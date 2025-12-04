@@ -1569,318 +1569,156 @@
         }
     };
 
-    // ================= 4. APP LOGIC & DATA =================
-        
-        // --- MASSIVE GRAMMAR DATABASE (All questions included) ---
-        const grammarPool = {
-            ving: [
-                // List 1
-                {q: "I ___________ (read) a book now.", a: "am reading"}, {q: "She ___________ (sit) on the chair now.", a: "is sitting"},
-                {q: "They ___________ (play) football right now.", a: "are playing"}, {q: "He ___________ (run) in the park now.", a: "is running"},
-                {q: "The bird ___________ (fly) in the sky.", a: "is flying"}, {q: "We ___________ (eat) lunch now.", a: "are eating"},
-                {q: "My mother ___________ (cook) dinner at the moment.", a: "is cooking"}, {q: "Listen! The baby ___________ (cry).", a: "is crying"},
-                {q: "I ___________ (write) my name now.", a: "am writing"}, {q: "The dog ___________ (sleep) on the floor now.", a: "is sleeping"},
-                {q: "My brother ___________ (watch) TV right now.", a: "is watching"}, {q: "Look! The bus ___________ (come).", a: "is coming"},
-                {q: "They ___________ (dance) to the music now.", a: "are dancing"}, {q: "She ___________ (drink) milk now.", a: "is drinking"},
-                {q: "It ___________ (rain) outside now.", a: "is raining"}, {q: "The boys ___________ (swim) in the pool now.", a: "are swimming"},
-                {q: "I ___________ (draw) a picture at the moment.", a: "am drawing"}, {q: "Look! The cat ___________ (climb) the tree.", a: "is climbing"},
-                {q: "We ___________ (sing) a song now.", a: "are singing"}, {q: "He ___________ (ride) his bike right now.", a: "is riding"},
-                {q: "My dad ___________ (wash) the car now.", a: "is washing"}, {q: "The students ___________ (study) English now.", a: "are studying"},
-                {q: "I ___________ (listen) to the teacher now.", a: "am listening"}, {q: "She ___________ (wear) a red dress today.", a: "is wearing"},
-                {q: "They ___________ (walk) to school now.", a: "are walking"}, {q: "Look! The monkey ___________ (jump).", a: "is jumping"},
-                {q: "My sister ___________ (brush) her hair now.", a: "is brushing"}, {q: "We ___________ (make) a cake now.", a: "are making"},
-                {q: "The teacher ___________ (talk) right now.", a: "is talking"}, {q: "I ___________ (do) my homework now.", a: "am doing"},
-                {q: "He ___________ (open) the door now.", a: "is opening"}, {q: "The girl ___________ (smile) at me now.", a: "is smiling"},
-                {q: "They ___________ (clean) the classroom now.", a: "are cleaning"}, {q: "Look! The plane ___________ (go) up.", a: "is going"},
-                {q: "My friends ___________ (wait) for the bus.", a: "are waiting"}, {q: "The baby ___________ (laugh) now.", a: "is laughing"},
-                {q: "I ___________ (help) my mom now.", a: "am helping"}, {q: "She ___________ (buy) an apple now.", a: "is buying"},
-                {q: "We ___________ (look) at the stars now.", a: "are looking"}, {q: "He ___________ (drive) a car right now.", a: "is driving"},
-                {q: "The ducks ___________ (swim) in the pond.", a: "are swimming"}, {q: "Look! It ___________ (snow).", a: "is snowing"},
-                {q: "My grandma ___________ (knit) a sweater now.", a: "is knitting"}, {q: "I ___________ (stand) up now.", a: "am standing"},
-                {q: "They ___________ (cut) the paper now.", a: "are cutting"}, {q: "The phone ___________ (ring) right now.", a: "is ringing"},
-                {q: "She ___________ (skip) rope now.", a: "is skipping"}, {q: "We ___________ (learn) math now.", a: "are learning"},
-                {q: "The cat ___________ (chase) a mouse now.", a: "is chasing"}, {q: "I ___________ (use) the computer now.", a: "am using"},
-                // List 2
-                {q: "My sister ___________ (drink) juice now.", a: "is drinking"}, {q: "We ___________ (sit) on the floor.", a: "are sitting"},
-                {q: "The teacher ___________ (write) on the board.", a: "is writing"}, {q: "I ___________ (look) for my bag.", a: "am looking"},
-                {q: "He ___________ (kick) the ball.", a: "is kicking"}, {q: "They ___________ (run) to the bus.", a: "are running"},
-                {q: "The birds ___________ (sing) in the tree.", a: "are singing"}, {q: "She ___________ (draw) a flower.", a: "is drawing"},
-                {q: "I ___________ (wait) for my dad.", a: "am waiting"}, {q: "My mom ___________ (talk) on the phone.", a: "is talking"},
-                {q: "The baby ___________ (sleep) in the bed.", a: "is sleeping"}, {q: "We ___________ (play) a game.", a: "are playing"},
-                {q: "Look! The sun ___________ (shine).", a: "is shining"}, {q: "He ___________ (carry) a heavy box.", a: "is carrying"},
-                {q: "They ___________ (buy) snacks.", a: "are buying"}, {q: "She ___________ (wash) her hands.", a: "is washing"},
-                {q: "I ___________ (brush) my teeth now.", a: "am brushing"}, {q: "The dog ___________ (bark) at the cat.", a: "is barking"},
-                {q: "My dad ___________ (read) the newspaper.", a: "is reading"}, {q: "It ___________ (rain) very hard.", a: "is raining"},
-                {q: "We ___________ (eat) breakfast.", a: "are eating"}, {q: "He ___________ (fix) his toy.", a: "is fixing"},
-                {q: "She ___________ (comb) her hair.", a: "is combing"}, {q: "The boys ___________ (jump) on the bed.", a: "are jumping"},
-                {q: "I ___________ (learn) English.", a: "am learning"}, {q: "They ___________ (watch) a funny video.", a: "are watching"},
-                {q: "My friends ___________ (walk) home.", a: "are walking"}, {q: "The cat ___________ (eat) fish.", a: "is eating"},
-                {q: "She ___________ (clean) her room.", a: "is cleaning"}, {q: "He ___________ (ride) a horse.", a: "is riding"},
-                {q: "I ___________ (do) a puzzle.", a: "am doing"}, {q: "The girl ___________ (cry) loudly.", a: "is crying"},
-                {q: "We ___________ (listen) to the radio.", a: "are listening"}, {q: "Look! The kite ___________ (fly) high.", a: "is flying"},
-                {q: "My brother ___________ (cut) the cake.", a: "is cutting"}, {q: "They ___________ (swim) in the sea.", a: "are swimming"},
-                {q: "She ___________ (dance) nicely.", a: "is dancing"}, {q: "I ___________ (wear) blue shoes.", a: "am wearing"},
-                {q: "The car ___________ (stop) now.", a: "is stopping"}, {q: "He ___________ (open) his gift.", a: "is opening"},
-                {q: "We ___________ (stand) up.", a: "are standing"}, {q: "The students ___________ (ask) questions.", a: "are asking"},
-                {q: "My grandma ___________ (cook) rice.", a: "is cooking"}, {q: "She ___________ (smile) at the baby.", a: "is smiling"},
-                {q: "I ___________ (help) my teacher.", a: "am helping"}, {q: "The bus ___________ (go) fast.", a: "is going"},
-                {q: "They ___________ (climb) the wall.", a: "are climbing"}, {q: "He ___________ (hit) the ball.", a: "is hitting"},
-                {q: "Look! The flower ___________ (grow).", a: "is growing"}, {q: "We ___________ (pack) our bags.", a: "are packing"},
-                {q: "My aunt ___________ (drive) the car.", a: "is driving"}, {q: "The duck ___________ (swim) on the water.", a: "is swimming"},
-                {q: "I ___________ (close) the window.", a: "am closing"}, {q: "She ___________ (count) the money.", a: "is counting"},
-                {q: "They ___________ (play) hide and seek.", a: "are playing"}, {q: "He ___________ (pull) the door.", a: "is pulling"},
-                {q: "The man ___________ (work) hard.", a: "is working"}, {q: "I ___________ (try) to sleep.", a: "am trying"},
-                {q: "My cat ___________ (play) with a ball.", a: "is playing"}, {q: "We ___________ (enjoy) the party.", a: "are enjoying"},
-                {q: "She ___________ (give) him a book.", a: "is giving"}, {q: "Look! The plane ___________ (land).", a: "is landing"},
-                {q: "They ___________ (shout) loudly.", a: "are shouting"}, {q: "He ___________ (push) the cart.", a: "is pushing"},
-                {q: "I ___________ (make) a card.", a: "am making"}, {q: "My mom ___________ (chop) vegetables.", a: "is chopping"},
-                {q: "The rain ___________ (fall) down.", a: "is falling"}, {q: "We ___________ (get) dressed.", a: "are getting"},
-                {q: "She ___________ (put) on her hat.", a: "is putting"}, {q: "The boys ___________ (fight) now.", a: "are fighting"},
-                {q: "I ___________ (hold) a pen.", a: "am holding"}, {q: "He ___________ (throw) the ball.", a: "is throwing"},
-                {q: "They ___________ (jog) in the park.", a: "are jogging"}, {q: "My sister ___________ (skip) happily.", a: "is skipping"},
-                {q: "The fire ___________ (burn).", a: "is burning"}, {q: "We ___________ (tell) a story.", a: "are telling"},
-                {q: "She ___________ (hide) under the table.", a: "is hiding"}, {q: "Look! The train ___________ (move).", a: "is moving"},
-                {q: "I ___________ (rest) on the sofa.", a: "am resting"}, {q: "My dad ___________ (paint) the wall.", a: "is painting"},
-                {q: "The students ___________ (take) a test.", a: "are taking"}, {q: "He ___________ (catch) a fish.", a: "is catching"},
-                {q: "They ___________ (plant) a tree.", a: "are planting"}, {q: "She ___________ (feed) the dog.", a: "is feeding"},
-                {q: "We ___________ (shop) for clothes.", a: "are shopping"}, {q: "I ___________ (think) about lunch.", a: "am thinking"},
-                {q: "The wind ___________ (blow) hard.", a: "is blowing"}, {q: "Look! The leaves ___________ (fall).", a: "are falling"},
-                {q: "My brother ___________ (mix) the colors.", a: "is mixing"}, {q: "He ___________ (check) his phone.", a: "is checking"},
-                {q: "She ___________ (call) her friend.", a: "is calling"}, {q: "They ___________ (build) a sandcastle.", a: "are building"},
-                {q: "I ___________ (send) an email.", a: "am sending"}, {q: "The baby ___________ (crawl) now.", a: "is crawling"},
-                {q: "We ___________ (hurry) to school.", a: "are hurrying"}, {q: "My grandpa ___________ (walk) slowly.", a: "is walking"},
-                {q: "She ___________ (tie) her shoes.", a: "is tying"}, {q: "He ___________ (exercise) now.", a: "is exercising"},
-                {q: "Look! The star ___________ (twinkle).", a: "is twinkling"}, {q: "I ___________ (finish) my food.", a: "am finishing"},
-                {q: "They ___________ (prepare) dinner.", a: "are preparing"}, {q: "The monkey ___________ (eat) a banana.", a: "is eating"},
-                {q: "My teacher ___________ (read) a story.", a: "is reading"}, {q: "We ___________ (say) goodbye.", a: "are saying"},
-                {q: "He ___________ (start) the car.", a: "is starting"}
-            ],
-            toInf: [
-                // List 1
-                {q: "I want ___________ (go) home.", a: "to go"}, {q: "She likes ___________ (play) with dolls.", a: "to play"},
-                {q: "We need ___________ (drink) some water.", a: "to drink"}, {q: "He hopes ___________ (see) a movie.", a: "to see"},
-                {q: "Do you want ___________ (eat) pizza?", a: "to eat"}, {q: "They love ___________ (read) storybooks.", a: "to read"},
-                {q: "My mom wants ___________ (cook) soup.", a: "to cook"}, {q: "I try ___________ (study) hard.", a: "to study"},
-                {q: "My brother likes ___________ (run) fast.", a: "to run"}, {q: "We decided ___________ (visit) Grandma.", a: "to visit"},
-                {q: "She needs ___________ (sleep) early.", a: "to sleep"}, {q: "I want ___________ (buy) a new toy.", a: "to buy"},
-                {q: "He likes ___________ (draw) animals.", a: "to draw"}, {q: "They want ___________ (watch) TV.", a: "to watch"},
-                {q: "Do you like ___________ (sing)?", a: "to sing"}, {q: "The baby wants ___________ (cry).", a: "to cry"},
-                {q: "I hope ___________ (get) a gift.", a: "to get"}, {q: "She loves ___________ (dance).", a: "to dance"},
-                {q: "We need ___________ (wash) our hands.", a: "to wash"}, {q: "He wants ___________ (be) a doctor.", a: "to be"},
-                {q: "My dog likes ___________ (jump).", a: "to jump"}, {q: "They plan ___________ (go) to the park.", a: "to go"},
-                {q: "I want ___________ (help) you.", a: "to help"}, {q: "She starts ___________ (write) her name.", a: "to write"},
-                {q: "Do you want ___________ (come) with me?", a: "to come"}, {q: "He needs ___________ (wear) a coat.", a: "to wear"},
-                {q: "We like ___________ (swim) in summer.", a: "to swim"}, {q: "I want ___________ (ask) a question.", a: "to ask"},
-                {q: "She hopes ___________ (win) the game.", a: "to win"}, {q: "They love ___________ (play) football.", a: "to play"},
-                {q: "I need ___________ (do) my homework.", a: "to do"}, {q: "My dad likes ___________ (drive).", a: "to drive"},
-                {q: "He wants ___________ (climb) the tree.", a: "to climb"}, {q: "We try ___________ (listen) carefully.", a: "to listen"},
-                {q: "She likes ___________ (ride) her bike.", a: "to ride"}, {q: "I want ___________ (give) you this.", a: "to give"},
-                {q: "They need ___________ (clean) the room.", a: "to clean"}, {q: "Look, he wants ___________ (stop).", a: "to stop"},
-                {q: "I love ___________ (eat) ice cream.", a: "to eat"}, {q: "Do you like ___________ (walk) to school?", a: "to walk"},
-                {q: "She wants ___________ (open) the box.", a: "to open"}, {q: "We need ___________ (find) the key.", a: "to find"},
-                {q: "He hopes ___________ (pass) the test.", a: "to pass"}, {q: "I want ___________ (tell) a story.", a: "to tell"},
-                {q: "My cat likes ___________ (sleep).", a: "to sleep"}, {q: "They try ___________ (catch) the ball.", a: "to catch"},
-                {q: "She needs ___________ (brush) her teeth.", a: "to brush"}, {q: "I want ___________ (sit) down.", a: "to sit"},
-                {q: "He likes ___________ (make) robots.", a: "to make"}, {q: "We want ___________ (fly) a kite.", a: "to fly"},
-                // List 2
-                {q: "I like ___________ (eat) cake.", a: "to eat"}, {q: "She wants ___________ (see) the birds.", a: "to see"},
-                {q: "We need ___________ (buy) milk.", a: "to buy"}, {q: "He tries ___________ (lift) the box.", a: "to lift"},
-                {q: "They hope ___________ (visit) Japan.", a: "to visit"}, {q: "My mom loves ___________ (cook).", a: "to cook"},
-                {q: "Do you want ___________ (play)?", a: "to play"}, {q: "I plan ___________ (study) tonight.", a: "to study"},
-                {q: "She likes ___________ (wear) pink.", a: "to wear"}, {q: "He needs ___________ (drink) juice.", a: "to drink"},
-                {q: "We decided ___________ (stay) home.", a: "to stay"}, {q: "The dog wants ___________ (go) out.", a: "to go"},
-                {q: "I like ___________ (draw) faces.", a: "to draw"}, {q: "She loves ___________ (sing) songs.", a: "to sing"},
-                {q: "He tries ___________ (run) fast.", a: "to run"}, {q: "They want ___________ (watch) a movie.", a: "to watch"},
-                {q: "Do you like ___________ (swim)?", a: "to swim"}, {q: "I need ___________ (clean) my room.", a: "to clean"},
-                {q: "My dad wants ___________ (sleep).", a: "to sleep"}, {q: "She hopes ___________ (find) her toy.", a: "to find"},
-                {q: "We love ___________ (walk) in the park.", a: "to walk"}, {q: "He plans ___________ (make) a robot.", a: "to make"},
-                {q: "I want ___________ (learn) piano.", a: "to learn"}, {q: "They need ___________ (finish) work.", a: "to finish"},
-                {q: "She likes ___________ (help) mom.", a: "to help"}, {q: "Do you want ___________ (dance)?", a: "to dance"},
-                {q: "I try ___________ (be) good.", a: "to be"}, {q: "He wants ___________ (sell) his bike.", a: "to sell"},
-                {q: "We like ___________ (read) together.", a: "to read"}, {q: "She needs ___________ (wash) her hair.", a: "to wash"},
-                {q: "The cat likes ___________ (catch) mice.", a: "to catch"}, {q: "I hope ___________ (see) you soon.", a: "to see"},
-                {q: "They want ___________ (climb) the hill.", a: "to climb"}, {q: "He loves ___________ (play) guitar.", a: "to play"},
-                {q: "Do you need ___________ (use) the pen?", a: "to use"}, {q: "I decided ___________ (walk) to school.", a: "to walk"},
-                {q: "She wants ___________ (call) grandma.", a: "to call"}, {q: "We try ___________ (save) money.", a: "to save"},
-                {q: "He likes ___________ (ride) horses.", a: "to ride"}, {q: "I need ___________ (ask) teacher.", a: "to ask"},
-                {q: "They hope ___________ (win) the race.", a: "to win"}, {q: "She loves ___________ (paint) pictures.", a: "to paint"},
-                {q: "My brother wants ___________ (jump).", a: "to jump"}, {q: "We plan ___________ (have) a party.", a: "to have"},
-                {q: "Do you like ___________ (ski)?", a: "to ski"}, {q: "I want ___________ (give) a gift.", a: "to give"},
-                {q: "He needs ___________ (fix) the car.", a: "to fix"}, {q: "She tries ___________ (open) the jar.", a: "to open"},
-                {q: "They like ___________ (go) shopping.", a: "to go"}, {q: "I love ___________ (eat) pizza.", a: "to eat"},
-                {q: "We want ___________ (look) at the stars.", a: "to look"}, {q: "He decides ___________ (buy) the red one.", a: "to buy"},
-                {q: "She needs ___________ (wait) here.", a: "to wait"}, {q: "Do you hope ___________ (pass) the test?", a: "to pass"},
-                {q: "I like ___________ (listen) to music.", a: "to listen"}, {q: "My dog loves ___________ (run).", a: "to run"},
-                {q: "They want ___________ (build) a house.", a: "to build"}, {q: "He tries ___________ (catch) the bus.", a: "to catch"},
-                {q: "She needs ___________ (take) a photo.", a: "to take"}, {q: "We plan ___________ (visit) the zoo.", a: "to visit"},
-                {q: "I want ___________ (sit) here.", a: "to sit"}, {q: "Do you like ___________ (drink) tea?", a: "to drink"},
-                {q: "He hopes ___________ (get) a puppy.", a: "to get"}, {q: "She loves ___________ (play) tennis.", a: "to play"},
-                {q: "They need ___________ (do) the dishes.", a: "to do"}, {q: "I try ___________ (write) neatly.", a: "to write"},
-                {q: "We want ___________ (swim) today.", a: "to swim"}, {q: "My sister likes ___________ (dance).", a: "to dance"},
-                {q: "He decided ___________ (go) to bed.", a: "to go"}, {q: "She needs ___________ (brush) teeth.", a: "to brush"},
-                {q: "I hope ___________ (fly) a plane.", a: "to fly"}, {q: "Do you want ___________ (come) in?", a: "to come"},
-                {q: "They love ___________ (watch) cartoons.", a: "to watch"}, {q: "He tries ___________ (kick) the ball.", a: "to kick"},
-                {q: "We need ___________ (find) the map.", a: "to find"}, {q: "She wants ___________ (wear) a dress.", a: "to wear"},
-                {q: "I like ___________ (stand) up.", a: "to stand"}, {q: "My mom plans ___________ (bake) cake.", a: "to bake"},
-                {q: "He wants ___________ (drive) fast.", a: "to drive"}, {q: "They need ___________ (stop) talking.", a: "to stop"},
-                {q: "I love ___________ (collect) stamps.", a: "to collect"}, {q: "Do you try ___________ (eat) healthy?", a: "to eat"},
-                {q: "She hopes ___________ (meet) him.", a: "to meet"}, {q: "We decide ___________ (play) outside.", a: "to play"},
-                {q: "He likes ___________ (grow) plants.", a: "to grow"}, {q: "I want ___________ (show) you this.", a: "to show"},
-                {q: "The baby needs ___________ (sleep).", a: "to sleep"}, {q: "They try ___________ (pull) the rope.", a: "to pull"},
-                {q: "She loves ___________ (make) art.", a: "to make"}, {q: "I plan ___________ (go) away.", a: "to go"},
-                {q: "We need ___________ (pay) for this.", a: "to pay"}, {q: "Do you like ___________ (climb) trees?", a: "to climb"},
-                {q: "He wants ___________ (share) his toy.", a: "to share"}, {q: "She hopes ___________ (become) a nurse.", a: "to become"},
-                {q: "They decide ___________ (start) now.", a: "to start"}, {q: "I try ___________ (remember) the word.", a: "to remember"},
-                {q: "We love ___________ (swim) in the pool.", a: "to swim"}, {q: "He needs ___________ (close) the door.", a: "to close"},
-                {q: "She likes ___________ (teach) English.", a: "to teach"}, {q: "I want ___________ (hold) the baby.", a: "to hold"},
-                {q: "My dad plans ___________ (work) late.", a: "to work"}, {q: "They need ___________ (pack) bags.", a: "to pack"},
-                {q: "He tries ___________ (speak) slowly.", a: "to speak"}, {q: "Do you want ___________ (join) us?", a: "to join"},
-                {q: "I love ___________ (be) happy.", a: "to be"}
-            ],
-            past: [
-                // List 1
-                {q: "I ___________ (walk) to the park yesterday.", a: "walked"}, {q: "She ___________ (play) football yesterday.", a: "played"},
-                {q: "They ___________ (watch) TV last night.", a: "watched"}, {q: "We ___________ (cook) dinner yesterday.", a: "cooked"},
-                {q: "He ___________ (wash) his face this morning.", a: "washed"}, {q: "I ___________ (listen) to music yesterday.", a: "listened"},
-                {q: "My mom ___________ (clean) the house last week.", a: "cleaned"}, {q: "The dog ___________ (bark) last night.", a: "barked"},
-                {q: "It ___________ (rain) yesterday.", a: "rained"}, {q: "We ___________ (visit) the zoo last Sunday.", a: "visited"},
-                {q: "She ___________ (dance) at the party last night.", a: "danced"}, {q: "He ___________ (paint) a picture yesterday.", a: "painted"},
-                {q: "I ___________ (finish) my homework last night.", a: "finished"}, {q: "They ___________ (climb) the hill yesterday.", a: "climbed"},
-                {q: "The baby ___________ (cry) last night.", a: "cried"}, {q: "I ___________ (go) to school yesterday.", a: "went"},
-                {q: "She ___________ (eat) an apple yesterday.", a: "ate"}, {q: "We ___________ (see) a bird yesterday.", a: "saw"},
-                {q: "He ___________ (buy) a new bag last week.", a: "bought"}, {q: "They ___________ (swim) in the pool last Sunday.", a: "swam"},
-                {q: "I ___________ (have) a good time yesterday.", a: "had"}, {q: "My dad ___________ (drive) the car yesterday.", a: "drove"},
-                {q: "The bird ___________ (fly) away yesterday.", a: "flew"}, {q: "She ___________ (draw) a picture last night.", a: "drew"},
-                {q: "We ___________ (drink) orange juice yesterday.", a: "drank"}, {q: "He ___________ (run) very fast yesterday.", a: "ran"},
-                {q: "I ___________ (sleep) late last night.", a: "slept"}, {q: "They ___________ (sit) on the grass yesterday.", a: "sat"},
-                {q: "She ___________ (write) a letter last week.", a: "wrote"}, {q: "We ___________ (sing) a song yesterday.", a: "sang"},
-                {q: "I ___________ (make) a card yesterday.", a: "made"}, {q: "He ___________ (read) a book last night.", a: "read"},
-                {q: "She ___________ (come) to my house yesterday.", a: "came"}, {q: "They ___________ (give) me a gift yesterday.", a: "gave"},
-                {q: "I ___________ (take) a photo last Sunday.", a: "took"}, {q: "We ___________ (stand) in line yesterday.", a: "stood"},
-                {q: "He ___________ (do) his homework yesterday.", a: "did"}, {q: "The cat ___________ (catch) a mouse last night.", a: "caught"},
-                {q: "I ___________ (ride) my bike yesterday.", a: "rode"}, {q: "She ___________ (wear) a blue coat yesterday.", a: "wore"},
-                {q: "We ___________ (find) a ball in the park yesterday.", a: "found"}, {q: "He ___________ (say) hello to me yesterday.", a: "said"},
-                {q: "They ___________ (meet) their teacher last week.", a: "met"}, {q: "I ___________ (get) up early yesterday.", a: "got"},
-                {q: "She ___________ (teach) me English last year.", a: "taught"}, {q: "I ___________ (know) the answer yesterday.", a: "knew"},
-                {q: "We ___________ (fly) to Japan last year.", a: "flew"}, {q: "He ___________ (bring) his lunch yesterday.", a: "brought"},
-                {q: "I ___________ (forget) my pencil yesterday.", a: "forgot"}, {q: "They ___________ (win) the game yesterday.", a: "won"},
-                // List 2
-                {q: "I ___________ (clean) the desk yesterday.", a: "cleaned"}, {q: "She ___________ (cook) eggs yesterday.", a: "cooked"},
-                {q: "They ___________ (play) games last night.", a: "played"}, {q: "He ___________ (walk) to the shop yesterday.", a: "walked"},
-                {q: "We ___________ (watch) a show last week.", a: "watched"}, {q: "I ___________ (wash) the dishes yesterday.", a: "washed"},
-                {q: "My dog ___________ (bark) at the mailman.", a: "barked"}, {q: "She ___________ (paint) a wall yesterday.", a: "painted"},
-                {q: "He ___________ (climb) a tree last Sunday.", a: "climbed"}, {q: "The rain ___________ (stop) yesterday.", a: "stopped"},
-                {q: "We ___________ (visit) my aunt last week.", a: "visited"}, {q: "I ___________ (listen) to the teacher.", a: "listened"},
-                {q: "They ___________ (dance) at the party.", a: "danced"}, {q: "She ___________ (call) me yesterday.", a: "called"},
-                {q: "He ___________ (help) his dad yesterday.", a: "helped"}, {q: "I ___________ (open) the gift last night.", a: "opened"},
-                {q: "We ___________ (wait) for the bus.", a: "waited"}, {q: "They ___________ (want) a cookie yesterday.", a: "wanted"},
-                {q: "She ___________ (use) my pen yesterday.", a: "used"}, {q: "He ___________ (jump) high yesterday.", a: "jumped"},
-                {q: "I ___________ (look) at the moon last night.", a: "looked"}, {q: "We ___________ (start) school last week.", a: "started"},
-                {q: "They ___________ (finish) the game.", a: "finished"}, {q: "She ___________ (brush) her hair yesterday.", a: "brushed"},
-                {q: "He ___________ (kick) the ball yesterday.", a: "kicked"}, {q: "I ___________ (ask) a question yesterday.", a: "asked"},
-                {q: "The baby ___________ (cry) last night.", a: "cried"}, {q: "We ___________ (live) there last year.", a: "lived"},
-                {q: "They ___________ (pull) the door yesterday.", a: "pulled"}, {q: "She ___________ (push) the cart yesterday.", a: "pushed"},
-                {q: "He ___________ (talk) to me yesterday.", a: "talked"}, {q: "I ___________ (pick) up the trash.", a: "picked"},
-                {q: "We ___________ (miss) the bus yesterday.", a: "missed"}, {q: "They ___________ (show) me the picture.", a: "showed"},
-                {q: "She ___________ (need) help yesterday.", a: "needed"}, {q: "He ___________ (turn) on the light.", a: "turned"},
-                {q: "I ___________ (go) to the park yesterday.", a: "went"}, {q: "She ___________ (eat) pizza last night.", a: "ate"},
-                {q: "They ___________ (see) a movie yesterday.", a: "saw"}, {q: "We ___________ (buy) candy yesterday.", a: "bought"},
-                {q: "He ___________ (have) fun yesterday.", a: "had"}, {q: "I ___________ (drink) milk this morning.", a: "drank"},
-                {q: "My mom ___________ (make) a cake yesterday.", a: "made"}, {q: "The bird ___________ (fly) away yesterday.", a: "flew"},
-                {q: "She ___________ (draw) a cat last night.", a: "drew"}, {q: "We ___________ (swim) in the lake yesterday.", a: "swam"},
-                {q: "He ___________ (run) in the race yesterday.", a: "ran"}, {q: "I ___________ (sleep) well last night.", a: "slept"},
-                {q: "They ___________ (sit) down yesterday.", a: "sat"}, {q: "She ___________ (write) a story last week.", a: "wrote"},
-                {q: "We ___________ (sing) loud yesterday.", a: "sang"}, {q: "He ___________ (read) a comic last night.", a: "read"},
-                {q: "I ___________ (come) home late yesterday.", a: "came"}, {q: "They ___________ (give) money yesterday.", a: "gave"},
-                {q: "She ___________ (take) the bus yesterday.", a: "took"}, {q: "We ___________ (stand) up yesterday.", a: "stood"},
-                {q: "He ___________ (do) the dishes last night.", a: "did"}, {q: "The cat ___________ (catch) a bird yesterday.", a: "caught"},
-                {q: "I ___________ (ride) the bike last Sunday.", a: "rode"}, {q: "She ___________ (wear) a pink hat yesterday.", a: "wore"},
-                {q: "We ___________ (find) a key yesterday.", a: "found"}, {q: "He ___________ (say) goodbye yesterday.", a: "said"},
-                {q: "They ___________ (meet) friends last week.", a: "met"}, {q: "I ___________ (get) a present yesterday.", a: "got"},
-                {q: "She ___________ (know) the song yesterday.", a: "knew"}, {q: "We ___________ (fly) a kite last Sunday.", a: "flew"},
-                {q: "He ___________ (bring) a toy yesterday.", a: "brought"}, {q: "I ___________ (forget) my bag yesterday.", a: "forgot"},
-                {q: "They ___________ (win) the match yesterday.", a: "won"}, {q: "She ___________ (lose) her pen yesterday.", a: "lost"},
-                {q: "We ___________ (go) shopping last week.", a: "went"}, {q: "He ___________ (tell) a lie yesterday.", a: "told"},
-                {q: "I ___________ (eat) ice cream yesterday.", a: "ate"}, {q: "They ___________ (drive) to the beach.", a: "drove"},
-                {q: "She ___________ (leave) early yesterday.", a: "left"}, {q: "We ___________ (keep) the secret yesterday.", a: "kept"},
-                {q: "He ___________ (put) the book there yesterday.", a: "put"}, {q: "I ___________ (cut) the paper yesterday.", a: "cut"},
-                {q: "They ___________ (read) the news yesterday.", a: "read"}, {q: "She ___________ (swim) fast yesterday.", a: "swam"},
-                {q: "My dad ___________ (buy) a car last year.", a: "bought"}, {q: "We ___________ (sleep) in a tent yesterday.", a: "slept"},
-                {q: "He ___________ (teach) me math yesterday.", a: "taught"}, {q: "I ___________ (think) about you yesterday.", a: "thought"},
-                {q: "They ___________ (sell) the house last year.", a: "sold"}, {q: "She ___________ (sit) on the chair yesterday.", a: "sat"},
-                {q: "We ___________ (write) names yesterday.", a: "wrote"}, {q: "He ___________ (run) home yesterday.", a: "ran"},
-                {q: "I ___________ (make) dinner last night.", a: "made"}, {q: "They ___________ (drink) water yesterday.", a: "drank"},
-                {q: "She ___________ (go) to bed early yesterday.", a: "went"}, {q: "We ___________ (see) a star last night.", a: "saw"},
-                {q: "He ___________ (send) a letter yesterday.", a: "sent"}, {q: "I ___________ (feel) happy yesterday.", a: "felt"},
-                {q: "They ___________ (break) the cup yesterday.", a: "broke"}, {q: "She ___________ (hear) a sound last night.", a: "heard"},
-                {q: "We ___________ (pay) for the food.", a: "paid"}, {q: "He ___________ (fall) down yesterday.", a: "fell"},
-                {q: "I ___________ (choose) the red one.", a: "chose"}, {q: "They ___________ (hold) hands yesterday.", a: "held"},
-                {q: "She ___________ (draw) a map yesterday.", a: "drew"}, {q: "We ___________ (speak) English yesterday.", a: "spoke"},
-                {q: "He ___________ (begin) to cry yesterday.", a: "began"}, {q: "I ___________ (grow) tall last year.", a: "grew"},
-                {q: "They ___________ (build) a snowman yesterday.", a: "built"}
-            ]
-        };
+    // IF YOU NEED THE FULL STORIES & DICTIONARY AGAIN, LET ME KNOW. 
+    // OTHERWISE, KEEP THE ONES YOU HAVE.
 
-        let currentDay = parseInt(localStorage.getItem('p2_day')) || 1;
-        let isGameSolved = false;
-        let currentDictTarget = "";
-        
-        // Test State Variables
-        let dictQueue = [];
-        let firstAttemptHistory = {}; // Stores { 'word': 'user_input ✅/❌' }
-        let testStatus = 'not_started'; // not_started, in_progress, done
-        let grammarQuestions = []; // Stores the selected 15 questions
-        let grammarDone = false;
+    // ================= 4. APP LOGIC & DATA (THE FIXED PART) =================
 
-        window.onload = function() {
-            initDaySelect();
-            // Load Dictionary Queue and History from Save if exists
-            loadTestState();
-            
-            loadDay(currentDay);
-            updateNavStatus();
-        };
+    // --- MASSIVE GRAMMAR DATABASE ---
+    const grammarPool = {
+        ving: [
+            {q: "I ___________ (read) a book now.", a: "am reading"}, {q: "She ___________ (sit) on the chair now.", a: "is sitting"},
+            {q: "They ___________ (play) football right now.", a: "are playing"}, {q: "He ___________ (run) in the park now.", a: "is running"},
+            {q: "The bird ___________ (fly) in the sky.", a: "is flying"}, {q: "We ___________ (eat) lunch now.", a: "are eating"},
+            {q: "My mother ___________ (cook) dinner at the moment.", a: "is cooking"}, {q: "Listen! The baby ___________ (cry).", a: "is crying"},
+            {q: "I ___________ (write) my name now.", a: "am writing"}, {q: "The dog ___________ (sleep) on the floor now.", a: "is sleeping"},
+            {q: "My brother ___________ (watch) TV right now.", a: "is watching"}, {q: "Look! The bus ___________ (come).", a: "is coming"},
+            {q: "They ___________ (dance) to the music now.", a: "are dancing"}, {q: "She ___________ (drink) milk now.", a: "is drinking"},
+            {q: "It ___________ (rain) outside now.", a: "is raining"}, {q: "The boys ___________ (swim) in the pool now.", a: "are swimming"},
+            {q: "I ___________ (draw) a picture at the moment.", a: "am drawing"}, {q: "Look! The cat ___________ (climb) the tree.", a: "is climbing"},
+            {q: "We ___________ (sing) a song now.", a: "are singing"}, {q: "He ___________ (ride) his bike right now.", a: "is riding"},
+            {q: "My dad ___________ (wash) the car now.", a: "is washing"}, {q: "The students ___________ (study) English now.", a: "are studying"},
+            {q: "I ___________ (listen) to the teacher now.", a: "am listening"}, {q: "She ___________ (wear) a red dress today.", a: "is wearing"},
+            {q: "They ___________ (walk) to school now.", a: "are walking"}, {q: "Look! The monkey ___________ (jump).", a: "is jumping"},
+            {q: "My sister ___________ (brush) her hair now.", a: "is brushing"}, {q: "We ___________ (make) a cake now.", a: "are making"},
+            {q: "The teacher ___________ (talk) right now.", a: "is talking"}, {q: "I ___________ (do) my homework now.", a: "am doing"},
+            {q: "He ___________ (open) the door now.", a: "is opening"}, {q: "The girl ___________ (smile) at me now.", a: "is smiling"},
+            {q: "They ___________ (clean) the classroom now.", a: "are cleaning"}, {q: "Look! The plane ___________ (go) up.", a: "is going"},
+            {q: "My friends ___________ (wait) for the bus.", a: "are waiting"}, {q: "The baby ___________ (laugh) now.", a: "is laughing"},
+            {q: "I ___________ (help) my mom now.", a: "am helping"}, {q: "She ___________ (buy) an apple now.", a: "is buying"},
+            {q: "We ___________ (look) at the stars now.", a: "are looking"}, {q: "He ___________ (drive) a car right now.", a: "is driving"},
+            {q: "The ducks ___________ (swim) in the pond.", a: "are swimming"}, {q: "Look! It ___________ (snow).", a: "is snowing"},
+            {q: "My grandma ___________ (knit) a sweater now.", a: "is knitting"}, {q: "I ___________ (stand) up now.", a: "am standing"},
+            {q: "They ___________ (cut) the paper now.", a: "are cutting"}, {q: "The phone ___________ (ring) right now.", a: "is ringing"},
+            {q: "She ___________ (skip) rope now.", a: "is skipping"}, {q: "We ___________ (learn) math now.", a: "are learning"},
+            {q: "The cat ___________ (chase) a mouse now.", a: "is chasing"}, {q: "I ___________ (use) the computer now.", a: "am using"}
+        ],
+        toInf: [
+            {q: "I want ___________ (go) home.", a: "to go"}, {q: "She likes ___________ (play) with dolls.", a: "to play"},
+            {q: "We need ___________ (drink) some water.", a: "to drink"}, {q: "He hopes ___________ (see) a movie.", a: "to see"},
+            {q: "Do you want ___________ (eat) pizza?", a: "to eat"}, {q: "They love ___________ (read) storybooks.", a: "to read"},
+            {q: "My mom wants ___________ (cook) soup.", a: "to cook"}, {q: "I try ___________ (study) hard.", a: "to study"},
+            {q: "My brother likes ___________ (run) fast.", a: "to run"}, {q: "We decided ___________ (visit) Grandma.", a: "to visit"},
+            {q: "She needs ___________ (sleep) early.", a: "to sleep"}, {q: "I want ___________ (buy) a new toy.", a: "to buy"},
+            {q: "He likes ___________ (draw) animals.", a: "to draw"}, {q: "They want ___________ (watch) TV.", a: "to watch"},
+            {q: "Do you like ___________ (sing)?", a: "to sing"}, {q: "The baby wants ___________ (cry).", a: "to cry"},
+            {q: "I hope ___________ (get) a gift.", a: "to get"}, {q: "She loves ___________ (dance).", a: "to dance"},
+            {q: "We need ___________ (wash) our hands.", a: "to wash"}, {q: "He wants ___________ (be) a doctor.", a: "to be"},
+            {q: "My dog likes ___________ (jump).", a: "to jump"}, {q: "They plan ___________ (go) to the park.", a: "to go"},
+            {q: "I want ___________ (help) you.", a: "to help"}, {q: "She starts ___________ (write) her name.", a: "to write"},
+            {q: "Do you want ___________ (come) with me?", a: "to come"}, {q: "He needs ___________ (wear) a coat.", a: "to wear"},
+            {q: "We like ___________ (swim) in summer.", a: "to swim"}, {q: "I want ___________ (ask) a question.", a: "to ask"},
+            {q: "She hopes ___________ (win) the game.", a: "to win"}, {q: "They love ___________ (play) football.", a: "to play"},
+            {q: "I need ___________ (do) my homework.", a: "to do"}, {q: "My dad likes ___________ (drive).", a: "to drive"},
+            {q: "He wants ___________ (climb) the tree.", a: "to climb"}, {q: "We try ___________ (listen) carefully.", a: "to listen"},
+            {q: "She likes ___________ (ride) her bike.", a: "to ride"}, {q: "I want ___________ (give) you this.", a: "to give"},
+            {q: "They need ___________ (clean) the room.", a: "to clean"}, {q: "Look, he wants ___________ (stop).", a: "to stop"},
+            {q: "I love ___________ (eat) ice cream.", a: "to eat"}, {q: "Do you like ___________ (walk) to school?", a: "to walk"},
+            {q: "She wants ___________ (open) the box.", a: "to open"}, {q: "We need ___________ (find) the key.", a: "to find"},
+            {q: "He hopes ___________ (pass) the test.", a: "to pass"}, {q: "I want ___________ (tell) a story.", a: "to tell"},
+            {q: "My cat likes ___________ (sleep).", a: "to sleep"}, {q: "They try ___________ (catch) the ball.", a: "to catch"},
+            {q: "She needs ___________ (brush) her teeth.", a: "to brush"}, {q: "I want ___________ (sit) down.", a: "to sit"},
+            {q: "He likes ___________ (make) robots.", a: "to make"}, {q: "We want ___________ (fly) a kite.", a: "to fly"}
+        ],
+        past: [
+            {q: "I ___________ (walk) to the park yesterday.", a: "walked"}, {q: "She ___________ (play) football yesterday.", a: "played"},
+            {q: "They ___________ (watch) TV last night.", a: "watched"}, {q: "We ___________ (cook) dinner yesterday.", a: "cooked"},
+            {q: "He ___________ (wash) his face this morning.", a: "washed"}, {q: "I ___________ (listen) to music yesterday.", a: "listened"},
+            {q: "My mom ___________ (clean) the house last week.", a: "cleaned"}, {q: "The dog ___________ (bark) last night.", a: "barked"},
+            {q: "It ___________ (rain) yesterday.", a: "rained"}, {q: "We ___________ (visit) the zoo last Sunday.", a: "visited"},
+            {q: "She ___________ (dance) at the party last night.", a: "danced"}, {q: "He ___________ (paint) a picture yesterday.", a: "painted"},
+            {q: "I ___________ (finish) my homework last night.", a: "finished"}, {q: "They ___________ (climb) the hill yesterday.", a: "climbed"},
+            {q: "The baby ___________ (cry) last night.", a: "cried"}, {q: "I ___________ (go) to school yesterday.", a: "went"},
+            {q: "She ___________ (eat) an apple yesterday.", a: "ate"}, {q: "We ___________ (see) a bird yesterday.", a: "saw"},
+            {q: "He ___________ (buy) a new bag last week.", a: "bought"}, {q: "They ___________ (swim) in the pool last Sunday.", a: "swam"},
+            {q: "I ___________ (have) a good time yesterday.", a: "had"}, {q: "My dad ___________ (drive) the car yesterday.", a: "drove"},
+            {q: "The bird ___________ (fly) away yesterday.", a: "flew"}, {q: "She ___________ (draw) a picture last night.", a: "drew"},
+            {q: "We ___________ (drink) orange juice yesterday.", a: "drank"}, {q: "He ___________ (run) very fast yesterday.", a: "ran"},
+            {q: "I ___________ (sleep) late last night.", a: "slept"}, {q: "They ___________ (sit) on the grass yesterday.", a: "sat"},
+            {q: "She ___________ (write) a letter last week.", a: "wrote"}, {q: "We ___________ (sing) a song yesterday.", a: "sang"},
+            {q: "I ___________ (make) a card yesterday.", a: "made"}, {q: "He ___________ (read) a book last night.", a: "read"},
+            {q: "She ___________ (come) to my house yesterday.", a: "came"}, {q: "They ___________ (give) me a gift yesterday.", a: "gave"},
+            {q: "I ___________ (take) a photo last Sunday.", a: "took"}, {q: "We ___________ (stand) in line yesterday.", a: "stood"},
+            {q: "He ___________ (do) his homework yesterday.", a: "did"}, {q: "The cat ___________ (catch) a mouse last night.", a: "caught"},
+            {q: "I ___________ (ride) my bike yesterday.", a: "rode"}, {q: "She ___________ (wear) a blue coat yesterday.", a: "wore"},
+            {q: "We ___________ (find) a ball in the park yesterday.", a: "found"}, {q: "He ___________ (say) hello to me yesterday.", a: "said"},
+            {q: "They ___________ (meet) their teacher last week.", a: "met"}, {q: "I ___________ (get) up early yesterday.", a: "got"},
+            {q: "She ___________ (teach) me English last year.", a: "taught"}, {q: "I ___________ (know) the answer yesterday.", a: "knew"},
+            {q: "We ___________ (fly) to Japan last year.", a: "flew"}, {q: "He ___________ (bring) his lunch yesterday.", a: "brought"},
+            {q: "I ___________ (forget) my pencil yesterday.", a: "forgot"}, {q: "They ___________ (win) the game yesterday.", a: "won"}
+        ]
+    };
 
-        function initDaySelect() {
-            const s = document.getElementById('daySelect');
-            s.innerHTML = '';
-            for(let i=1; i<=31; i++) {
-                let opt = document.createElement('option');
-                opt.value = i;
-                opt.text = `Day ${i}`;
-                if(i === currentDay) opt.selected = true;
-                s.appendChild(opt);
-            }
-        }
-
-        function changeDay() {
-            currentDay = parseInt(document.getElementById('daySelect').value);
-            localStorage.setItem('p2_day', currentDay);
-            
-            // Changing day resets the test for the NEW day
-            resetTestForNewDay();
-            
-            isGameSolved = false;
-            loadDay(currentDay);
-            nav('learn');
-        }
-
-        function resetTestForNewDay() {
-            localStorage.removeItem(`p2_test_state_${currentDay}`);
-            dictQueue = []; 
-            firstAttemptHistory = {};
-            grammarQuestions = [];
-            grammarDone = false;
-            testStatus = 'not_started';
-            updateNavStatus();
-        }
-
-        // Global Mission State
+    let currentDay = parseInt(localStorage.getItem('p2_day')) || 1;
+    let isGameSolved = false;
+    let currentDictTarget = "";
+    
+    // Global State Variables
+    let dictQueue = [];
+    let firstAttemptHistory = {}; // Stores { 'word': 'user_input ✅/❌' }
+    let testStatus = 'not_started'; // not_started, in_progress, done
+    let grammarQuestions = []; // Stores the selected 15 questions
+    let grammarDone = false;
     let missionProgress = {
-        listened: [],    // Stores words listened to, e.g., ['apple', 'banana'...]
-        reading: [],     // Stores indices of Reading Questions answered correctly, e.g., [0, 1, 2, 3, 4]
+        listened: [],    // Stores words listened to
+        reading: [],     // Stores indices of Reading Questions answered correctly
         game: false      // Game finished?
     };
+
+    window.onload = function() {
+        initDaySelect();
+        // Load Dictionary Queue and History from Save if exists
+        loadTestState();
+        
+        loadDay(currentDay);
+        updateNavStatus();
+        checkMissionUnlock(); // Ensure lock status is correct on load
+    };
+
+    function initDaySelect() {
+        const s = document.getElementById('daySelect');
+        s.innerHTML = '';
+        for(let i=1; i<=31; i++) {
+            let opt = document.createElement('option');
+            opt.value = i;
+            opt.text = `Day ${i}`;
+            if(i === currentDay) opt.selected = true;
+            s.appendChild(opt);
+        }
+    }
+
+    function changeDay() {
+        currentDay = parseInt(document.getElementById('daySelect').value);
+        localStorage.setItem('p2_day', currentDay);
+        
+        // Changing day resets the test for the NEW day
+        resetTestForNewDay();
+        
+        isGameSolved = false;
+        loadDay(currentDay);
+        nav('learn');
+    }
+
+    function resetTestForNewDay() {
+        localStorage.removeItem(`p2_test_state_${currentDay}`);
+        dictQueue = []; 
+        firstAttemptHistory = {};
+        grammarQuestions = [];
+        grammarDone = false;
+        testStatus = 'not_started';
+        missionProgress = { listened: [], reading: [], game: false };
+        updateNavStatus();
+    }
 
     function loadTestState() {
         const saved = localStorage.getItem(`p2_test_state_${currentDay}`);
@@ -1891,122 +1729,110 @@
             testStatus = data.status || 'not_started';
             grammarQuestions = data.grammarQ || [];
             grammarDone = data.grammarDone || false;
-            
-            // LOAD MISSION PROGRESS
             missionProgress = data.mission || { listened: [], reading: [], game: false };
-            isGameSolved = missionProgress.game; // Sync game state
+            isGameSolved = missionProgress.game; 
         } else {
-            // New Day Reset
+            // New load for this day, fill queue
             const dayWords = dailyWords[currentDay-1] || [];
-            dictQueue = [...dayWords];
+            dictQueue = [...dayWords]; // Copy array
             firstAttemptHistory = {};
             testStatus = 'not_started';
-            
-            // RESET MISSION PROGRESS
             missionProgress = { listened: [], reading: [], game: false };
             isGameSolved = false;
             generateGrammarQuestions();
         }
         updateDictUI();
         updateNavStatus();
-        checkMissionUnlock(); // Check if buttons should be locked/unlocked
     }
 
     function saveTestState() {
-        // Sync game state to mission progress before saving
-        missionProgress.game = isGameSolved; 
-
+        missionProgress.game = isGameSolved;
         const state = {
             queue: dictQueue,
             history: firstAttemptHistory,
             status: testStatus,
             grammarQ: grammarQuestions,
             grammarDone: grammarDone,
-            mission: missionProgress // Save the new mission data
+            mission: missionProgress
         };
         localStorage.setItem(`p2_test_state_${currentDay}`, JSON.stringify(state));
         updateNavStatus();
         checkMissionUnlock();
     }
 
-        function updateNavStatus() {
-            const badge = document.getElementById('testStatus');
-            const totalWords = (dailyWords[currentDay-1] || []).length;
-            
-            if (grammarDone) {
-                badge.className = 'status-badge status-done';
-                badge.innerText = '完成 (Done)';
-            } else if (testStatus === 'in_progress' || dictQueue.length < totalWords) {
-                badge.className = 'status-badge status-progress';
-                if(dictQueue.length === 0) {
-                    badge.innerText = '進行中 (In Progress) - 50%';
-                } else {
-                    badge.innerText = '進行中 (In Progress)';
-                }
+    function updateNavStatus() {
+        const badge = document.getElementById('testStatus');
+        const totalWords = (dailyWords[currentDay-1] || []).length;
+        
+        if (grammarDone) {
+            badge.className = 'status-badge status-done';
+            badge.innerText = '完成 (Done)';
+        } else if (testStatus === 'in_progress' || dictQueue.length < totalWords) {
+            badge.className = 'status-badge status-progress';
+            if(dictQueue.length === 0) {
+                badge.innerText = '進行中 (In Progress) - 50%';
             } else {
-                badge.className = 'status-badge status-none';
-                badge.innerText = '';
+                badge.innerText = '進行中 (In Progress)';
             }
+        } else {
+            badge.className = 'status-badge status-none';
+            badge.innerText = '';
         }
+    }
 
-        function generateGrammarQuestions() {
-            // Pick 5 random from each massive pool
-            const get5 = (arr) => {
-                const shuffled = [...arr].sort(() => 0.5 - Math.random());
-                return shuffled.slice(0, 5);
-            };
-            grammarQuestions = {
-                v: get5(grammarPool.ving),
-                t: get5(grammarPool.toInf),
-                p: get5(grammarPool.past)
-            };
-        }
+    function generateGrammarQuestions() {
+        const get5 = (arr) => {
+            const shuffled = [...arr].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, 5);
+        };
+        grammarQuestions = {
+            v: get5(grammarPool.ving),
+            t: get5(grammarPool.toInf),
+            p: get5(grammarPool.past)
+        };
+    }
 
-        function nav(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            
-            const map = {'learn':0, 'story':1, 'game':2, 'dictation':3};
-            const btns = document.querySelectorAll('.nav-btn');
-            if(btns[map[id]]) btns[map[id]].classList.add('active');
-            
-            // Lockdown Logic
-            if(id === 'dictation') {
-                btns.forEach((btn, index) => { if(index !== 3) btn.disabled = true; });
-                document.getElementById('daySelect').disabled = true;
-                // Mark as in progress if not already
-                if(testStatus === 'not_started') testStatus = 'in_progress';
-                saveTestState();
-                checkGrammarUnlock();
-            } 
-            if(id === 'game') initGame();
-        }
-
-        function exitTest() {
+    // --- NAVIGATION & LOCKING ---
+    function nav(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        
+        const map = {'learn':0, 'story':1, 'game':2, 'dictation':3};
+        const btns = document.querySelectorAll('.nav-btn');
+        if(btns[map[id]]) btns[map[id]].classList.add('active');
+        
+        // Lockdown Logic
+        if(id === 'dictation') {
+            btns.forEach((btn, index) => { if(index !== 3) btn.disabled = true; });
+            document.getElementById('daySelect').disabled = true;
+            if(testStatus === 'not_started') testStatus = 'in_progress';
             saveTestState();
-            document.querySelectorAll('.nav-btn').forEach(b => b.disabled = false);
-            document.getElementById('daySelect').disabled = false;
-            nav('learn');
-        }
+            checkGrammarUnlock();
+        } 
+        if(id === 'game') initGame();
+    }
 
-        function checkMissionUnlock() {
+    function exitTest() {
+        saveTestState();
+        document.querySelectorAll('.nav-btn').forEach(b => b.disabled = false);
+        document.getElementById('daySelect').disabled = false;
+        nav('learn');
+    }
+
+    function checkMissionUnlock() {
         const btn = document.getElementById('navTestBtn');
         const dayWords = dailyWords[currentDay-1] || [];
-        const storyQs = (articles[currentDay] && articles[currentDay].q) ? articles[currentDay].q.length : 0;
+        // Handle undefined articles
+        const art = articles[currentDay];
+        const storyQs = (art && art.q) ? art.q.length : 0;
 
-        // Condition 1: Listened to all 5 words
         const allListened = missionProgress.listened.length >= dayWords.length;
-        
-        // Condition 2: Reading Quiz Done (All questions correct)
         const allRead = missionProgress.reading.length >= storyQs;
-        
-        // Condition 3: Game Solved
         const gameDone = missionProgress.game;
 
         if (allListened && allRead && gameDone) {
             btn.classList.remove('locked');
-            // Remove the pseudo-element text via class, or just let CSS handle it
         } else {
             btn.classList.add('locked');
         }
@@ -2015,9 +1841,9 @@
     function tryEnterTest() {
         const btn = document.getElementById('navTestBtn');
         if (btn.classList.contains('locked')) {
-            // Show alert of what is missing
             const dayWords = dailyWords[currentDay-1] || [];
-            const storyQs = articles[currentDay] ? articles[currentDay].q.length : 0;
+            const art = articles[currentDay];
+            const storyQs = (art && art.q) ? art.q.length : 0;
             
             let msg = "Mission Incomplete (任務未完成)! \n\n";
             if(missionProgress.listened.length < dayWords.length) msg += "❌ Listen to all 5 words (聽完5個單詞)\n";
@@ -2035,392 +1861,185 @@
         }
     }
 
-        // --- DICTATION LOGIC ---
-        function updateDictUI() {
-            const count = dictQueue.length;
-            document.getElementById('dictCount').innerText = `剩餘: ${count}`;
-            
-            document.getElementById('dictInput').value = '';
-            document.getElementById('dictMsg').innerText = '';
-            document.getElementById('resLatest').innerText = '-';
-            document.getElementById('resFirst').innerText = '-';
-
-            if(count > 0) {
-                const w = dictQueue[0];
-                currentDictTarget = w;
-                const info = dictionary[w] || {cn:'Translation'};
-                document.getElementById('dictCn').innerText = info.cn;
-                
-                if(firstAttemptHistory[w]) {
-                    document.getElementById('resFirst').innerText = firstAttemptHistory[w];
-                }
-                document.getElementById('dictationWrapper').style.display = 'block';
-                document.getElementById('grammarLocked').style.display = 'block';
-                document.getElementById('grammarSection').style.display = 'none';
-            } else {
-                document.getElementById('dictCn').innerText = "Dictation Complete! (聽寫完成)";
-                document.getElementById('dictationWrapper').style.display = 'none';
-                currentDictTarget = "";
-                checkGrammarUnlock();
-            }
-        }
-
-        function checkGrammarUnlock() {
-            if(dictQueue.length === 0) {
-                document.getElementById('grammarLocked').style.display = 'none';
-                document.getElementById('grammarSection').style.display = 'block';
-                renderGrammarQuiz();
-            }
-        }
-
-        function playDictSound() { if(currentDictTarget) speak(currentDictTarget); }
-        function giveHint() { if(currentDictTarget) document.getElementById('dictInput').value = currentDictTarget[0] + "..."; }
-
-        function checkDict() {
-            if(!currentDictTarget) return;
-            const inputElem = document.getElementById('dictInput');
-            const val = inputElem.value.trim().toLowerCase();
-            const msg = document.getElementById('dictMsg');
-            
-            const isCorrect = (val === currentDictTarget);
-            const displayResult = `${val} ${isCorrect ? '✅' : '❌'}`;
-
-            if (!firstAttemptHistory[currentDictTarget]) {
-                firstAttemptHistory[currentDictTarget] = displayResult;
-                document.getElementById('resFirst').innerText = displayResult;
-                saveTestState(); 
-            }
-            document.getElementById('resLatest').innerText = displayResult;
-
-            if(isCorrect) {
-                msg.innerText = "答對了! (Correct) 🎉";
-                msg.style.color = "var(--success)";
-                speak("Good Job");
-                setTimeout(() => {
-                    dictQueue.shift();
-                    saveTestState(); 
-                    updateDictUI();
-                }, 1000);
-            } else {
-                msg.innerText = "再試一次! (Try Again)";
-                msg.style.color = "var(--error)";
-                speak("Try again");
-                dictQueue.push(dictQueue.shift());
-                saveTestState();
-                setTimeout(() => {
-                    inputElem.value = '';
-                    msg.innerText = '';
-                }, 1000);
-            }
-        }
-
-        // --- GRAMMAR LOGIC ---
-        function toggleRule(id) {
-            const el = document.getElementById(id);
-            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
-        }
-
-        function renderGrammarQuiz() {
-            const r = (id, list) => {
-                const div = document.getElementById(id);
-                if(div.innerHTML !== "") return; 
-                
-                list.forEach((item, idx) => {
-                    div.innerHTML += `
-                        <div class="g-q-row">
-                            ${idx+1}. ${item.q.replace('___________', `<input type="text" class="g-input" data-ans="${item.a}">`)}
-                            <span class="g-feedback"></span>
-                        </div>
-                    `;
-                });
-            };
-            
-            r('quizVing', grammarQuestions.v);
-            r('quizInf', grammarQuestions.t);
-            r('quizPast', grammarQuestions.p);
-        }
-
-        function checkGrammarAll() {
-            const inputs = document.querySelectorAll('.g-input');
-            let allCorrect = true;
-            let count = 0;
-
-            inputs.forEach(input => {
-                const userAns = input.value.trim().toLowerCase();
-                const correctAns = input.getAttribute('data-ans').toLowerCase();
-                const fb = input.nextElementSibling;
-                
-                if(userAns === correctAns) {
-                    input.style.border = "2px solid var(--success)";
-                    input.style.background = "#f0fff4";
-                    fb.innerHTML = "✅";
-                } else {
-                    input.style.border = "2px solid var(--error)";
-                    input.style.background = "#fff5f5";
-                    fb.innerHTML = "❌"; 
-                    allCorrect = false;
-                }
-                if(userAns !== "") count++;
-            });
-
-            const msg = document.getElementById('grammarFinalMsg');
-            if(allCorrect && count === 15) {
-                msg.innerHTML = "<span style='color:var(--success)'>🎉 Congratulations! All Missions Complete! 🎉<br>任務全部完成！</span>";
-                grammarDone = true;
-                testStatus = 'done';
-                saveTestState();
-                updateNavStatus();
-            } else {
-                msg.innerText = "Keep going! Some answers are missing or wrong. (加油！有些答案不正確)";
-                grammarDone = false;
-            }
-        }
-
-        // --- UTILS ---
-        function makeClickable(txt) {
-            return txt.split(' ').map(w => {
-                const clean = w.replace(/[^a-zA-Z]/g, ''); 
-                if (!clean) return w;
-                return `<span class="click-word" onclick="wordClick('${clean}'); event.stopPropagation();">${w}</span>`;
-            }).join(' ');
-        }
+    // --- DICTATION LOGIC ---
+    function updateDictUI() {
+        const count = dictQueue.length;
+        document.getElementById('dictCount').innerText = `剩餘: ${count}`;
         
-        function speak(txt) {
-            window.speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(txt);
-            u.lang = 'en-US'; u.rate = 0.8;
-            window.speechSynthesis.speak(u);
+        document.getElementById('dictInput').value = '';
+        document.getElementById('dictMsg').innerText = '';
+        document.getElementById('resLatest').innerText = '-';
+        document.getElementById('resFirst').innerText = '-';
+
+        if(count > 0) {
+            const w = dictQueue[0];
+            currentDictTarget = w;
+            const info = dictionary[w] || {cn:'Translation'};
+            document.getElementById('dictCn').innerText = info.cn;
+            
+            if(firstAttemptHistory[w]) {
+                document.getElementById('resFirst').innerText = firstAttemptHistory[w];
+            }
+            document.getElementById('dictationWrapper').style.display = 'block';
+            document.getElementById('grammarLocked').style.display = 'block';
+            document.getElementById('grammarSection').style.display = 'none';
+        } else {
+            // DICTATION IS DONE
+            document.getElementById('dictCn').innerText = "Dictation Complete! (聽寫完成)";
+            document.getElementById('dictationWrapper').style.display = 'none';
+            currentDictTarget = "";
+            
+            // UNLOCK GRAMMAR
+            checkGrammarUnlock();
         }
+    }
+
+    function checkGrammarUnlock() {
+        if(dictQueue.length === 0) {
+            document.getElementById('grammarLocked').style.display = 'none';
+            document.getElementById('grammarSection').style.display = 'block';
+            renderGrammarQuiz();
+        }
+    }
+
+    function playDictSound() { if(currentDictTarget) speak(currentDictTarget); }
+    function giveHint() { if(currentDictTarget) document.getElementById('dictInput').value = currentDictTarget[0] + "..."; }
+
+    function checkDict() {
+        if(!currentDictTarget) return;
+        const inputElem = document.getElementById('dictInput');
+        const val = inputElem.value.trim().toLowerCase();
+        const msg = document.getElementById('dictMsg');
         
-        function wordClick(w) {
-            w = w.toLowerCase().trim();
-            let info = dictionary[w];
-            if (!info && w.endsWith('s')) info = dictionary[w.slice(0, -1)];
+        const isCorrect = (val === currentDictTarget);
+        const displayResult = `${val} ${isCorrect ? '✅' : '❌'}`;
 
-            document.getElementById('mWord').innerText = w;
-            if (info) {
-                document.getElementById('mCn').innerText = info.cn;
-                document.getElementById('mSound').innerText = info.sound || "";
-            } else {
-                document.getElementById('mCn').innerText = "Translation not found";
-            }
-            document.getElementById('mAudio').onclick = () => speak(w);
-            document.getElementById('modal').style.display = 'flex';
-            speak(w);
+        if (!firstAttemptHistory[currentDictTarget]) {
+            firstAttemptHistory[currentDictTarget] = displayResult;
+            document.getElementById('resFirst').innerText = displayResult;
+            saveTestState(); 
         }
-        
-        function closeModal(e) {
-            if(!e || e.target.id === 'modal' || e.target.className === 'close-x') {
-                document.getElementById('modal').style.display = 'none';
-            }
-        }
+        document.getElementById('resLatest').innerText = displayResult;
 
-        function checkQuiz(btn, isCorrect) {
-            if(isCorrect === 'true') {
-                btn.classList.add('correct');
-                btn.innerHTML += " ✅";
-                speak("Correct");
-            } else {
-                btn.classList.add('wrong');
-                speak("Try again");
-            }
-        }
-
-        function initGame() {
-            const container = document.getElementById('gameZone');
-            const hint = document.getElementById('gameHint');
-            const msg = document.getElementById('gameMsg');
-            
-            // Find the restart button (it's the last button in the game section)
-            // We will hide it if the game is done
-            const restartBtn = document.querySelector('#game button.nav-btn');
-
-            container.innerHTML = '';
-            msg.innerText = '';
-
-            // If Saved as Solved, show Finished Screen immediately
-            if (isGameSolved) {
-                hint.innerText = "Mission Complete! (任務完成)";
-                msg.innerHTML = "<h2 style='color:var(--success)'>🌟 Puzzle Solved! 🌟</h2><p>Great job!</p>";
-                if(restartBtn) restartBtn.style.display = 'none'; // Hide restart button
-                return;
-            }
-
-            // If not solved, show Restart button and setup game
-            if(restartBtn) restartBtn.style.display = 'inline-block';
-
-            const dayWordList = dailyWords[currentDay-1];
-            const targetWord = dayWordList[Math.floor(Math.random() * dayWordList.length)];
-            const sentence = `I can see a ${targetWord}.`;
-            const cnWord = dictionary[targetWord] ? dictionary[targetWord].cn : targetWord;
-            const translation = `我可以看到一個${cnWord}。`;
-            
-            hint.innerText = translation; 
-            
-            let parts = sentence.replace('.','').split(' ');
-            parts.push('.'); 
-            parts.sort(() => Math.random() - 0.5); 
-            
-            parts.forEach(word => {
-                const piece = document.createElement('div');
-                piece.className = 'puzzle-piece';
-                piece.innerText = word;
-                piece.onclick = function() {
-                    container.appendChild(this);
-                    checkPuzzle(sentence);
-                };
-                container.appendChild(piece);
-            });
-        }
-
-        function checkPuzzle(target) {
-        const container = document.getElementById('gameZone');
-        const currentArr = Array.from(container.children).map(div => div.innerText);
-        let currentStr = currentArr.join(' ').replace(' .', '.');
-        const msg = document.getElementById('gameMsg');
-        
-        if(currentStr === target) {
-            msg.innerText = "🌟 Perfect Grammar! 🌟";
+        if(isCorrect) {
+            msg.innerText = "答對了! (Correct) 🎉";
             msg.style.color = "var(--success)";
-            speak(target);
-            
-            // NEW: Save the finished state
-            isGameSolved = true; 
+            speak("Good Job");
+            setTimeout(() => {
+                dictQueue.shift();
+                saveTestState(); 
+                updateDictUI();
+            }, 1000);
+        } else {
+            msg.innerText = "再試一次! (Try Again)";
+            msg.style.color = "var(--error)";
+            speak("Try again");
+            dictQueue.push(dictQueue.shift());
             saveTestState();
+            setTimeout(() => {
+                inputElem.value = '';
+                msg.innerText = '';
+            }, 1000);
+        }
+    }
 
-            const pieces = document.querySelectorAll('.puzzle-piece');
-            pieces.forEach(p => {
-                p.style.backgroundColor = "var(--success)";
-                p.onclick = null;
-                p.style.cursor = "default";
+    // --- GRAMMAR LOGIC ---
+    function toggleRule(id) {
+        const el = document.getElementById(id);
+        el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function renderGrammarQuiz() {
+        const r = (id, list) => {
+            const div = document.getElementById(id);
+            if(div.innerHTML !== "") return; 
+            
+            list.forEach((item, idx) => {
+                div.innerHTML += `
+                    <div class="g-q-row">
+                        ${idx+1}. ${item.q.replace('___________', `<input type="text" class="g-input" data-ans="${item.a}">`)}
+                        <span class="g-feedback"></span>
+                    </div>
+                `;
             });
-            
-            // Hide restart button immediately after winning
-            const restartBtn = document.querySelector('#game button.nav-btn');
-            if(restartBtn) restartBtn.style.display = 'none';
-        }
-    }
+        };
         
-       function loadDay(d) {
-        // A. Words
-        const grid = document.getElementById('wordGrid');
-        grid.innerHTML = '';
-        const dayWords = dailyWords[d-1] || [];
-        
-        dayWords.forEach(en => {
-            const lowerEn = en.toLowerCase();
-            const info = dictionary[lowerEn] || {cn:'Search', sound:''};
-            
-            // Check if already listened for visual cue (optional, using green border)
-            const isListened = missionProgress.listened.includes(en);
-            const borderStyle = isListened ? "border-color:var(--success);" : "";
-
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div class="en-text">${en}</div>
-                <div class="cn-text">${info.cn}</div>
-                <div class="mnemonic">${info.sound || ""}</div>
-                <button class="audio-btn" style="${borderStyle}" onclick="trackListening('${en}', this)">🔊</button>
-                <div class="sentence">I like the ${en}.</div>
-            `;
-            grid.appendChild(card);
-        });
-
-        // B. Story (Standard load)
-        const art = articles[d] || {t:'No Story', txt:'No text.', q:[]};
-        document.getElementById('storyTitle').innerText = art.t;
-        document.getElementById('storyContent').innerHTML = makeClickable(art.txt);
-
-        // C. Quiz (Updated to track question Index)
-        const qArea = document.getElementById('quizArea');
-        qArea.innerHTML = '';
-        art.q.forEach((item, idx) => {
-            const box = document.createElement('div');
-            box.className = 'quiz-box';
-            
-            // Check if this specific question is already solved
-            const isSolved = missionProgress.reading.includes(idx);
-            
-            let opts = [item.a, ...item.o].sort(() => Math.random() - 0.5);
-            
-            let btnHtml = opts.map(o => {
-                // If solved and this is the correct answer, mark it green
-                let extraClass = "";
-                if(isSolved && o === item.a) extraClass = "correct";
-                
-                // Pass the Question Index (idx) to checkQuiz
-                return `<button class="quiz-opt ${extraClass}" onclick="checkQuiz(this, '${o===item.a}', ${idx})">${makeClickable(o)} ${isSolved && o===item.a ? '✅' : ''}</button>`
-            }).join('');
-
-            box.innerHTML = `<p style="font-weight:bold; color:var(--primary)">Q${idx+1}: ${makeClickable(item.q)}</p>${btnHtml}`;
-            qArea.appendChild(box);
-        });
+        r('quizVing', grammarQuestions.v);
+        r('quizInf', grammarQuestions.t);
+        r('quizPast', grammarQuestions.p);
     }
 
-    // NEW FUNCTION: Track Listening
-    function trackListening(word, btn) {
-        speak(word);
-        if(!missionProgress.listened.includes(word)) {
-            missionProgress.listened.push(word);
-            btn.style.borderColor = "var(--success)"; // Visual feedback
+    function checkGrammarAll() {
+        const inputs = document.querySelectorAll('.g-input');
+        let allCorrect = true;
+        let count = 0;
+
+        inputs.forEach(input => {
+            const userAns = input.value.trim().toLowerCase();
+            const correctAns = input.getAttribute('data-ans').toLowerCase();
+            const fb = input.nextElementSibling;
+            
+            if(userAns === correctAns) {
+                input.style.border = "2px solid var(--success)";
+                input.style.background = "#f0fff4";
+                fb.innerHTML = "✅";
+            } else {
+                input.style.border = "2px solid var(--error)";
+                input.style.background = "#fff5f5";
+                fb.innerHTML = "❌"; 
+                allCorrect = false;
+            }
+            if(userAns !== "") count++;
+        });
+
+        const msg = document.getElementById('grammarFinalMsg');
+        if(allCorrect && count === 15) {
+            msg.innerHTML = "<span style='color:var(--success)'>🎉 Congratulations! All Missions Complete! 🎉<br>任務全部完成！</span>";
+            grammarDone = true;
+            testStatus = 'done';
             saveTestState();
+        } else {
+            msg.innerText = "Keep going! Some answers are missing or wrong. (加油！有些答案不正確)";
+            grammarDone = false;
         }
     }
 
-    // --- SMART CLICK (WITH DICTIONARY FALLBACK) ---
+    // --- COMMON UTILS ---
+    function makeClickable(txt) {
+        return txt.split(' ').map(w => {
+            const clean = w.replace(/[^a-zA-Z]/g, ''); 
+            if (!clean) return w;
+            return `<span class="click-word" onclick="wordClick('${clean}'); event.stopPropagation();">${w}</span>`;
+        }).join(' ');
+    }
+    
+    function speak(txt) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(txt);
+        u.lang = 'en-US'; u.rate = 0.8;
+        window.speechSynthesis.speak(u);
+    }
+    
     function wordClick(w) {
         w = w.toLowerCase().trim();
         let info = dictionary[w];
-
-        // Try singular forms if not found
-        if (!info) {
-            if (w.endsWith('s') && dictionary[w.slice(0, -1)]) { info = dictionary[w.slice(0, -1)]; w = w.slice(0, -1); }
-            else if (w.endsWith('es') && dictionary[w.slice(0, -2)]) { info = dictionary[w.slice(0, -2)]; w = w.slice(0, -2); }
-            else if (w.endsWith('d') && dictionary[w.slice(0, -1)]) { info = dictionary[w.slice(0, -1)]; w = w.slice(0, -1); }
-            else if (w.endsWith('ed') && dictionary[w.slice(0, -2)]) { info = dictionary[w.slice(0, -2)]; w = w.slice(0, -2); }
-            else if (w.endsWith('ing') && dictionary[w.slice(0, -3)]) { info = dictionary[w.slice(0, -3)]; w = w.slice(0, -3); }
-        }
+        if (!info && w.endsWith('s')) info = dictionary[w.slice(0, -1)];
 
         document.getElementById('mWord').innerText = w;
         if (info) {
             document.getElementById('mCn').innerText = info.cn;
-            document.getElementById('mSound').innerText = info.sound || "Click speaker";
-            if(!dictQueue.includes(w)) {
-                dictQueue.push(w);
-                localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
-                updateDictUI();
-            }
+            document.getElementById('mSound').innerText = info.sound || "";
         } else {
             document.getElementById('mCn').innerText = "Translation not found";
-            document.getElementById('mSound').innerText = "";
         }
-
         document.getElementById('mAudio').onclick = () => speak(w);
         document.getElementById('modal').style.display = 'flex';
         speak(w);
     }
-
+    
     function closeModal(e) {
         if(!e || e.target.id === 'modal' || e.target.className === 'close-x') {
             document.getElementById('modal').style.display = 'none';
-        }
-    }
-
-    function checkQuiz(btn, isCorrect, qIndex) {
-        if(isCorrect === 'true') {
-            btn.classList.add('correct');
-            if(!btn.innerHTML.includes('✅')) btn.innerHTML += " ✅";
-            speak("Correct");
-            
-            // Save Reading Progress
-            if(!missionProgress.reading.includes(qIndex)) {
-                missionProgress.reading.push(qIndex);
-                saveTestState();
-            }
-        } else {
-            btn.classList.add('wrong');
-            speak("Try again");
         }
     }
 
@@ -2429,15 +2048,19 @@
         const container = document.getElementById('gameZone');
         const hint = document.getElementById('gameHint');
         const msg = document.getElementById('gameMsg');
-        
+        const restartBtn = document.querySelector('#game button.nav-btn');
+
         container.innerHTML = '';
         msg.innerText = '';
 
         if (isGameSolved) {
-            hint.innerText = "Mission Complete!";
-            msg.innerHTML = "<span style='color:var(--success)'>🌟 You finished today's puzzle! 🌟</span>";
+            hint.innerText = "Mission Complete! (任務完成)";
+            msg.innerHTML = "<h2 style='color:var(--success)'>🌟 Puzzle Solved! 🌟</h2><p>Great job!</p>";
+            if(restartBtn) restartBtn.style.display = 'none';
             return;
         }
+
+        if(restartBtn) restartBtn.style.display = 'inline-block';
 
         const dayWordList = dailyWords[currentDay-1];
         const targetWord = dayWordList[Math.floor(Math.random() * dayWordList.length)];
@@ -2475,8 +2098,7 @@
             speak(target);
             
             isGameSolved = true; 
-            missionProgress.game = true; // Update mission progress
-            saveTestState();             // Save and check unlock
+            saveTestState(); // This calls checkMissionUnlock inside
 
             const pieces = document.querySelectorAll('.puzzle-piece');
             pieces.forEach(p => {
@@ -2492,93 +2114,88 @@
 
     function resetGame() {
         isGameSolved = false;
-        saveTestState(); // Save the "not finished" state
+        saveTestState();
         initGame();
     }
-
-    // --- DICTATION ---
-    let dictFirstAttempt = null; // Variable to store the first try
-
-    function updateDictUI() {
-        const count = dictQueue.length;
-        document.getElementById('dictCount').innerText = `剩餘: ${count}`; // Traditional Chinese
+    
+    // --- UI LOADERS ---
+    function loadDay(d) {
+        // A. Words
+        const grid = document.getElementById('wordGrid');
+        grid.innerHTML = '';
+        const dayWords = dailyWords[d-1] || [];
         
-        // Reset inputs and history when loading a new word
-        document.getElementById('dictInput').value = '';
-        document.getElementById('dictMsg').innerText = '';
-        document.getElementById('resFirst').innerText = '-';
-        document.getElementById('resLatest').innerText = '-';
-        dictFirstAttempt = null; // Reset first attempt memory
-
-        if(count > 0) {
-            const w = dictQueue[0];
-            currentDictTarget = w;
-            const info = dictionary[w] || {cn:'Translation'};
-            document.getElementById('dictCn').innerText = info.cn;
-        } else {
-            document.getElementById('dictCn').innerText = "完成任務! (Done)";
-            currentDictTarget = "";
-        }
-    }
-
-    function playDictSound() {
-        if(currentDictTarget) speak(currentDictTarget);
-    }
-
-    function giveHint() {
-        if(currentDictTarget) document.getElementById('dictInput').value = currentDictTarget[0] + "...";
-    }
-
-    function checkDict() {
-        if(!currentDictTarget) return;
-        
-        const inputElem = document.getElementById('dictInput');
-        const val = inputElem.value.trim().toLowerCase();
-        const msg = document.getElementById('dictMsg');
-        
-        // --- NEW RESULT LOGIC ---
-        const isCorrect = (val === currentDictTarget);
-        const displayResult = `${val} ${isCorrect ? '✅' : '❌'}`;
-
-        // 1. If this is the very first time checking this word, save it.
-        if (dictFirstAttempt === null) {
-            dictFirstAttempt = displayResult;
-            document.getElementById('resFirst').innerText = dictFirstAttempt;
-        }
-
-        // 2. Always update the latest result
-        document.getElementById('resLatest').innerText = displayResult;
-        // ------------------------
-
-        if(isCorrect) {
-            msg.innerText = "答對了! (Correct) 🎉";
-            msg.style.color = "var(--success)";
-            speak("Good Job");
+        dayWords.forEach(en => {
+            const lowerEn = en.toLowerCase();
+            const info = dictionary[lowerEn] || {cn:'Search', sound:''};
             
-            // Wait 1.5 seconds before moving to next word so they can see the result
-            setTimeout(() => {
-                dictQueue.shift();
-                localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
-                updateDictUI();
-            }, 1500);
+            const isListened = missionProgress.listened.includes(en);
+            const borderStyle = isListened ? "border-color:var(--success);" : "";
+
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="en-text">${en}</div>
+                <div class="cn-text">${info.cn}</div>
+                <div class="mnemonic">${info.sound || ""}</div>
+                <button class="audio-btn" style="${borderStyle}" onclick="trackListening('${en}', this)">🔊</button>
+                <div class="sentence">I like the ${en}.</div>
+            `;
+            grid.appendChild(card);
+        });
+
+        // B. Story
+        const art = articles[d] || {t:'No Story', txt:'No text.', q:[]};
+        document.getElementById('storyTitle').innerText = art.t;
+        document.getElementById('storyContent').innerHTML = makeClickable(art.txt);
+
+        // C. Quiz
+        const qArea = document.getElementById('quizArea');
+        qArea.innerHTML = '';
+        art.q.forEach((item, idx) => {
+            const box = document.createElement('div');
+            box.className = 'quiz-box';
+            
+            const isSolved = missionProgress.reading.includes(idx);
+            
+            let opts = [item.a, ...item.o].sort(() => Math.random() - 0.5);
+            let btnHtml = opts.map(o => {
+                let extraClass = "";
+                if(isSolved && o === item.a) extraClass = "correct";
+                return `<button class="quiz-opt ${extraClass}" onclick="checkQuiz(this, '${o===item.a}', ${idx})">${makeClickable(o)} ${isSolved && o===item.a ? '✅' : ''}</button>`
+            }).join('');
+
+            box.innerHTML = `<p style="font-weight:bold; color:var(--primary)">Q${idx+1}: ${makeClickable(item.q)}</p>${btnHtml}`;
+            qArea.appendChild(box);
+        });
+    }
+
+    // --- TRACKING HELPERS ---
+    function trackListening(word, btn) {
+        speak(word);
+        if(!missionProgress.listened.includes(word)) {
+            missionProgress.listened.push(word);
+            btn.style.borderColor = "var(--success)"; 
+            saveTestState(); // This calls checkMissionUnlock
+        }
+    }
+
+    function checkQuiz(btn, isCorrect, qIndex) {
+        if(isCorrect === 'true') {
+            btn.classList.add('correct');
+            if(!btn.innerHTML.includes('✅')) btn.innerHTML += " ✅";
+            speak("Correct");
+            
+            if(!missionProgress.reading.includes(qIndex)) {
+                missionProgress.reading.push(qIndex);
+                saveTestState(); // This calls checkMissionUnlock
+            }
         } else {
-            msg.innerText = "再試一次! (Try Again)";
-            msg.style.color = "var(--error)";
+            btn.classList.add('wrong');
             speak("Try again");
-            
-            // Move word to back of queue
-            dictQueue.push(dictQueue.shift());
-            localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
-            
-            // Clear input after 1 second but KEEP history visible
-            setTimeout(() => {
-                inputElem.value = '';
-                msg.innerText = '';
-                // Note: We do NOT call updateDictUI() here because that clears the history.
-                // We keep the current word active until they get it right.
-            }, 1000);
         }
     }
+
 </script>
 </body>
 </html>
