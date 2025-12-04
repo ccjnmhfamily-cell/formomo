@@ -1869,13 +1869,15 @@
                 testStatus = data.status || 'not_started';
                 grammarQuestions = data.grammarQ || [];
                 grammarDone = data.grammarDone || false;
+                // NEW: Load Game State
+                isGameSolved = data.gameSolved || false;
             } else {
-                // New load for this day, fill queue
+                // New load for this day
                 const dayWords = dailyWords[currentDay-1] || [];
-                dictQueue = [...dayWords]; // Copy array
+                dictQueue = [...dayWords];
                 firstAttemptHistory = {};
                 testStatus = 'not_started';
-                // Pre-select grammar questions
+                isGameSolved = false; // Reset game
                 generateGrammarQuestions();
             }
             updateDictUI();
@@ -1888,7 +1890,9 @@
                 history: firstAttemptHistory,
                 status: testStatus,
                 grammarQ: grammarQuestions,
-                grammarDone: grammarDone
+                grammarDone: grammarDone,
+                // NEW: Save Game State
+                gameSolved: isGameSolved
             };
             localStorage.setItem(`p2_test_state_${currentDay}`, JSON.stringify(state));
             updateNavStatus();
@@ -2151,14 +2155,23 @@
             const hint = document.getElementById('gameHint');
             const msg = document.getElementById('gameMsg');
             
+            // Find the restart button (it's the last button in the game section)
+            // We will hide it if the game is done
+            const restartBtn = document.querySelector('#game button.nav-btn');
+
             container.innerHTML = '';
             msg.innerText = '';
 
+            // If Saved as Solved, show Finished Screen immediately
             if (isGameSolved) {
-                hint.innerText = "Mission Complete!";
-                msg.innerHTML = "<span style='color:var(--success)'>🌟 You finished today's puzzle! 🌟</span>";
+                hint.innerText = "Mission Complete! (任務完成)";
+                msg.innerHTML = "<h2 style='color:var(--success)'>🌟 Puzzle Solved! 🌟</h2><p>Great job!</p>";
+                if(restartBtn) restartBtn.style.display = 'none'; // Hide restart button
                 return;
             }
+
+            // If not solved, show Restart button and setup game
+            if(restartBtn) restartBtn.style.display = 'inline-block';
 
             const dayWordList = dailyWords[currentDay-1];
             const targetWord = dayWordList[Math.floor(Math.random() * dayWordList.length)];
@@ -2185,24 +2198,32 @@
         }
 
         function checkPuzzle(target) {
-            const container = document.getElementById('gameZone');
-            const currentArr = Array.from(container.children).map(div => div.innerText);
-            let currentStr = currentArr.join(' ').replace(' .', '.');
-            const msg = document.getElementById('gameMsg');
+        const container = document.getElementById('gameZone');
+        const currentArr = Array.from(container.children).map(div => div.innerText);
+        let currentStr = currentArr.join(' ').replace(' .', '.');
+        const msg = document.getElementById('gameMsg');
+        
+        if(currentStr === target) {
+            msg.innerText = "🌟 Perfect Grammar! 🌟";
+            msg.style.color = "var(--success)";
+            speak(target);
             
-            if(currentStr === target) {
-                msg.innerText = "🌟 Perfect Grammar! 🌟";
-                msg.style.color = "var(--success)";
-                speak(target);
-                isGameSolved = true; 
-                const pieces = document.querySelectorAll('.puzzle-piece');
-                pieces.forEach(p => {
-                    p.style.backgroundColor = "var(--success)";
-                    p.onclick = null;
-                    p.style.cursor = "default";
-                });
-            }
+            // NEW: Save the finished state
+            isGameSolved = true; 
+            saveTestState();
+
+            const pieces = document.querySelectorAll('.puzzle-piece');
+            pieces.forEach(p => {
+                p.style.backgroundColor = "var(--success)";
+                p.onclick = null;
+                p.style.cursor = "default";
+            });
+            
+            // Hide restart button immediately after winning
+            const restartBtn = document.querySelector('#game button.nav-btn');
+            if(restartBtn) restartBtn.style.display = 'none';
         }
+    }
         
         function loadDay(d) {
             const grid = document.getElementById('wordGrid');
@@ -2351,6 +2372,7 @@
 
     function resetGame() {
         isGameSolved = false;
+        saveTestState(); // Save the "not finished" state
         initGame();
     }
 
