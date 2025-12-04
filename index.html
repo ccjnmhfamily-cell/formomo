@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>P2 Space English Adventure (Fixed)</title>
+    <style>
+        :root {
+            --primary: #FFD700; /* Gold */
+            --secondary: #00BFFF; /* Deep Sky Blue */
+            --accent: #FF4500; /* Orange Red */
+            --bg-dark: #0B0D17; /* Space Black */
+            --card-bg: #1F2937; /* Dark Gray */
+            --text: #FFFFFF;
+            --success: #48bb78;
+            --error: #f56565;
+        }
+
+        * { box-sizing: border-box; touch-action: manipulation; }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Comic Sans MS', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            padding-bottom: 80px;
+        }
+
+        /* --- Header --- */
+        header {
+            background: rgba(11, 13, 23, 0.95);
+            padding: 10px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--secondary);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+        }
+
+        h1 { margin: 5px 0; color: var(--primary); text-shadow: 0 0 10px var(--accent); font-size: 1.5rem; }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+            background: #2d3748;
+            padding: 10px;
+            border-radius: 15px;
+        }
+
+        select {
+            font-size: 1rem;
+            padding: 5px;
+            border-radius: 8px;
+            background: white;
+            border: 2px solid var(--secondary);
+        }
+
+        /* --- Navigation --- */
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: var(--secondary);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-btn.active {
+            background: var(--accent);
+            border: 2px solid var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* --- Main Content --- */
+        main { max-width: 800px; margin: 0 auto; padding: 15px; }
+        
+        .section { display: none; animation: fadeIn 0.4s; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Word Cards --- */
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Wider cards */
+            gap: 15px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .en-text { 
+            font-size: 1.6rem; 
+            color: var(--primary); 
+            font-weight: bold; 
+            margin: 5px 0; 
+            word-wrap: break-word; /* Prevents text cutting off */
+            overflow-wrap: break-word;
+        }
+
+        .cn-text { font-size: 1.2rem; color: #ccc; margin-bottom: 5px; }
+        .mnemonic { color: var(--accent); font-size: 0.9rem; font-style: italic; min-height: 40px; margin-bottom: 5px; }
+        .sentence { color: #888; font-size: 0.85rem; padding-top: 5px; border-top: 1px solid #444; }
+
+        .audio-btn {
+            background: #fff; border: 2px solid var(--primary);
+            width: 35px; height: 35px; border-radius: 50%;
+            cursor: pointer; font-size: 1.2rem; margin: 5px;
+            display: inline-flex; justify-content: center; align-items: center;
+        }
+
+        /* --- Story & Quiz --- */
+        .story-box {
+            background: #fff; color: #222;
+            padding: 20px; border-radius: 15px;
+            font-size: 1.3rem; line-height: 1.8;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .story-title {
+            color: var(--accent); text-align: center;
+            border-bottom: 2px dashed #ccc; padding-bottom: 10px;
+        }
+
+        .click-word {
+            cursor: pointer; border-bottom: 1px dotted #999;
+            transition: background 0.2s; padding: 0 2px;
+        }
+        .click-word:hover { background: var(--primary); color: #000; border-radius: 4px; }
+
+        .quiz-box {
+            background: var(--card-bg); padding: 15px;
+            margin-top: 20px; border-radius: 10px; border: 1px solid #555;
+        }
+
+        .quiz-opt {
+            display: block; width: 100%; padding: 12px; margin: 8px 0;
+            background: #374151; color: white; border: none; border-radius: 8px;
+            text-align: left; font-size: 1rem; cursor: pointer;
+        }
+        .quiz-opt.correct { background: var(--success); font-weight: bold; }
+        .quiz-opt.wrong { background: var(--error); opacity: 0.7; }
+
+        /* --- Game Section --- */
+        .game-area {
+            background: #2d3748; padding: 20px; border-radius: 15px;
+            border: 2px dashed #666; min-height: 150px;
+            display: flex; flex-wrap: wrap; gap: 10px;
+            justify-content: center; align-items: center; margin-bottom: 20px;
+        }
+
+        .puzzle-piece {
+            background: var(--secondary); color: white; padding: 10px 20px;
+            border-radius: 10px; font-size: 1.2rem; cursor: pointer;
+            user-select: none; box-shadow: 0 4px 0 #0077b6; transition: transform 0.1s;
+        }
+        .puzzle-piece:active { transform: translateY(4px); box-shadow: none; }
+        .game-feedback { text-align: center; font-size: 1.5rem; font-weight: bold; height: 40px; margin-top: 10px; }
+
+        /* --- Dictation --- */
+        .dictation-area {
+            text-align: center; padding: 20px;
+            background: var(--card-bg); border-radius: 15px; border: 2px solid var(--accent);
+        }
+        .input-box {
+            width: 80%; padding: 10px; font-size: 1.5rem;
+            margin: 15px 0; border-radius: 10px; border: none; text-align: center;
+        }
+        .feedback { font-size: 1.2rem; font-weight: bold; min-height: 30px; margin: 10px 0; }
+
+        /* --- Modal --- */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 1000;
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; color: #333; padding: 25px; border-radius: 20px;
+            width: 90%; max-width: 350px; text-align: center; position: relative;
+        }
+        .close-x { position: absolute; top: 10px; right: 15px; font-size: 2rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🚀 P2 Space English</h1>
+    <div class="controls">
+        <label style="color:white; align-self:center;">Mission Day:</label>
+        <select id="daySelect" onchange="changeDay()"></select>
+    </div>
+    <div class="nav-bar">
+        <button class="nav-btn active" onclick="nav('learn')">1. Learn (每日五詞)</button>
+        <button class="nav-btn" onclick="nav('story')">2. Read (閱讀分析)</button>
+        <button class="nav-btn" onclick="nav('game')">3. Game (組句遊戲)</button>
+        <button class="nav-btn" onclick="nav('dictation')">4. Test (聽寫)</button>
+    </div>
+</header>
+
+<main>
+    <!-- SECTION 1: LEARN -->
+    <section id="learn" class="section active">
+        <h2 style="text-align:center; color:var(--primary)">Daily 5 Words (每日五詞)</h2>
+        <div id="wordGrid" class="word-grid"></div>
+    </section>
+
+    <!-- SECTION 2: READ -->
+    <section id="story" class="section">
+        <h2 style="text-align:center; color:var(--primary)">Reading Time (閱讀)</h2>
+        <p style="text-align:center; font-size:0.9rem; color:#aaa;">Click words to translate & save! (點擊翻譯)</p>
+        <div class="story-box">
+            <h3 id="storyTitle" class="story-title"></h3>
+            <div id="storyContent"></div>
+        </div>
+        <div id="quizArea"></div>
+    </section>
+
+    <!-- SECTION 3: GAME -->
+    <section id="game" class="section">
+        <h2 style="text-align:center; color:var(--primary)">Sentence Puzzle (組句遊戲)</h2>
+        <p style="text-align:center; color:#ccc;">Click words to build the sentence!</p>
+        <div style="text-align:center; margin-bottom:15px;">
+            <p style="font-size:1.1rem; color:#aaa;">Target: <span id="gameHint" style="color:white; font-weight:bold;"></span></p>
+        </div>
+        <div id="gameZone" class="game-area"></div>
+        <div id="gameMsg" class="game-feedback"></div>
+        <div style="text-align:center;">
+            <button class="nav-btn" onclick="resetGame()" style="background:#555;">Restart Puzzle</button>
+        </div>
+    </section>
+
+    <!-- SECTION 4: DICTATION -->
+    <section id="dictation" class="section">
+        <h2 style="text-align:center; color:var(--primary)">Review Mission (聽寫)</h2>
+        <div class="dictation-area">
+            <p style="color:#aaa;">Tap speaker -> Type word</p>
+            <h1 id="dictCn" style="color:white; font-size:2.5rem;">---</h1>
+            <button class="audio-btn" style="width:60px; height:60px; font-size:2rem;" onclick="playDictSound()">🔊</button>
+            <br>
+            <input type="text" id="dictInput" class="input-box" placeholder="English..." autocomplete="off">
+            <div style="display:flex; justify-content:space-between; padding:0 10%;">
+                <button onclick="giveHint()" style="background:none; color:#aaa; border:none; text-decoration:underline;">Hint?</button>
+                <span id="dictCount" style="color:var(--primary);">0 Left</span>
+            </div>
+            <div id="dictMsg" class="feedback"></div>
+            <button class="nav-btn" style="width:100%; background:var(--success); font-size:1.2rem; padding:12px;" onclick="checkDict()">Check Answer</button>
+        </div>
+    </section>
+</main>
+
+<!-- MODAL -->
+<div id="modal" class="modal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="close-x" onclick="closeModal(null)">&times;</span>
+        <h2 id="mWord" style="color:var(--accent); margin:0;"></h2>
+        <h3 id="mCn" style="color:#555;"></h3>
+        <p id="mSound" style="background:#f4f4f4; padding:5px; border-radius:5px; font-style:italic;"></p>
+        <button class="audio-btn" id="mAudio">🔊</button>
+        <div style="margin-top:10px; color:green; font-weight:bold;">✅ Saved to Review</div>
+    </div>
+</div>
+
+<script>
+    // ================= 1. WORD DATABASE (31 Days) =================
+    const dailyWords = [
+        ['bus','taxi','train','ship','car'], ['walk','run','ride','drive','fly'], ['plane','bicycle','boat','truck','motorbike'],
+        ['stop','go','come','fast','slow'], ['left','right','straight','near','far'], ['school','home','park','zoo','hospital'],
+        ['library','supermarket','playground','beach','cinema'], ['restaurant','shop','market','bank','hotel'], ['classroom','bedroom','bathroom','kitchen','garden'],
+        ['door','window','floor','wall','roof'], ['apple','banana','orange','grape','watermelon'], ['bread','rice','noodles','egg','meat'],
+        ['chicken','fish','vegetable','tomato','carrot'], ['milk','water','juice','tea','coffee'], ['cake','cookie','candy','ice cream','chocolate'],
+        ['happy','sad','angry','scared','excited'], ['hungry','thirsty','tired','sleepy','sick'], ['hot','cold','big','small','tall'],
+        ['head','eye','ear','nose','mouth'], ['hand','foot','arm','leg','finger'], ['eat','drink','sleep','read','write'],
+        ['play','sing','dance','jump','swim'], ['draw','paint','cut','paste','color'], ['book','pen','pencil','ruler','eraser'],
+        ['bag','desk','chair','table','board'], ['dog','cat','bird','rabbit','mouse'], ['lion','tiger','elephant','monkey','bear'],
+        ['sun','moon','star','cloud','rain'], ['tree','flower','grass','river','mountain'], ['red','blue','green','yellow','white'],
+        ['black','pink','purple','brown','gray']
+    ];
+
+    // ================= 2. COMPLETE DICTIONARY (Cleaned) =================
+    // ================= MASTER DICTIONARY (FIXED & COMPLETE) =================
+    const dictionary = {
+        // --- A ---
+        'a':{cn:'一個', sound:'Uh'}, 
+        'about':{cn:'關於', sound:'Uh-bout'}, 
+        'adds':{cn:'加入', sound:'Ads'}, 
+        'afternoon':{cn:'下午', sound:'After-noon'}, 
+        'alien':{cn:'外星人', sound:'Alien'}, 
+        'aliens':{cn:'外星人', sound:'Aliens'}, 
+        'also':{cn:'也', sound:'Also'}, 
+        'am':{cn:'是', sound:'Am'}, 
+        'an':{cn:'一個', sound:'An'}, 
+        'and':{cn:'和', sound:'And'}, 
+        'angry':{cn:'生氣', sound:'安gry'}, 
+        'animal':{cn:'動物', sound:'Animal'}, 
+        'animals':{cn:'動物', sound:'Animals'}, 
+        'apple':{cn:'蘋果', sound:'阿婆 (Ā pó)'}, 
+        'apples':{cn:'蘋果', sound:'阿婆s'}, 
+        'appeared':{cn:'出現', sound:'Uh-peered'}, 
+        'are':{cn:'是', sound:'Are'}, 
+        'arm':{cn:'手臂', sound:'阿m'}, 
+        'around':{cn:'周圍', sound:'Uh-round'}, 
+        'art':{cn:'美術', sound:'Art'}, 
+        'at':{cn:'在', sound:'At'}, 
+        'ate':{cn:'吃(過去式)', sound:'Ate'}, 
+        'attic':{cn:'閣樓', sound:'Attic'}, 
+        'autumn':{cn:'秋天', sound:'Autumn'},
+
+        // --- B ---
+        'baby':{cn:'嬰兒', sound:'Baby'}, 
+        'back':{cn:'後面/回', sound:'Back'}, 
+        'bag':{cn:'書包', sound:'背g'}, 
+        'baking':{cn:'烘焙', sound:'Baking'}, 
+        'ball':{cn:'球', sound:'Ball'}, 
+        'balloons':{cn:'氣球', sound:'Balloons'}, 
+        'banana':{cn:'香蕉', sound:'不拿拿 (Bù ná ná)'}, 
+        'bank':{cn:'銀行', sound:'办k'}, 
+        'bar':{cn:'棒/條', sound:'Bar'}, 
+        'basket':{cn:'籃子', sound:'Basket'}, 
+        'bathroom':{cn:'浴室', sound:'Bath入'}, 
+        'beach':{cn:'海灘', sound:'笔ch'}, 
+        'beanbag':{cn:'豆袋', sound:'Bean-bag'}, 
+        'bear':{cn:'熊', sound:'杯r'}, 
+        'beautiful':{cn:'美麗', sound:'Beautiful'}, 
+        'because':{cn:'因為', sound:'Be-cause'}, 
+        'bed':{cn:'床', sound:'Bed'}, 
+        'bedroom':{cn:'睡房', sound:'Bed入'}, 
+        'bees':{cn:'蜜蜂', sound:'Bees'}, 
+        'before':{cn:'之前', sound:'Be-fore'}, 
+        'ben':{cn:'Ben (名字)', sound:'Ben'}, 
+        'bench':{cn:'長椅', sound:'Bench'}, 
+        'bicycle':{cn:'單車', sound:'拜cycle'}, 
+        'big':{cn:'大', sound:'笔g'}, 
+        'bird':{cn:'鳥', sound:'不rd'}, 
+        'birthday':{cn:'生日', sound:'Birthday'}, 
+        'black':{cn:'黑色', sound:'不lack'}, 
+        'blanket':{cn:'毛毯', sound:'Blanket'}, 
+        'blue':{cn:'藍色', sound:'不lue'}, 
+        'board':{cn:'板', sound:'饱d'}, 
+        'boat':{cn:'小船', sound:'波t'}, 
+        'book':{cn:'書', sound:'不可 (Bù kě)'}, 
+        'books':{cn:'書本', sound:'Books'}, 
+        'boom':{cn:'隆隆聲', sound:'Boom'}, 
+        'bought':{cn:'買(過去式)', sound:'Bot'}, 
+        'bowl':{cn:'碗', sound:'Bowl'}, 
+        'box':{cn:'盒', sound:'Box'}, 
+        'branch':{cn:'樹枝', sound:'Branch'}, 
+        'bread':{cn:'麵包', sound:'不read'}, 
+        'breakfast':{cn:'早餐', sound:'Brek-fast'}, 
+        'bright':{cn:'光亮', sound:'Bright'}, 
+        'brings':{cn:'帶來', sound:'Brings'}, 
+        'brother':{cn:'兄弟', sound:'Brother'}, 
+        'brown':{cn:'啡色', sound:'不rown'}, 
+        'brush':{cn:'刷', sound:'Brush'}, 
+        'bubbly':{cn:'起泡', sound:'Bubbly'}, 
+        'bucket':{cn:'桶', sound:'Bucket'}, 
+        'buckle':{cn:'扣上', sound:'Buckle'}, 
+        'built':{cn:'建造(過去式)', sound:'Bilt'}, 
+        'bus':{cn:'巴士', sound:'爸死 (Bà sǐ)'}, 
+        'bushy':{cn:'濃密', sound:'Bushy'}, 
+        'butterflies':{cn:'蝴蝶', sound:'Butterflies'}, 
+        'butterfly':{cn:'蝴蝶', sound:'Butterfly'}, 
+        'buzz':{cn:'嗡嗡叫', sound:'Buzz'}, 
+        'by':{cn:'在...旁邊', sound:'Bye'},
+
+        // --- C ---
+        'cake':{cn:'蛋糕', sound:'客ke'}, 
+        'came':{cn:'來(過去式)', sound:'Came'}, 
+        'camping':{cn:'露營', sound:'Camping'}, 
+        'can':{cn:'可以', sound:'Can'}, 
+        'candle':{cn:'蠟燭', sound:'Candle'}, 
+        'candles':{cn:'蠟燭', sound:'Candles'}, 
+        'candy':{cn:'糖果', sound:'看dy'}, 
+        'car':{cn:'汽車', sound:'卡 (Kǎ)'}, 
+        'carrot':{cn:'紅蘿蔔', sound:'Ca肉'}, 
+        'cat':{cn:'貓', sound:'客t'}, 
+        'catch':{cn:'捉', sound:'Catch'}, 
+        'caterpillar':{cn:'毛蟲', sound:'Caterpillar'}, 
+        'caught':{cn:'捉住(過去式)', sound:'Cot'}, 
+        'chair':{cn:'椅子', sound:'车r'}, 
+        'chairs':{cn:'椅子', sound:'Chairs'}, 
+        'chase':{cn:'追', sound:'Chase'}, 
+        'chases':{cn:'追', sound:'Chases'}, 
+        'cheese':{cn:'芝士', sound:'Cheese'}, 
+        'chicken':{cn:'雞肉', sound:'吃cken'}, 
+        'child':{cn:'孩子', sound:'Child'}, 
+        'children':{cn:'孩子們', sound:'Children'}, 
+        'chip':{cn:'碎片/晶片', sound:'Chip'}, 
+        'chips':{cn:'薯片/碎片', sound:'Chips'}, 
+        'chocolate':{cn:'朱古力', sound:'Choco力'}, 
+        'choose':{cn:'選擇', sound:'Choose'}, 
+        'cinema':{cn:'戲院', sound:'希nema'}, 
+        'class':{cn:'班級', sound:'Class'}, 
+        'classroom':{cn:'課室', sound:'Class入'}, 
+        'clean':{cn:'清潔', sound:'Clean'}, 
+        'cleaned':{cn:'清潔(過去式)', sound:'Cleaned'}, 
+        'climbed':{cn:'爬(過去式)', sound:'Climbed'}, 
+        'close':{cn:'關', sound:'Close'}, 
+        'closed':{cn:'關(過去式)', sound:'Closed'}, 
+        'clothes':{cn:'衣服', sound:'Clothes'}, 
+        'cloud':{cn:'雲', sound:'克loud'}, 
+        'cloudy':{cn:'多雲', sound:'Cloudy'}, 
+        'coach':{cn:'教練', sound:'Coach'}, 
+        'coat':{cn:'外套', sound:'Coat'}, 
+        'cocoon':{cn:'繭', sound:'Cocoon'}, 
+        'coffee':{cn:'咖啡', sound:'考ffee'}, 
+        'coin':{cn:'硬幣', sound:'Coin'}, 
+        'cold':{cn:'冷', sound:'口ld'}, 
+        'color':{cn:'顏色', sound:'卡lor'}, 
+        'come':{cn:'來', sound:'康'}, 
+        'concert':{cn:'音樂會', sound:'Concert'}, 
+        'cookie':{cn:'曲奇', sound:'哭kie'}, 
+        'cookies':{cn:'曲奇', sound:'哭kies'}, 
+        'corn':{cn:'粟米', sound:'Corn'}, 
+        'corner':{cn:'角落', sound:'Corner'}, 
+        'could':{cn:'能夠(過去式)', sound:'Could'}, 
+        'covers':{cn:'覆蓋', sound:'Covers'}, 
+        'crayon':{cn:'蠟筆', sound:'Crayon'}, 
+        'crayons':{cn:'蠟筆', sound:'Crayons'}, 
+        'crib':{cn:'嬰兒床', sound:'Crib'}, 
+        'cries':{cn:'哭', sound:'Cries'}, 
+        'cucumber':{cn:'青瓜', sound:'Cucumber'}, 
+        'cucumbers':{cn:'青瓜', sound:'Cucumbers'}, 
+        'cup':{cn:'杯', sound:'Cup'}, 
+        'cut':{cn:'剪', sound:'卡t'},
+
+        // --- D ---
+        'dad':{cn:'爸爸', sound:'Dad'}, 
+        'dance':{cn:'跳舞', sound:'蛋ce'}, 
+        'day':{cn:'天', sound:'Day'}, 
+        'decided':{cn:'決定(過去式)', sound:'Decided'}, 
+        'delicious':{cn:'美味', sound:'Delicious'}, 
+        'desk':{cn:'書桌', sound:'Dad sk'}, 
+        'did':{cn:'做(過去式)', sound:'Did'}, 
+        'digs':{cn:'挖', sound:'Digs'}, 
+        'dinosaur':{cn:'恐龍', sound:'Dinosaur'}, 
+        'dinosaurs':{cn:'恐龍', sound:'Dinosaurs'}, 
+        'dirt':{cn:'泥土', sound:'Dirt'}, 
+        'do':{cn:'做', sound:'Do'}, 
+        'doctor':{cn:'醫生', sound:'Doctor'}, 
+        'does':{cn:'做', sound:'Does'}, 
+        'dog':{cn:'狗', sound:'道g'}, 
+        'door':{cn:'門', sound:'多'}, 
+        'dough':{cn:'麵團', sound:'Dough'}, 
+        'down':{cn:'向下', sound:'Down'}, 
+        'drank':{cn:'喝(過去式)', sound:'Drank'}, 
+        'draw':{cn:'畫', sound:'桌'}, 
+        'dress':{cn:'裙子', sound:'Dress'}, 
+        'dress-up':{cn:'裝扮', sound:'Dress up'}, 
+        'drink':{cn:'喝', sound:'追nk'}, 
+        'drive':{cn:'駕駛', sound:'拽夫'}, 
+        'driver':{cn:'司機', sound:'Driver'}, 
+        'drum':{cn:'鼓', sound:'Drum'}, 
+        'dusty':{cn:'多塵', sound:'Dusty'},
+
+        // --- E ---
+        'ear':{cn:'耳', sound:'一r'}, 
+        'eat':{cn:'吃', sound:'一t'}, 
+        'ate':{cn:'吃(過去式)', sound:'Ate'}, 
+        'eating':{cn:'正在吃', sound:'Eating'}, 
+        'egg':{cn:'蛋', sound:'爱g'}, 
+        'eggs':{cn:'蛋', sound:'Eggs'}, 
+        'elephant':{cn:'大象', sound:'爱lephant'}, 
+        'end':{cn:'結束', sound:'End'}, 
+        'eraser':{cn:'擦膠', sound:'E瑞ser'}, 
+        'every':{cn:'每一', sound:'Every'}, 
+        'excited':{cn:'興奮', sound:'Ex赛ted'}, 
+        'eye':{cn:'眼', sound:'爱'}, 
+        'eyes':{cn:'眼', sound:'Eyes'},
+
+        // --- F ---
+        'faces':{cn:'臉/鬼臉', sound:'Faces'}, 
+        'fairies':{cn:'仙子', sound:'Fairies'}, 
+        'fairy':{cn:'仙子', sound:'Fairy'}, 
+        'fall':{cn:'落下', sound:'Fall'}, 
+        'family':{cn:'家庭', sound:'Family'}, 
+        'fan':{cn:'風扇', sound:'Fan'}, 
+        'far':{cn:'遠', sound:'发'}, 
+        'farm':{cn:'農場', sound:'Farm'}, 
+        'fast':{cn:'快', sound:'发st'}, 
+        'fat':{cn:'肥', sound:'Fat'}, 
+        'favorite':{cn:'最愛', sound:'Favorite'}, 
+        'feel':{cn:'感覺', sound:'Feel'}, 
+        'felt':{cn:'感覺(過去式)', sound:'Felt'}, 
+        'fell':{cn:'掉下', sound:'Fell'}, 
+        'filled':{cn:'裝滿(過去式)', sound:'Filled'}, 
+        'find':{cn:'找', sound:'Find'}, 
+        'finger':{cn:'手指', sound:'芬ger'}, 
+        'fire':{cn:'火', sound:'Fire'}, 
+        'first':{cn:'第一/首先', sound:'First'}, 
+        'fish':{cn:'魚', sound:'飞sh'}, 
+        'five':{cn:'五', sound:'Five'}, 
+        'flew':{cn:'飛(過去式)', sound:'Flew'}, 
+        'floor':{cn:'地板', sound:'夫loor'}, 
+        'flour':{cn:'麵粉', sound:'Flour'}, 
+        'flower':{cn:'花', sound:'富lower'}, 
+        'flowers':{cn:'花', sound:'Flowers'}, 
+        'flute':{cn:'長笛', sound:'Flute'}, 
+        'fly':{cn:'飛', sound:'福来'}, 
+        'food':{cn:'食物', sound:'Food'}, 
+        'foot':{cn:'腳', sound:'富t'}, 
+        'for':{cn:'為了', sound:'For'}, 
+        'forest':{cn:'森林', sound:'Forest'}, 
+        'fork':{cn:'叉', sound:'Fork'}, 
+        'fort':{cn:'堡壘', sound:'Fort'}, 
+        'found':{cn:'發現(過去式)', sound:'Found'}, 
+        'friend':{cn:'朋友', sound:'Friend'}, 
+        'friends':{cn:'朋友', sound:'Friends'}, 
+        'from':{cn:'來自', sound:'From'}, 
+        'front':{cn:'前面', sound:'Front'}, 
+        'funny':{cn:'好笑', sound:'Funny'},
+
+        // --- G ---
+        'game':{cn:'遊戲', sound:'Game'}, 
+        'garden':{cn:'花園', sound:'Ga登'}, 
+        'gardening':{cn:'園藝', sound:'Gardening'}, 
+        'gave':{cn:'給(過去式)', sound:'Gave'}, 
+        'get':{cn:'拿/取', sound:'Get'}, 
+        'giraffe':{cn:'長頸鹿', sound:'Giraffe'}, 
+        'go':{cn:'去', sound:'狗'}, 
+        'goes':{cn:'去', sound:'Goes'}, 
+        'goal':{cn:'目標/入球', sound:'Goal'}, 
+        'good':{cn:'好', sound:'Good'}, 
+        'got':{cn:'得到/弄到', sound:'Got'}, 
+        'grandma':{cn:'祖母', sound:'Grandma'}, 
+        'grape':{cn:'葡萄', sound:'贵pe'}, 
+        'grass':{cn:'草', sound:'古rass'}, 
+        'gray':{cn:'灰色', sound:'鬼'}, 
+        'green':{cn:'綠色', sound:'古reen'}, 
+        'ground':{cn:'地面', sound:'Ground'}, 
+        'grow':{cn:'生長', sound:'Grow'}, 
+        'grows':{cn:'種植', sound:'Grows'}, 
+        'guard':{cn:'守衛/護具', sound:'Guard'}, 
+        'guards':{cn:'護具', sound:'Guards'},
+
+        // --- H ---
+        'had':{cn:'有(過去式)', sound:'Had'}, 
+        'hand':{cn:'手', sound:'汉d'}, 
+        'hands':{cn:'手', sound:'Hands'}, 
+        'happened':{cn:'發生', sound:'Happened'}, 
+        'happy':{cn:'開心', sound:'哈ppy'}, 
+        'hard':{cn:'硬/大(雨)', sound:'Hard'}, 
+        'has':{cn:'有', sound:'Has'}, 
+        'hat':{cn:'帽子', sound:'Hat'}, 
+        'have':{cn:'有', sound:'Have'}, 
+        'he':{cn:'他', sound:'He'}, 
+        'head':{cn:'頭', sound:'黑d'}, 
+        'help':{cn:'幫忙', sound:'Help'}, 
+        'helps':{cn:'幫忙', sound:'Helps'}, 
+        'her':{cn:'她的', sound:'Her'}, 
+        'hide':{cn:'躲藏', sound:'Hide'}, 
+        'his':{cn:'他的', sound:'His'}, 
+        'hiss':{cn:'嘶嘶聲', sound:'Hiss'}, 
+        'hisses':{cn:'發出嘶嘶聲', sound:'Hisses'}, 
+        'hole':{cn:'洞', sound:'Hole'}, 
+        'home':{cn:'家', sound:'后m'}, 
+        'honk':{cn:'響咹', sound:'Honk'}, 
+        'honks':{cn:'響咹', sound:'Honks'}, 
+        'hope':{cn:'希望', sound:'Hope'}, 
+        'hoped':{cn:'希望(過去式)', sound:'Hoped'}, 
+        'horn':{cn:'喇叭', sound:'Horn'}, 
+        'hose':{cn:'水喉', sound:'Hose'}, 
+        'hospital':{cn:'醫院', sound:'好spital'}, 
+        'hot':{cn:'熱', sound:'好t'}, 
+        'hotel':{cn:'酒店', sound:'好tel'}, 
+        'house':{cn:'屋', sound:'House'}, 
+        'how':{cn:'如何', sound:'How'}, 
+        'hungry':{cn:'餓', sound:'杭gry'}, 
+        'hurt':{cn:'痛', sound:'Hurt'},
+
+        // --- I ---
+        'i':{cn:'我', sound:'Eye'}, 
+        'ice':{cn:'冰', sound:'Ice'}, 
+        'if':{cn:'如果', sound:'If'}, 
+        'in':{cn:'在...裡', sound:'In'}, 
+        'inside':{cn:'裡面', sound:'Inside'}, 
+        'instrument':{cn:'樂器', sound:'Instrument'}, 
+        'is':{cn:'是', sound:'Is'}, 
+        'it':{cn:'它', sound:'It'}, 
+        'its':{cn:'它的', sound:'Its'},
+
+        // --- J ---
+        'jam':{cn:'果醬', sound:'Jam'}, 
+        'jeans':{cn:'牛仔褲', sound:'Jeans'}, 
+        'jersey':{cn:'球衣', sound:'Jersey'}, 
+        'jones':{cn:'Jones (姓氏)', sound:'Jones'}, 
+        'juice':{cn:'果汁', sound:'猪s'}, 
+        'jump':{cn:'跳', sound:'张p'}, 
+        'just':{cn:'只是', sound:'Just'},
+
+        // --- K ---
+        'keep':{cn:'保持', sound:'Keep'}, 
+        'kick':{cn:'踢', sound:'Kick'}, 
+        'kicks':{cn:'踢', sound:'Kicks'}, 
+        'kid':{cn:'小孩', sound:'Kid'}, 
+        'kitchen':{cn:'廚房', sound:'Kitch臣'}, 
+        'kite':{cn:'風箏', sound:'Kite'}, 
+        'knee':{cn:'膝蓋', sound:'Knee'},
+
+        // --- L ---
+        'laces':{cn:'鞋帶', sound:'Laces'}, 
+        'ladder':{cn:'梯子', sound:'Ladder'}, 
+        'ladybug':{cn:'瓢蟲', sound:'Ladybug'}, 
+        'last':{cn:'最後', sound:'Last'}, 
+        'later':{cn:'之後', sound:'Later'}, 
+        'leaf':{cn:'葉', sound:'Leaf'}, 
+        'learned':{cn:'學習(過去式)', sound:'Learned'}, 
+        'leaves':{cn:'葉子', sound:'Leaves'}, 
+        'leaving':{cn:'離開', sound:'Leaving'}, 
+        'left':{cn:'左', sound:'来ft'}, 
+        'leg':{cn:'腿', sound:'来g'}, 
+        'library':{cn:'圖書館', sound:'来brary'}, 
+        'lights':{cn:'燈', sound:'Lights'}, 
+        'like':{cn:'喜歡/像', sound:'Like'}, 
+        'likes':{cn:'喜歡', sound:'Likes'}, 
+        'lily':{cn:'Lily (名字)', sound:'Lily'}, 
+        'lion':{cn:'獅子', sound:'来on'}, 
+        'lions':{cn:'獅子', sound:'Lions'}, 
+        'little':{cn:'小的', sound:'Little'}, 
+        'living':{cn:'生活', sound:'Living'}, 
+        'long':{cn:'長', sound:'Long'}, 
+        'look':{cn:'看', sound:'Look'}, 
+        'looked':{cn:'看(過去式)', sound:'Looked'}, 
+        'looking':{cn:'正在看', sound:'Looking'}, 
+        'loose':{cn:'鬆動', sound:'Loose'}, 
+        'lost':{cn:'失去', sound:'Lost'}, 
+        'loudly':{cn:'大聲地', sound:'Loudly'}, 
+        'love':{cn:'愛', sound:'Love'}, 
+        'loves':{cn:'愛', sound:'Loves'}, 
+        'luna':{cn:'Luna (名字)', sound:'Luna'}, 
+        'lunch':{cn:'午餐', sound:'Lunch'},
+
+        // --- M ---
+        'made':{cn:'做(過去式)', sound:'Made'}, 
+        'magic':{cn:'魔法', sound:'Magic'}, 
+        'magnet':{cn:'磁石', sound:'Magnet'}, 
+        'make':{cn:'做', sound:'Make'}, 
+        'making':{cn:'正在做', sound:'Making'}, 
+        'many':{cn:'很多', sound:'Many'}, 
+        'market':{cn:'市場', sound:'妈ket'}, 
+        'marshmallow':{cn:'棉花糖', sound:'Marshmallow'}, 
+        'marshmallows':{cn:'棉花糖', sound:'Marshmallows'}, 
+        'max':{cn:'Max (名字)', sound:'Max'}, 
+        'me':{cn:'我', sound:'Me'}, 
+        'meat':{cn:'肉', sound:'米t'}, 
+        'mia':{cn:'Mia (名字)', sound:'Mia'}, 
+        'mike':{cn:'Mike (名字)', sound:'Mike'}, 
+        'milk':{cn:'牛奶', sound:'谬k'}, 
+        'mix':{cn:'混合', sound:'Mix'}, 
+        'mixes':{cn:'混合', sound:'Mixes'}, 
+        'mom':{cn:'媽媽', sound:'Mom'}, 
+        'monday':{cn:'星期一', sound:'Monday'}, 
+        'money':{cn:'錢', sound:'Money'}, 
+        'monkey':{cn:'猴子', sound:'忙key'}, 
+        'monster':{cn:'怪物', sound:'Monster'}, 
+        'monsters':{cn:'怪物', sound:'Monsters'}, 
+        'month':{cn:'月', sound:'Month'}, 
+        'moon':{cn:'月亮', sound:'木n'}, 
+        'morning':{cn:'早上', sound:'Morning'}, 
+        'mostly':{cn:'主要', sound:'Mostly'}, 
+        'moth':{cn:'蛾', sound:'Moth'}, 
+        'mother':{cn:'母親', sound:'Mother'}, 
+        'motorbike':{cn:'電單車', sound:'Moto拜'}, 
+        'mountain':{cn:'山', sound:'忙tain'}, 
+        'mouse':{cn:'老鼠', sound:'猫se'}, 
+        'mouth':{cn:'嘴', sound:'妈th'}, 
+        'movie':{cn:'電影', sound:'Movie'}, 
+        'mr':{cn:'先生', sound:'Mister'}, 
+        'much':{cn:'多', sound:'Much'}, 
+        'mud':{cn:'泥', sound:'Mud'}, 
+        'mushroom':{cn:'蘑菇', sound:'Mushroom'}, 
+        'mushrooms':{cn:'蘑菇', sound:'Mushrooms'}, 
+        'music':{cn:'音樂', sound:'Music'}, 
+        'musical':{cn:'音樂的', sound:'Musical'}, 
+        'must':{cn:'必須', sound:'Must'}, 
+        'my':{cn:'我的', sound:'My'},
+
+        // --- N ---
+        'name':{cn:'名字', sound:'Name'}, 
+        'naps':{cn:'小睡', sound:'Naps'}, 
+        'near':{cn:'近', sound:'你'}, 
+        'need':{cn:'需要', sound:'Need'}, 
+        'neighbors':{cn:'鄰居', sound:'Neighbors'}, 
+        'nest':{cn:'巢', sound:'Nest'}, 
+        'new':{cn:'新的', sound:'New'}, 
+        'no':{cn:'不', sound:'No'}, 
+        'noodles':{cn:'麵條', sound:'牛dles'}, 
+        'nose':{cn:'鼻', sound:'No死'}, 
+        'not':{cn:'不', sound:'Not'}, 
+        'now':{cn:'現在', sound:'Now'}, 
+        'nut':{cn:'堅果', sound:'Nut'},
+
+        // --- O ---
+        'of':{cn:'的', sound:'Ov'}, 
+        'off':{cn:'離開/脫下', sound:'Off'}, 
+        'oil':{cn:'油', sound:'Oil'}, 
+        'old':{cn:'舊/老', sound:'Old'}, 
+        'on':{cn:'在...上面', sound:'On'}, 
+        'one':{cn:'一', sound:'One'}, 
+        'ones':{cn:'那些', sound:'Ones'}, 
+        'onion':{cn:'洋蔥', sound:'Onion'}, 
+        'onions':{cn:'洋蔥', sound:'Onions'}, 
+        'only':{cn:'只有', sound:'Only'}, 
+        'opened':{cn:'打開(過去式)', sound:'Opened'}, 
+        'orange':{cn:'橙色', sound:'噢润之'}, 
+        'our':{cn:'我們的', sound:'Our'}, 
+        'out':{cn:'出去', sound:'Out'}, 
+        'outside':{cn:'外面', sound:'Outside'}, 
+        'oven':{cn:'焗爐', sound:'Oven'}, 
+        'over':{cn:'在...之上', sound:'Over'},
+
+        // --- P ---
+        'paint':{cn:'顏料/畫', sound:'喷t'}, 
+        'pants':{cn:'褲子', sound:'Pants'}, 
+        'parents':{cn:'父母', sound:'Parents'}, 
+        'park':{cn:'公園', sound:'怕k'}, 
+        'party':{cn:'派對', sound:'Party'}, 
+        'paste':{cn:'貼', sound:'配st'}, 
+        'peas':{cn:'豆', sound:'Peas'}, 
+        'pedal':{cn:'踏板', sound:'Pedal'}, 
+        'pedaling':{cn:'踩單車', sound:'Pedaling'}, 
+        'peel':{cn:'皮', sound:'Peel'}, 
+        'pen':{cn:'筆', sound:'盆'}, 
+        'pencil':{cn:'鉛筆', sound:'Pen手'}, 
+        'pepperoni':{cn:'辣香腸', sound:'Pepperoni'}, 
+        'peppers':{cn:'椒', sound:'Peppers'}, 
+        'piano':{cn:'鋼琴', sound:'Piano'}, 
+        'pick':{cn:'摘', sound:'Pick'}, 
+        'picking':{cn:'摘', sound:'Picking'}, 
+        'picture':{cn:'圖畫', sound:'Picture'}, 
+        'pie':{cn:'批', sound:'Pie'}, 
+        'pillow':{cn:'枕頭', sound:'Pillow'}, 
+        'pink':{cn:'粉紅色', sound:'聘k'}, 
+        'pizza':{cn:'薄餅', sound:'Pizza'}, 
+        'place':{cn:'地方', sound:'Place'}, 
+        'plane':{cn:'飛機', sound:'普lane'}, 
+        'plant':{cn:'植物', sound:'Plant'}, 
+        'planting':{cn:'種植', sound:'Planting'}, 
+        'plants':{cn:'植物', sound:'Plants'}, 
+        'play':{cn:'玩', sound:'普lay'}, 
+        'played':{cn:'玩(過去式)', sound:'Played'}, 
+        'playground':{cn:'遊樂場', sound:'Play光'}, 
+        'please':{cn:'請', sound:'Please'}, 
+        'pocket':{cn:'口袋', sound:'Pocket'}, 
+        'pool':{cn:'泳池', sound:'Pool'}, 
+        'popcorn':{cn:'爆谷', sound:'Popcorn'}, 
+        'potatoes':{cn:'薯仔', sound:'Potatoes'}, 
+        'practice':{cn:'練習', sound:'Practice'}, 
+        'princess':{cn:'公主', sound:'Princess'}, 
+        'proud':{cn:'自豪', sound:'Proud'}, 
+        'pull':{cn:'拉', sound:'Pull'}, 
+        'pulled':{cn:'拉(過去式)', sound:'Pulled'}, 
+        'pumpkin':{cn:'南瓜', sound:'Pumpkin'}, 
+        'purple':{cn:'紫色', sound:'婆ple'}, 
+        'purr':{cn:'呼嚕聲', sound:'Purr'}, 
+        'purrs':{cn:'發出呼嚕聲', sound:'Purrs'}, 
+        'push':{cn:'推', sound:'Push'}, 
+        'pushed':{cn:'推(過去式)', sound:'Pushed'}, 
+        'put':{cn:'放', sound:'Put'}, 
+        'puts':{cn:'放', sound:'Puts'},
+
+        // --- Q ---
+        'quiet':{cn:'安靜', sound:'Quiet'},
+
+        // --- R ---
+        'rabbit':{cn:'兔', sound:'瑞bbit'}, 
+        'rain':{cn:'雨', sound:'瑞n'}, 
+        'rainbow':{cn:'彩虹', sound:'Rainbow'}, 
+        'raining':{cn:'下雨中', sound:'Raining'}, 
+        'rainy':{cn:'下雨的', sound:'Rainy'}, 
+        'read':{cn:'閱讀', sound:'瑞d'}, 
+        'red':{cn:'紅色', sound:'瑞d'}, 
+        'restaurant':{cn:'餐廳', sound:'瑞staurant'}, 
+        'return':{cn:'歸還', sound:'Return'}, 
+        'rice':{cn:'飯', sound:'瑞s'}, 
+        'ride':{cn:'騎', sound:'坏的'}, 
+        'riding':{cn:'正在騎', sound:'Riding'}, 
+        'right':{cn:'右/對', sound:'瑞'}, 
+        'river':{cn:'河', sound:'瑞ver'}, 
+        'roaring':{cn:'咆哮', sound:'Roaring'}, 
+        'roast':{cn:'烤', sound:'Roast'}, 
+        'roasted':{cn:'烤(過去式)', sound:'Roasted'}, 
+        'rock':{cn:'岩石', sound:'Rock'}, 
+        'roof':{cn:'屋頂', sound:'入f'}, 
+        'room':{cn:'房間', sound:'Room'}, 
+        'rose':{cn:'玫瑰/Rose (名字)', sound:'Rose'}, 
+        'row':{cn:'排', sound:'Row'}, 
+        'rug':{cn:'地毯', sound:'Rug'}, 
+        'ruler':{cn:'尺', sound:'入ler'}, 
+        'run':{cn:'跑', sound:'润 (Rùn)'}, 
+        'running':{cn:'正在跑', sound:'Running'}, 
+        'runs':{cn:'跑', sound:'Runs'},
+
+        // --- S ---
+        'sad':{cn:'傷心', sound:'杀d'}, 
+        'said':{cn:'說(過去式)', sound:'Said'}, 
+        'salad':{cn:'沙律', sound:'Salad'}, 
+        'sam':{cn:'Sam (名字)', sound:'Sam'}, 
+        'sandcastle':{cn:'沙堡', sound:'Sandcastle'}, 
+        'sandwich':{cn:'三文治', sound:'Sandwich'}, 
+        'sang':{cn:'唱(過去式)', sound:'Sang'}, 
+        'santa':{cn:'聖誕老人', sound:'Santa'}, 
+        'sarah':{cn:'Sarah (名字)', sound:'Sarah'}, 
+        'sat':{cn:'坐(過去式)', sound:'Sat'}, 
+        'sauce':{cn:'醬汁', sound:'Sauce'}, 
+        'sausage':{cn:'香腸', sound:'Sausage'}, 
+        'saw':{cn:'看見(過去式)', sound:'Saw'}, 
+        'scared':{cn:'害怕', sound:'死cared'}, 
+        'scary':{cn:'恐怖', sound:'Scary'}, 
+        'school':{cn:'學校', sound:'死古'}, 
+        'score':{cn:'得分', sound:'Score'}, 
+        'scored':{cn:'得分(過去式)', sound:'Scored'}, 
+        'scratched':{cn:'抓/刮', sound:'Scratched'}, 
+        'sea':{cn:'海', sound:'Sea'}, 
+        'seatbelts':{cn:'安全帶', sound:'Seatbelts'}, 
+        'see':{cn:'看見', sound:'See'}, 
+        'seed':{cn:'種子', sound:'Seed'}, 
+        'seeds':{cn:'種子', sound:'Seeds'}, 
+        'seek':{cn:'尋找', sound:'Seek'}, 
+        'seven':{cn:'七', sound:'Seven'}, 
+        'she':{cn:'她', sound:'She'}, 
+        'shell':{cn:'貝殼', sound:'Shell'}, 
+        'shin':{cn:'脛', sound:'Shin'}, 
+        'shiny':{cn:'閃亮', sound:'Shiny'}, 
+        'ship':{cn:'船', sound:'洗普'}, 
+        'shirt':{cn:'襯衫', sound:'Shirt'}, 
+        'shoe':{cn:'鞋', sound:'Shoe'}, 
+        'shoes':{cn:'鞋', sound:'Shoes'}, 
+        'shop':{cn:'商店', sound:'夏p'}, 
+        'short':{cn:'短', sound:'Short'}, 
+        'shovel':{cn:'鏟', sound:'Shovel'}, 
+        'sick':{cn:'生病', sound:'西ck'}, 
+        'sing':{cn:'唱', sound:'星'}, 
+        'singing':{cn:'正在唱', sound:'Singing'}, 
+        'sister':{cn:'姐妹', sound:'Sister'}, 
+        'sit':{cn:'坐', sound:'Sit'}, 
+        'sitting':{cn:'正在坐', sound:'Sitting'}, 
+        'six':{cn:'六', sound:'Six'}, 
+        'sky':{cn:'天空', sound:'Sky'}, 
+        'sleep':{cn:'睡覺', sound:'死leep'}, 
+        'sleeping':{cn:'正在睡', sound:'Sleeping'}, 
+        'sleepy':{cn:'想睡', sound:'死leepy'}, 
+        'slept':{cn:'睡(過去式)', sound:'Slept'}, 
+        'slipped':{cn:'滑倒', sound:'Slipped'}, 
+        'slow':{cn:'慢', sound:'死low'}, 
+        'small':{cn:'小', sound:'死mall'}, 
+        'smells':{cn:'聞起來', sound:'Smells'}, 
+        'smile':{cn:'微笑', sound:'Smile'}, 
+        'smith':{cn:'Smith (姓氏)', sound:'Smith'}, 
+        'snack':{cn:'零食', sound:'Snack'}, 
+        'snow':{cn:'雪', sound:'Snow'}, 
+        'snowman':{cn:'雪人', sound:'Snowman'}, 
+        'snowy':{cn:'下雪的', sound:'Snowy'}, 
+        'soccer':{cn:'足球', sound:'Soccer'}, 
+        'soft':{cn:'軟', sound:'Soft'}, 
+        'some':{cn:'一些', sound:'Some'}, 
+        'something':{cn:'某事', sound:'Something'}, 
+        'sometimes':{cn:'有時', sound:'Sometimes'}, 
+        'song':{cn:'歌', sound:'Song'}, 
+        'songs':{cn:'歌', sound:'Songs'}, 
+        'soon':{cn:'很快', sound:'Soon'}, 
+        'sound':{cn:'聲音', sound:'Sound'}, 
+        'soup':{cn:'湯', sound:'Soup'}, 
+        'space':{cn:'太空', sound:'Space'}, 
+        'spider':{cn:'蜘蛛', sound:'Spider'}, 
+        'spin':{cn:'旋轉/紡', sound:'Spin'}, 
+        'spiral':{cn:'螺旋', sound:'Spiral'}, 
+        'splash':{cn:'濺水聲', sound:'Splash'}, 
+        'sponge':{cn:'海綿', sound:'Sponge'}, 
+        'spooky':{cn:'恐怖', sound:'Spooky'}, 
+        'spoon':{cn:'匙羹', sound:'Spoon'}, 
+        'sports':{cn:'運動', sound:'Sports'}, 
+        'spray':{cn:'噴', sound:'Spray'}, 
+        'sprayed':{cn:'噴(過去式)', sound:'Sprayed'}, 
+        'spun':{cn:'紡(過去式)', sound:'Spun'}, 
+        'squeak':{cn:'吱吱聲', sound:'Squeak'}, 
+        'squirrel':{cn:'松鼠', sound:'Squirrel'}, 
+        'stage':{cn:'舞台', sound:'Stage'}, 
+        'stand':{cn:'站立', sound:'Stand'}, 
+        'star':{cn:'星', sound:'斯tar'}, 
+        'stars':{cn:'星', sound:'Stars'}, 
+        'start':{cn:'開始', sound:'Start'}, 
+        'still':{cn:'仍然', sound:'Still'}, 
+        'stop':{cn:'停止', sound:'死top'}, 
+        'stops':{cn:'停止', sound:'Stops'}, 
+        'store':{cn:'商店', sound:'Store'}, 
+        'stories':{cn:'故事', sound:'Stories'}, 
+        'story':{cn:'故事', sound:'Story'}, 
+        'straight':{cn:'直', sound:'死traight'}, 
+        'strange':{cn:'奇怪', sound:'Strange'}, 
+        'strawberry':{cn:'士多啤梨', sound:'Strawberry'}, 
+        'strong':{cn:'強壯', sound:'Strong'}, 
+        'suddenly':{cn:'突然', sound:'Suddenly'}, 
+        'sugar':{cn:'糖', sound:'Sugar'}, 
+        'summer':{cn:'夏天', sound:'Summer'}, 
+        'sun':{cn:'太陽', sound:'三'}, 
+        'sunday':{cn:'星期日', sound:'Sunday'}, 
+        'sunny':{cn:'陽光普照', sound:'Sunny'}, 
+        'sunset':{cn:'日落', sound:'Sunset'}, 
+        'supermarket':{cn:'超市', sound:'苏per market'}, 
+        'sweet':{cn:'甜', sound:'Sweet'}, 
+        'swim':{cn:'游泳', sound:'死wim'}, 
+        'swimsuit':{cn:'泳衣', sound:'Swimsuit'},
+
+        // --- T ---
+        'table':{cn:'桌子', sound:'太ble'}, 
+        'tag':{cn:'捉迷藏', sound:'Tag'}, 
+        'tail':{cn:'尾巴', sound:'Tail'}, 
+        'take':{cn:'拿', sound:'Take'}, 
+        'takes':{cn:'拿/帶去', sound:'Takes'}, 
+        'tall':{cn:'高', sound:'头ll'}, 
+        'tap':{cn:'輕拍聲', sound:'Tap'}, 
+        'taxi':{cn:'的士', sound:'太可惜'}, 
+        'tea':{cn:'茶', sound:'体'}, 
+        'teach':{cn:'教', sound:'Teach'}, 
+        'teacher':{cn:'老師', sound:'Teacher'}, 
+        'teaches':{cn:'教', sound:'Teaches'}, 
+        'team':{cn:'隊伍', sound:'Team'}, 
+        'teeth':{cn:'牙齒', sound:'Teeth'}, 
+        'tells':{cn:'告訴', sound:'Tells'}, 
+        'tent':{cn:'帳篷', sound:'Tent'}, 
+        'test':{cn:'測試', sound:'Test'}, 
+        'that':{cn:'那', sound:'That'}, 
+        'the':{cn:'這/那', sound:'The'}, 
+        'them':{cn:'他們', sound:'Them'}, 
+        'then':{cn:'然後', sound:'Then'}, 
+        'there':{cn:'那裡', sound:'There'}, 
+        'they':{cn:'他們', sound:'They'}, 
+        'thin':{cn:'瘦', sound:'Thin'}, 
+        'thirsty':{cn:'口渴', sound:'Thir死ty'}, 
+        'three':{cn:'三', sound:'Three'}, 
+        'thunder':{cn:'雷', sound:'Thunder'}, 
+        'thunderstorm':{cn:'雷暴', sound:'Thunderstorm'}, 
+        'tiger':{cn:'老虎', sound:'泰ger'}, 
+        'tired':{cn:'累', sound:'太rd'}, 
+        'to':{cn:'去/向', sound:'To'}, 
+        'today':{cn:'今天', sound:'Today'}, 
+        'told':{cn:'告訴(過去式)', sound:'Told'}, 
+        'tom':{cn:'Tom (名字)', sound:'Tom'}, 
+        'tomato':{cn:'番茄', sound:'To妈to'}, 
+        'tomatoes':{cn:'番茄', sound:'Tomatoes'}, 
+        'too':{cn:'太/也', sound:'Too'}, 
+        'took':{cn:'拿(過去式)', sound:'Took'}, 
+        'tooth':{cn:'牙齒', sound:'Tooth'}, 
+        'topic':{cn:'題目', sound:'Topic'}, 
+        'tortillas':{cn:'薄餅', sound:'Tortillas'}, 
+        'towel':{cn:'毛巾', sound:'Towel'}, 
+        'tower':{cn:'塔', sound:'Tower'}, 
+        'toy':{cn:'玩具', sound:'Toy'}, 
+        'toys':{cn:'玩具', sound:'Toys'}, 
+        'train':{cn:'火車', sound:'垂 (Chuí) n'}, 
+        'training':{cn:'訓練', sound:'Training'}, 
+        'trash':{cn:'垃圾', sound:'Trash'}, 
+        'tree':{cn:'樹', sound:'吹'}, 
+        'trees':{cn:'樹', sound:'Trees'}, 
+        'trip':{cn:'旅程', sound:'Trip'}, 
+        'tripped':{cn:'絆倒', sound:'Tripped'}, 
+        'truck':{cn:'卡車', sound:'出ck'}, 
+        'trunk':{cn:'象鼻/樹幹', sound:'Trunk'}, 
+        'try':{cn:'嘗試', sound:'Try'}, 
+        'tuesday':{cn:'星期二', sound:'Tuesday'}, 
+        'tummy':{cn:'肚子', sound:'Tummy'}, 
+        'turn':{cn:'轉', sound:'Turn'}, 
+        'twitched':{cn:'抽動', sound:'Twitched'}, 
+        'two':{cn:'二', sound:'Two'},
+
+        // --- U ---
+        'under':{cn:'在...下面', sound:'Under'}, 
+        'untie':{cn:'鬆開', sound:'Untie'}, 
+        'until':{cn:'直到', sound:'Until'}, 
+        'up':{cn:'向上', sound:'Up'}, 
+        'us':{cn:'我們', sound:'Us'}, 
+        'used':{cn:'用(過去式)', sound:'Used'},
+
+        // --- V ---
+        'vanilla':{cn:'雲呢拿', sound:'Vanilla'}, 
+        'vegetable':{cn:'蔬菜', sound:'Veg table'}, 
+        'vegetables':{cn:'蔬菜', sound:'Vegetables'}, 
+        'very':{cn:'非常', sound:'Very'}, 
+        'violin':{cn:'小提琴', sound:'Violin'},
+
+        // --- W ---
+        'walk':{cn:'走路', sound:'我克'}, 
+        'wall':{cn:'牆', sound:'我ll'}, 
+        'wanted':{cn:'想要', sound:'Wanted'}, 
+        'warm':{cn:'溫暖', sound:'Warm'}, 
+        'was':{cn:'是/在(過去式)', sound:'Was'}, 
+        'washed':{cn:'洗(過去式)', sound:'Washed'}, 
+        'washing':{cn:'洗', sound:'Washing'}, 
+        'watched':{cn:'觀看', sound:'Watched'}, 
+        'water':{cn:'水', sound:'我ter'}, 
+        'watercolors':{cn:'水彩', sound:'Watercolors'}, 
+        'watermelon':{cn:'西瓜', sound:'Water妈'}, 
+        'watering':{cn:'淋水', sound:'Watering'}, 
+        'waters':{cn:'水/淋水', sound:'Waters'}, 
+        'wave':{cn:'揮手', sound:'Wave'}, 
+        'waves':{cn:'揮手', sound:'Waves'}, 
+        'wear':{cn:'穿', sound:'Wear'}, 
+        'weather':{cn:'天氣', sound:'Weather'}, 
+        'web':{cn:'網', sound:'Web'}, 
+        'week':{cn:'星期', sound:'Week'}, 
+        'went':{cn:'去(過去式)', sound:'Went'}, 
+        'were':{cn:'是(過去式)', sound:'Were'}, 
+        'wet':{cn:'濕', sound:'Wet'}, 
+        'what':{cn:'什麼', sound:'What'}, 
+        'wheels':{cn:'車輪', sound:'Wheels'}, 
+        'when':{cn:'當...時', sound:'When'}, 
+        'where':{cn:'哪裡', sound:'Where'}, 
+        'which':{cn:'哪一個', sound:'Which'}, 
+        'while':{cn:'當...時', sound:'While'}, 
+        'whiskers':{cn:'Whiskers (貓名)', sound:'Whiskers'}, 
+        'white':{cn:'白色', sound:'外t'}, 
+        'who':{cn:'誰', sound:'Who'}, 
+        'whose':{cn:'誰的', sound:'Whose'}, 
+        'why':{cn:'為什麼', sound:'Why'}, 
+        'wiggle':{cn:'扭動', sound:'Wiggle'}, 
+        'wiggled':{cn:'扭動(過去式)', sound:'Wiggled'}, 
+        'will':{cn:'將會', sound:'Will'}, 
+        'window':{cn:'窗', sound:'Win斗'}, 
+        'windows':{cn:'窗', sound:'Windows'}, 
+        'wings':{cn:'翅膀', sound:'Wings'}, 
+        'winter':{cn:'冬天', sound:'Winter'}, 
+        'with':{cn:'和', sound:'With'}, 
+        'wooden':{cn:'木製', sound:'Wooden'}, 
+        'worm':{cn:'蟲', sound:'Worm'}, 
+        'would':{cn:'將會(過去式)', sound:'Would'}, 
+        'write':{cn:'寫', sound:'Right'}, 
+        'writer':{cn:'作者', sound:'Writer'},
+
+        // --- Y ---
+        'yard':{cn:'庭院', sound:'Yard'}, 
+        'yellow':{cn:'黃色', sound:'耶llow'}, 
+        'yes':{cn:'是', sound:'Yes'}, 
+        'yet':{cn:'還', sound:'Yet'}, 
+        'you':{cn:'你', sound:'You'},
+
+        // --- Z ---
+        'zoo':{cn:'動物園', sound:'Zoo'}
+    };
+
+        // ================= 3. STORY DATABASE (COMPLETE 31 DAYS) =================
+    const articles = {
+        1: {
+            t: "The Blue Bird",
+            txt: "One sunny morning, a little bird sat on a tree branch. The bird was bright blue with a white tummy. He was looking for his breakfast. Suddenly, he saw a small worm on the ground. The bird flew down and caught the worm. He was very happy and sang a sweet song.",
+            q: [
+                {q: "What color was the bird?", a: "Blue and White", o: ["Green and Red", "Yellow and Black"]},
+                {q: "Where did the bird sit?", a: "On a tree branch", o: ["On a car roof", "On a house"]},
+                {q: "What was the bird looking for?", a: "His breakfast", o: ["A friend", "A toy"]},
+                {q: "What did the bird catch?", a: "A worm", o: ["A fly", "A spider"]},
+                {q: "What did the bird do after catching the worm?", a: "He sang a song", o: ["He went to sleep", "He cried"]}
+            ]
+        },
+        2: {
+            t: "Sam’s Red Ball",
+            txt: "Sam has a new toy. It is a big, red ball. He likes to play with it in the park. Sam kicks the ball to his dog, Max. Max runs very fast to get the ball. Max brings the ball back to Sam. They play until the sun goes down.",
+            q: [
+                {q: "What is Sam's new toy?", a: "A red ball", o: ["A blue kite", "A green bike"]},
+                {q: "Where does Sam play?", a: "In the park", o: ["In the kitchen", "At school"]},
+                {q: "Who does Sam kick the ball to?", a: "His dog, Max", o: ["His dad", "His cat"]},
+                {q: "What does Max do?", a: "He runs fast to get the ball", o: ["He eats the ball", "He sleeps on the grass"]},
+                {q: "When do they stop playing?", a: "When the sun goes down", o: ["When it starts raining", "When the ball breaks"]}
+            ]
+        },
+        3: {
+            t: "Baking Cookies",
+            txt: "On Sunday, Mia helps her mom in the kitchen. They are making chocolate chip cookies. Mia mixes the flour, sugar, and eggs in a big bowl. Then, she adds the chocolate chips. Mom puts the cookies in the oven. The kitchen smells delicious!",
+            q: [
+                {q: "What day is it?", a: "Sunday", o: ["Monday", "Friday"]},
+                {q: "Who is Mia helping?", a: "Her mom", o: ["Her brother", "Her teacher"]},
+                {q: "What are they making?", a: "Chocolate chip cookies", o: ["Pizza", "Apple pie"]},
+                {q: "What does Mia mix in the bowl?", a: "Flour, sugar, and eggs", o: ["Milk and juice", "Water and salt"]},
+                {q: "Where does Mom put the cookies?", a: "In the oven", o: ["In the fridge", "On the table"]}
+            ]
+        },
+        4: {
+            t: "The Lost Tooth",
+            txt: "Tom was eating an apple when he felt something strange. His loose tooth fell out! Tom was excited. He washed the tooth and put it under his pillow. He hoped the Tooth Fairy would come while he was sleeping.",
+            q: [
+                {q: "What was Tom eating?", a: "An apple", o: ["A banana", "A sandwich"]},
+                {q: "What happened to Tom?", a: "He lost his tooth", o: ["He hurt his knee", "He lost his shoe"]},
+                {q: "How did Tom feel?", a: "Excited", o: ["Sad", "Angry"]},
+                {q: "Where did Tom put the tooth?", a: "Under his pillow", o: ["In the trash", "In his pocket"]},
+                {q: "Who did Tom hope would come?", a: "The Tooth Fairy", o: ["Santa Claus", "The Easter Bunny"]}
+            ]
+        },
+        5: {
+            t: "The Rainy Day",
+            txt: "It was raining hard outside. The sky was gray and cloudy. Lily could not go out to play. She sat by the window and watched the rain fall. She decided to draw a picture of a rainbow with her crayons.",
+            q: [
+                {q: "What was the weather like?", a: "Raining hard", o: ["Sunny and hot", "Snowy and cold"]},
+                {q: "What color was the sky?", a: "Gray and cloudy", o: ["Blue and clear", "Pink and orange"]},
+                {q: "Why did Lily stay inside?", a: "She could not go out to play", o: ["She was sick", "She was tired"]},
+                {q: "Where did Lily sit?", a: "By the window", o: ["Under the bed", "In the kitchen"]},
+                {q: "What did Lily draw?", a: "A rainbow", o: ["A dog", "A car"]}
+            ]
+        },
+        6: {
+            t: "The School Bus",
+            txt: "Every morning, the big yellow bus stops at the corner. The driver, Mr. Jones, waves at the children. The children get on the bus one by one. They sit down and buckle their seatbelts. The bus takes them to school.",
+            q: [
+                {q: "What color is the bus?", a: "Yellow", o: ["Red", "Blue"]},
+                {q: "What is the driver's name?", a: "Mr. Jones", o: ["Mr. Smith", "Mr. Brown"]},
+                {q: "What does Mr. Jones do?", a: "He waves at the children", o: ["He honks the horn", "He eats lunch"]},
+                {q: "What do the children do after sitting down?", a: "They buckle their seatbelts", o: ["They stand up", "They run around"]},
+                {q: "Where does the bus take them?", a: "To school", o: ["To the zoo", "To the park"]}
+            ]
+        },
+        7: {
+            t: "A Trip to the Zoo",
+            txt: "Ben went to the zoo with his class. He saw a tall giraffe eating leaves from a tree. He also saw a big elephant with a long trunk. The lions were sleeping on a rock. Ben’s favorite animal was the monkey because it was funny.",
+            q: [
+                {q: "Who did Ben go to the zoo with?", a: "His class", o: ["His family", "His neighbors"]},
+                {q: "What was the giraffe eating?", a: "Leaves", o: ["Meat", "Bread"]},
+                {q: "What were the lions doing?", a: "Sleeping", o: ["Running", "Roaring"]},
+                {q: "Which animal had a long trunk?", a: "The elephant", o: ["The monkey", "The giraffe"]},
+                {q: "What was Ben’s favorite animal?", a: "The monkey", o: ["The lion", "The elephant"]}
+            ]
+        },
+        8: {
+            t: "The Magic Box",
+            txt: "Sarah found a dusty box in the attic. When she opened it, she found old clothes. She put on a shiny dress and a hat. Suddenly, she felt like a princess. It was a box of dress-up clothes from when her grandma was little.",
+            q: [
+                {q: "Where did Sarah find the box?", a: "In the attic", o: ["In the garden", "In the basement"]},
+                {q: "What was inside the box?", a: "Old clothes", o: ["Toys", "Books"]},
+                {q: "What did Sarah put on?", a: "A dress and a hat", o: ["A coat and boots", "A shirt and pants"]},
+                {q: "How did Sarah feel?", a: "Like a princess", o: ["Like a teacher", "Like a doctor"]},
+                {q: "Who did the clothes belong to?", a: "Her grandma", o: ["Her mom", "Her sister"]}
+            ]
+        },
+        9: {
+            t: "Gardening Time",
+            txt: "Dad is planting flowers in the garden. He digs a hole with a shovel. He puts a seed inside the hole. He covers it with dirt. Then, he waters the seed with a hose. He tells me that soon a beautiful flower will grow.",
+            q: [
+                {q: "What is Dad planting?", a: "Flowers", o: ["Trees", "Vegetables"]},
+                {q: "What does he use to dig a hole?", a: "A shovel", o: ["A spoon", "A fork"]},
+                {q: "What does he put inside the hole?", a: "A seed", o: ["A rock", "A toy"]},
+                {q: "What does he use to water the seed?", a: "A hose", o: ["A cup", "A bucket"]},
+                {q: "What will grow from the seed?", a: "A flower", o: ["An apple", "A pumpkin"]}
+            ]
+        },
+        10: {
+            t: "The Sleepy Cat",
+            txt: "Luna is a fat orange cat. She loves to sleep. Her favorite place is on the soft rug by the fire. Sometimes she chases a toy mouse, but mostly she naps. When she is happy, she purrs very loudly.",
+            q: [
+                {q: "What color is Luna?", a: "Orange", o: ["Black", "White"]},
+                {q: "What does Luna love to do?", a: "Sleep", o: ["Run outside", "Swim"]},
+                {q: "Where is her favorite place?", a: "On the rug by the fire", o: ["On the table", "In the box"]},
+                {q: "What does she chase sometimes?", a: "A toy mouse", o: ["A real mouse", "A bird"]},
+                {q: "What does she do when she is happy?", a: "She purrs", o: ["She barks", "She hisses"]}
+            ]
+        },
+        11: {
+            t: "The Library",
+            txt: "I went to the library with my teacher. It was very quiet. I found a book about dinosaurs. I sat on a big beanbag chair to read. I must return the book in one week.",
+            q: [
+                {q: "Who did the writer go to the library with?", a: "Their teacher", o: ["Their mom", "Their brother"]},
+                {q: "Is the library noisy or quiet?", a: "Very quiet", o: ["Very noisy", "Full of music"]},
+                {q: "What was the book about?", a: "Dinosaurs", o: ["Cars", "Fairies"]},
+                {q: "What did the writer sit on?", a: "A beanbag chair", o: ["A wooden chair", "The floor"]},
+                {q: "When must the book be returned?", a: "In one week", o: ["In one day", "In one month"]}
+            ]
+        },
+        12: {
+            t: "New Shoes",
+            txt: "My old shoes were too small, so I went to the shop. I chose some bright green shoes. When I run, they make a squeak sound. I ran around the store to test them. I am very happy with my new shoes.",
+            q: [
+                {q: "Why did the child need new shoes?", a: "The old ones were too small", o: ["The old ones were lost", "The old ones were dirty"]},
+                {q: "What color shoes did the child choose?", a: "Green", o: ["Red", "Blue"]},
+                {q: "What happens when the child runs?", a: "The shoes squeak", o: ["Lights flash on the side", "The laces untie"]},
+                {q: "Where did the child run to test the shoes?", a: "Around the store", o: ["In the park", "At school"]},
+                {q: "How does the child feel about the new shoes?", a: "Happy", o: ["Sad", "Angry"]}
+            ]
+        },
+        13: {
+            t: "A Rainy Afternoon",
+            txt: "It was raining outside. The rain went tap, tap, tap on the roof. I could not play outside. I built a fort in the living room. Whiskers the cat came inside. Then, a rainbow appeared in the sky.",
+            q: [
+                {q: "What sound did the rain make?", a: "Tap, tap, tap", o: ["Boom, boom, boom", "Splash, splash, splash"]},
+                {q: "Why couldn't the child play outside?", a: "It was raining", o: ["It was too dark", "They were sick"]},
+                {q: "What did the child build?", a: "A fort", o: ["A castle", "A tower"]},
+                {q: "Who came into the fort?", a: "Whiskers the cat", o: ["The dog", "The mom"]},
+                {q: "What appeared in the sky when the rain stopped?", a: "A rainbow", o: ["The sun only", "A bird"]}
+            ]
+        },
+        14: {
+            t: "The Zoo Trip",
+            txt: "Our class went to the zoo. We saw a tall giraffe eating leaves. The lions were sleeping in the sun. The elephant used its trunk to drink water. Before we left, I bought a magnet at the shop.",
+            q: [
+                {q: "Where did the class go?", a: "To the zoo", o: ["To the library", "To the beach"]},
+                {q: "What was the giraffe eating?", a: "Leaves", o: ["Bananas", "Grass"]},
+                {q: "What were the lions doing?", a: "Sleeping", o: ["Roaring", "Eating"]},
+                {q: "Which animal used its trunk to drink water?", a: "The elephant", o: ["The monkey", "The tiger"]},
+                {q: "What did the writer buy before leaving?", a: "A magnet", o: ["A hat", "A toy lion"]}
+            ]
+        },
+        15: {
+            t: "Grandma’s Garden",
+            txt: "I help Grandma in her garden. She grows tomatoes and cucumbers. I like watering the plants. There are beautiful yellow flowers. Bees buzz around them. We made a salad for lunch.",
+            q: [
+                {q: "What vegetables grow in Grandma’s garden?", a: "Tomatoes and cucumbers", o: ["Carrots and peas", "Potatoes and corn"]},
+                {q: "How does the child help Grandma?", a: "Watering the plants", o: ["Pulling weeds", "Planting seeds"]},
+                {q: "What color are the flowers?", a: "Yellow", o: ["Purple", "Pink"]},
+                {q: "What insect buzzes around the flowers?", a: "Bees", o: ["Flies", "Ants"]},
+                {q: "What did they make with the tomatoes?", a: "A salad", o: ["Soup", "Pizza"]}
+            ]
+        },
+        16: {
+            t: "The Loose Tooth",
+            txt: "I was eating an apple when my tooth moved. It wiggles when I touch it. Suddenly, it fell out! It did not hurt. I will put it under my pillow. I hope to get a coin.",
+            q: [
+                {q: "What happens when the child touches the tooth?", a: "It wiggles", o: ["It hurts", "It breaks"]},
+                {q: "What was the child eating when the tooth fell out?", a: "An apple", o: ["A carrot", "Candy"]},
+                {q: "Did it hurt when the tooth fell out?", a: "No, it did not hurt", o: ["Yes, a lot", "Just a little"]},
+                {q: "Where will the child put the tooth?", a: "Under the pillow", o: ["In a cup", "In the trash"]},
+                {q: "What does the child hope to get?", a: "A coin", o: ["A toy", "A book"]}
+            ]
+        },
+        17: {
+            t: "Soccer Practice",
+            txt: "On Tuesday I go to soccer practice. I wear my team jersey and shin guards. Coach Mike teaches us how to kick. We played a game and I scored a goal. I felt very proud.",
+            q: [
+                {q: "What day is soccer practice?", a: "Tuesday", o: ["Monday", "Friday"]},
+                {q: "What does the writer wear?", a: "A team jersey and shin guards", o: ["Jeans and a t-shirt", "A swimsuit"]},
+                {q: "Who is the coach?", a: "Coach Mike", o: ["Coach Sam", "Coach John"]},
+                {q: "What happened at the end of practice?", a: "They played a game", o: ["They went home", "It rained"]},
+                {q: "How did the writer feel after scoring?", a: "Proud", o: ["Sad", "Tired"]}
+            ]
+        },
+        18: {
+            t: "The Butterfly",
+            txt: "I found a caterpillar on a green leaf. It spun a cocoon and went to sleep. Later, a butterfly came out! It had orange and black wings. It flew to a pretty flower.",
+            q: [
+                {q: "What did the writer find on a leaf?", a: "A caterpillar", o: ["A ladybug", "A worm"]},
+                {q: "What did the caterpillar spin?", a: "A cocoon", o: ["A web", "A nest"]},
+                {q: "What came out of the cocoon?", a: "A butterfly", o: ["A moth", "A bee"]},
+                {q: "What color were the wings?", a: "Orange and black", o: ["Blue and green", "Yellow and white"]},
+                {q: "Where did the butterfly fly to?", a: "To a flower", o: ["To a tree", "To the sky"]}
+            ]
+        },
+        19: {
+            t: "Making Pizza",
+            txt: "Dad bought dough to make pizza. First we put tomato sauce on it. Then I put pepperoni on my side. Dad put sausage on his side. The cheese was bubbly when it came out of the oven.",
+            q: [
+                {q: "What did Dad buy for the pizza?", a: "Dough", o: ["Bread", "Tortillas"]},
+                {q: "What was the first thing they put on the dough?", a: "Tomato sauce", o: ["Cheese", "Pepperoni"]},
+                {q: "What topping did the child put on the pizza?", a: "Pepperoni", o: ["Mushrooms", "Peppers"]},
+                {q: "What topping did Dad put on his side?", a: "Sausage", o: ["Onions", "Mushrooms"]},
+                {q: "How did the cheese look after baking?", a: "Bubbly", o: ["Burnt", "Hard"]}
+            ]
+        },
+        20: {
+            t: "The Camping Trip",
+            txt: "We went camping in the forest. We slept in a green tent. We made a fire and roasted marshmallows. Dad told spooky stories. I slept in a warm sleeping bag.",
+            q: [
+                {q: "Where did the family go camping?", a: "In the forest", o: ["At the beach", "In the backyard"]},
+                {q: "What color was the tent?", a: "Green", o: ["Blue", "Red"]},
+                {q: "What did they roast on the fire?", a: "Marshmallows", o: ["Hot dogs", "Corn"]},
+                {q: "What did they do before bed?", a: "Told spooky stories", o: ["Played cards", "Sang songs"]},
+                {q: "Where did the writer sleep?", a: "In a sleeping bag", o: ["On a cot", "On the grass"]}
+            ]
+        },
+        21: {
+            t: "The Beach Day",
+            txt: "We went to the beach today. I built a big sandcastle. I used my green bucket. I found a shell that looked like a fan. The water was cold but fun.",
+            q: [
+                {q: "Where did the family go?", a: "To the beach", o: ["To the park", "To the pool"]},
+                {q: "What did the writer build?", a: "A sandcastle", o: ["A snowman", "A house"]},
+                {q: "What color was the bucket?", a: "Green", o: ["Red", "Yellow"]},
+                {q: "What kind of shell did the writer find?", a: "A shell that looked like a fan", o: ["A spiral shell", "A star shell"]},
+                {q: "How did the water feel?", a: "Cold", o: ["Hot", "Warm"]}
+            ]
+        },
+        22: {
+            t: "My Baby Sister",
+            txt: "My baby sister is named Lily. She sleeps in a crib. When she is hungry, she cries. I make funny faces and she smiles. She is small and has no teeth yet.",
+            q: [
+                {q: "What is the baby sister’s name?", a: "Lily", o: ["Mia", "Rose"]},
+                {q: "Where does Lily sleep?", a: "In a crib", o: ["In a big bed", "In a stroller"]},
+                {q: "Why does Lily cry?", a: "She is hungry", o: ["She is cold", "She is bored"]},
+                {q: "How does the writer make Lily smile?", a: "By making funny faces", o: ["By singing", "By dancing"]},
+                {q: "Does Lily have any teeth?", a: "No, none yet", o: ["Yes, two", "Yes, many"]}
+            ]
+        },
+        23: {
+            t: "The Birthday Party",
+            txt: "It was Ben's birthday party. We had blue and red balloons. We played musical chairs together. We ate chocolate cake. Ben had seven candles on his cake.",
+            q: [
+                {q: "Whose birthday is it?", a: "Ben's", o: ["The writer's", "Tom's"]},
+                {q: "What colors were the balloons?", a: "Blue and red", o: ["Pink and purple", "Green and yellow"]},
+                {q: "What game did they play?", a: "Musical chairs", o: ["Tag", "Hide and seek"]},
+                {q: "What kind of cake did they eat?", a: "Chocolate", o: ["Vanilla", "Strawberry"]},
+                {q: "How many candles were on the cake?", a: "Seven", o: ["Five", "Six"]}
+            ]
+        },
+        24: {
+            t: "Washing the Car",
+            txt: "Dad's car was covered in dust and mud. We used a sponge to wash it. I cleaned the wheels. I sprayed Dad with the hose by mistake! Now the car is shiny and clean.",
+            q: [
+                {q: "Why did the car need washing?", a: "It was covered in dust and mud", o: ["It was new", "It had scratches"]},
+                {q: "What did they use to wash the car?", a: "A sponge", o: ["A brush", "A towel"]},
+                {q: "Which part of the car did the child clean?", a: "The wheels", o: ["The windows", "The roof"]},
+                {q: "What happened with the hose?", a: "The child sprayed Dad", o: ["It broke", "No water came out"]},
+                {q: "How does the car look now?", a: "Shiny and clean", o: ["Still dirty", "Wet"]}
+            ]
+        },
+        25: {
+            t: "The Thunderstorm",
+            txt: "There was a storm last night. The thunder went Boom! I was scared. I pulled my blanket over my head. Mom came in and read me a story until I slept.",
+            q: [
+                {q: "What made the loud 'Boom' sound?", a: "Thunder", o: ["A drum", "A car"]},
+                {q: "What did the child pull over their head?", a: "A blanket", o: ["A pillow", "A coat"]},
+                {q: "How did the child feel about the storm?", a: "Scared", o: ["Happy", "Excited"]},
+                {q: "Who came into the room to help?", a: "Mom", o: ["Dad", "Grandma"]},
+                {q: "What did Mom do?", a: "Read a story", o: ["Sang a song", "Closed the window"]}
+            ]
+        },
+        26: {
+            t: "Learning to Ride",
+            txt: "I have a new blue bicycle. Dad took off the training wheels. I was scared I would fall. Dad told me to keep pedaling. I did it! I can ride alone now.",
+            q: [
+                {q: "What color is the new bicycle?", a: "Blue", o: ["Red", "Black"]},
+                {q: "What did Dad take off the bike?", a: "The training wheels", o: ["The basket", "The bell"]},
+                {q: "How did the writer feel at first?", a: "Scared", o: ["Brave", "Bored"]},
+                {q: "What did Dad tell the writer to do?", a: "Keep pedaling", o: ["Stop", "Turn left"]},
+                {q: "Did the writer learn to ride alone?", a: "Yes", o: ["No", "Almost"]}
+            ]
+        },
+        27: {
+            t: "Picking Apples",
+            txt: "It is Autumn. We went to a farm to pick apples. I climbed a ladder to reach the high ones. We filled a big basket. Mom says we will make apple pie.",
+            q: [
+                {q: "What season is it in the story?", a: "Autumn", o: ["Summer", "Winter"]},
+                {q: "Where did they go?", a: "To a farm", o: ["To a store", "To a park"]},
+                {q: "Why did the child climb a ladder?", a: "To reach high apples", o: ["To see better", "To hide"]},
+                {q: "What did they fill with apples?", a: "A basket", o: ["A bag", "A box"]},
+                {q: "What will they make with the apples?", a: "Apple pie", o: ["Juice", "Jam"]}
+            ]
+        },
+        28: {
+            t: "The Scary Movie",
+            txt: "We watched a movie about monsters. We ate popcorn. The monster had three eyes! He slipped on a banana peel and fell. It was funny, not scary.",
+            q: [
+                {q: "What was the movie about?", a: "Monsters", o: ["Aliens", "Animals"]},
+                {q: "What snack did they make?", a: "Popcorn", o: ["Chips", "Candy"]},
+                {q: "How many eyes did the monster have?", a: "Three", o: ["Two", "Four"]},
+                {q: "Why did the monster fall down?", a: "He slipped on a banana peel", o: ["He tripped on a rock", "He was pushed"]},
+                {q: "Did the writer find the movie scary in the end?", a: "No", o: ["Yes", "A little bit"]}
+            ]
+        },
+        29: {
+            t: "Art Class",
+            txt: "In art class we used watercolors. I wanted to paint a sunset. I used orange and red. I got paint on my nose by mistake. The teacher gave me a towel to clean it.",
+            q: [
+                {q: "What kind of paint did they use?", a: "Watercolors", o: ["Oil paint", "Finger paint"]},
+                {q: "What did the writer want to paint?", a: "A sunset", o: ["A flower", "A house"]},
+                {q: "Name one color the writer used.", a: "Orange", o: ["Purple", "Green"]},
+                {q: "Where did the writer get paint by accident?", a: "On their nose", o: ["On their shirt", "On their hands"]},
+                {q: "Who gave the writer a towel?", a: "The teacher", o: ["A friend", "Mom"]}
+            ]
+        },
+        30: {
+            t: "The Squirrel",
+            txt: "I sat on a park bench eating a nut bar. A squirrel came near. It had a big bushy tail. It twitched its nose at me. Then it ran under a bush to find food.",
+            q: [
+                {q: "Where was the writer sitting?", a: "On a park bench", o: ["On the grass", "In a car"]},
+                {q: "What was the writer eating?", a: "A nut bar", o: ["An apple", "A sandwich"]},
+                {q: "What kind of tail did the squirrel have?", a: "Bushy", o: ["Short", "Long and thin"]},
+                {q: "What did the squirrel do with its nose?", a: "It twitched it", o: ["It scratched it", "It hid it"]},
+                {q: "Where did the squirrel go to eat the food?", a: "Under a bush", o: ["Up a tree", "Behind the bench"]}
+            ]
+        },
+        31: {
+            t: "The School Concert",
+            txt: "It was the last day of school. We had a concert. I played the drum. Sarah played the flute. My parents sat in the front row. I felt proud and happy.",
+            q: [
+                {q: "What special event happened on the last day of school?", a: "A concert", o: ["A sports day", "A party"]},
+                {q: "What instrument did the writer play?", a: "The drum", o: ["The flute", "The piano"]},
+                {q: "What did Sarah play?", a: "The flute", o: ["The drum", "The violin"]},
+                {q: "Where did the parents sit?", a: "In the front row", o: ["In the back", "On the stage"]},
+                {q: "How did the writer feel at the end?", a: "Proud and happy", o: ["Nervous", "Tired"]}
+            ]
+        }
+    };
+
+    // ================= 4. APP LOGIC =================
+    let currentDay = parseInt(localStorage.getItem('p2_day')) || 1;
+    let dictQueue = JSON.parse(localStorage.getItem('p2_queue')) || [];
+    let isGameSolved = false;
+    let currentDictTarget = "";
+
+    window.onload = function() {
+        initDaySelect();
+        loadDay(currentDay);
+        updateDictUI();
+    };
+
+    function initDaySelect() {
+        const s = document.getElementById('daySelect');
+        for(let i=1; i<=31; i++) {
+            let opt = document.createElement('option');
+            opt.value = i;
+            opt.text = `Day ${i}`;
+            if(i === currentDay) opt.selected = true;
+            s.appendChild(opt);
+        }
+    }
+
+    function changeDay() {
+        currentDay = parseInt(document.getElementById('daySelect').value);
+        localStorage.setItem('p2_day', currentDay);
+        isGameSolved = false;
+        loadDay(currentDay);
+        nav('learn');
+    }
+
+    function nav(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        
+        const map = {'learn':0, 'story':1, 'game':2, 'dictation':3};
+        const btns = document.querySelectorAll('.nav-btn');
+        if(btns[map[id]]) btns[map[id]].classList.add('active');
+        
+        if(id === 'game') initGame();
+    }
+
+    function speak(txt) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(txt);
+        u.lang = 'en-US'; u.rate = 0.8;
+        window.speechSynthesis.speak(u);
+    }
+
+    // Helper to turn text into clickable words
+    function makeClickable(txt) {
+        return txt.split(' ').map(w => {
+            const clean = w.replace(/[^a-zA-Z]/g, ''); // Clean punctuation
+            if (!clean) return w;
+            // event.stopPropagation() prevents the button from being "clicked" when checking a word
+            return `<span class="click-word" onclick="wordClick('${clean}'); event.stopPropagation();">${w}</span>`;
+        }).join(' ');
+    }
+
+    function loadDay(d) {
+        // A. Words
+        const grid = document.getElementById('wordGrid');
+        grid.innerHTML = '';
+        const dayWords = dailyWords[d-1] || [];
+        let addedNew = false;
+        
+        dayWords.forEach(en => {
+            const lowerEn = en.toLowerCase();
+            const info = dictionary[lowerEn] || {cn:'Search', sound:''};
+            
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="en-text">${en}</div>
+                <div class="cn-text">${info.cn}</div>
+                <div class="mnemonic">${info.sound || ""}</div>
+                <button class="audio-btn" onclick="speak('${en}')">🔊</button>
+                <div class="sentence">I like the ${en}.</div>
+            `;
+            grid.appendChild(card);
+
+            // Auto add to dictation
+            if(!dictQueue.includes(lowerEn)) {
+                dictQueue.push(lowerEn);
+                addedNew = true;
+            }
+        });
+
+        if(addedNew) {
+            localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
+            updateDictUI();
+        }
+
+        // B. Story (Now using makeClickable)
+        const art = articles[d] || {t:'No Story', txt:'No text.', q:[]};
+        document.getElementById('storyTitle').innerText = art.t;
+        // This generates the clickable story text
+        document.getElementById('storyContent').innerHTML = makeClickable(art.txt);
+
+        // C. Quiz (Now clickable!)
+        const qArea = document.getElementById('quizArea');
+        qArea.innerHTML = '';
+        art.q.forEach((item, idx) => {
+            const box = document.createElement('div');
+            box.className = 'quiz-box';
+            
+            // Randomize options
+            let opts = [item.a, ...item.o].sort(() => Math.random() - 0.5);
+            
+            let btnHtml = opts.map(o => 
+                // We convert option text 'o' to clickable HTML
+                // We pass the raw text 'o' to checkQuiz logic, but show HTML in the button
+                `<button class="quiz-opt" onclick="checkQuiz(this, '${o===item.a}')">${makeClickable(o)}</button>`
+            ).join('');
+
+            // We also make the Question text clickable
+            box.innerHTML = `<p style="font-weight:bold; color:var(--primary)">Q${idx+1}: ${makeClickable(item.q)}</p>${btnHtml}`;
+            qArea.appendChild(box);
+        });
+    }
+
+    // --- SMART CLICK (WITH DICTIONARY FALLBACK) ---
+    function wordClick(w) {
+        w = w.toLowerCase().trim();
+        let info = dictionary[w];
+
+        // Try singular forms if not found
+        if (!info) {
+            if (w.endsWith('s') && dictionary[w.slice(0, -1)]) { info = dictionary[w.slice(0, -1)]; w = w.slice(0, -1); }
+            else if (w.endsWith('es') && dictionary[w.slice(0, -2)]) { info = dictionary[w.slice(0, -2)]; w = w.slice(0, -2); }
+            else if (w.endsWith('d') && dictionary[w.slice(0, -1)]) { info = dictionary[w.slice(0, -1)]; w = w.slice(0, -1); }
+            else if (w.endsWith('ed') && dictionary[w.slice(0, -2)]) { info = dictionary[w.slice(0, -2)]; w = w.slice(0, -2); }
+            else if (w.endsWith('ing') && dictionary[w.slice(0, -3)]) { info = dictionary[w.slice(0, -3)]; w = w.slice(0, -3); }
+        }
+
+        document.getElementById('mWord').innerText = w;
+        if (info) {
+            document.getElementById('mCn').innerText = info.cn;
+            document.getElementById('mSound').innerText = info.sound || "Click speaker";
+            if(!dictQueue.includes(w)) {
+                dictQueue.push(w);
+                localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
+                updateDictUI();
+            }
+        } else {
+            document.getElementById('mCn').innerText = "Translation not found";
+            document.getElementById('mSound').innerText = "";
+        }
+
+        document.getElementById('mAudio').onclick = () => speak(w);
+        document.getElementById('modal').style.display = 'flex';
+        speak(w);
+    }
+
+    function closeModal(e) {
+        if(!e || e.target.id === 'modal' || e.target.className === 'close-x') {
+            document.getElementById('modal').style.display = 'none';
+        }
+    }
+
+    function checkQuiz(btn, isCorrect) {
+        if(isCorrect === 'true') {
+            btn.classList.add('correct');
+            btn.innerHTML += " ✅";
+            speak("Correct");
+        } else {
+            btn.classList.add('wrong');
+            speak("Try again");
+        }
+    }
+
+    // --- GAME ---
+    function initGame() {
+        const container = document.getElementById('gameZone');
+        const hint = document.getElementById('gameHint');
+        const msg = document.getElementById('gameMsg');
+        
+        container.innerHTML = '';
+        msg.innerText = '';
+
+        if (isGameSolved) {
+            hint.innerText = "Mission Complete!";
+            msg.innerHTML = "<span style='color:var(--success)'>🌟 You finished today's puzzle! 🌟</span>";
+            return;
+        }
+
+        const dayWordList = dailyWords[currentDay-1];
+        const targetWord = dayWordList[Math.floor(Math.random() * dayWordList.length)];
+        const sentence = `I can see a ${targetWord}.`;
+        const cnWord = dictionary[targetWord] ? dictionary[targetWord].cn : targetWord;
+        const translation = `我可以看到一個${cnWord}。`;
+        
+        hint.innerText = translation; 
+        
+        let parts = sentence.replace('.','').split(' ');
+        parts.push('.'); 
+        parts.sort(() => Math.random() - 0.5); 
+        
+        parts.forEach(word => {
+            const piece = document.createElement('div');
+            piece.className = 'puzzle-piece';
+            piece.innerText = word;
+            piece.onclick = function() {
+                container.appendChild(this);
+                checkPuzzle(sentence);
+            };
+            container.appendChild(piece);
+        });
+    }
+
+    function checkPuzzle(target) {
+        const container = document.getElementById('gameZone');
+        const currentArr = Array.from(container.children).map(div => div.innerText);
+        let currentStr = currentArr.join(' ').replace(' .', '.');
+        const msg = document.getElementById('gameMsg');
+        
+        if(currentStr === target) {
+            msg.innerText = "🌟 Perfect Grammar! 🌟";
+            msg.style.color = "var(--success)";
+            speak(target);
+            isGameSolved = true; 
+            const pieces = document.querySelectorAll('.puzzle-piece');
+            pieces.forEach(p => {
+                p.style.backgroundColor = "var(--success)";
+                p.onclick = null;
+                p.style.cursor = "default";
+            });
+        }
+    }
+
+    function resetGame() {
+        isGameSolved = false;
+        initGame();
+    }
+
+    // --- DICTATION ---
+    function updateDictUI() {
+        const count = dictQueue.length;
+        document.getElementById('dictCount').innerText = `${count} words`;
+        if(count > 0) {
+            const w = dictQueue[0];
+            currentDictTarget = w;
+            const info = dictionary[w] || {cn:'Translation'};
+            document.getElementById('dictCn').innerText = info.cn;
+        } else {
+            document.getElementById('dictCn').innerText = "All Done!";
+            currentDictTarget = "";
+        }
+    }
+
+    function playDictSound() {
+        if(currentDictTarget) speak(currentDictTarget);
+    }
+
+    function giveHint() {
+        if(currentDictTarget) document.getElementById('dictInput').value = currentDictTarget[0] + "...";
+    }
+
+    function checkDict() {
+        if(!currentDictTarget) return;
+        const val = document.getElementById('dictInput').value.trim().toLowerCase();
+        const msg = document.getElementById('dictMsg');
+
+        if(val === currentDictTarget) {
+            msg.innerText = "Correct! 🎉";
+            msg.style.color = "var(--success)";
+            speak("Good Job");
+            dictQueue.shift();
+            localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
+            setTimeout(() => {
+                document.getElementById('dictInput').value = '';
+                msg.innerText = '';
+                updateDictUI();
+            }, 1000);
+        } else {
+            msg.innerText = "Try Again!";
+            msg.style.color = "var(--error)";
+            speak("Try again");
+            dictQueue.push(dictQueue.shift());
+            localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
+            setTimeout(() => {
+                document.getElementById('dictInput').value = '';
+                msg.innerText = '';
+                updateDictUI();
+            }, 1000);
+        }
+    }
+</script>
+</body>
+</html>
