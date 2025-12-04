@@ -5,291 +5,265 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>P2 Space English Adventure (Fixed)</title>
     <style>
-        :root {
-            --primary: #FFD700; /* Gold */
-            --secondary: #00BFFF; /* Deep Sky Blue */
-            --accent: #FF4500; /* Orange Red */
-            --bg-dark: #0B0D17; /* Space Black */
-            --card-bg: #1F2937; /* Dark Gray */
-            --text: #FFFFFF;
-            --success: #48bb78;
-            --error: #f56565;
-        }
+    :root {
+        --primary: #FFD700; /* Gold */
+        --secondary: #00BFFF; /* Deep Sky Blue */
+        --accent: #FF4500; /* Orange Red */
+        --bg-dark: #121420; /* Softer Space Black */
+        --card-bg: #2C3E50; /* Bluish Dark Gray */
+        --text: #FFFFFF;
+        --success: #2ecc71;
+        --error: #e74c3c;
+        --font-cartoon: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif;
+    }
 
-        * { box-sizing: border-box; touch-action: manipulation; }
+    * { box-sizing: border-box; touch-action: manipulation; }
 
-        body {
-            font-family: 'Microsoft JhengHei', 'Comic Sans MS', sans-serif;
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px);
-            background-size: 50px 50px;
-            background-position: 0 0, 25px 25px;
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            padding-bottom: 80px;
-        }
+    body {
+        font-family: var(--font-cartoon); /* Force Cartoon Font */
+        background-color: var(--bg-dark);
+        /* Animated Space Background */
+        background-image: 
+            radial-gradient(white 2px, transparent 2px), 
+            radial-gradient(rgba(255,255,255,.5) 1px, transparent 1px);
+        background-size: 50px 50px, 20px 20px;
+        background-position: 0 0, 10px 10px;
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        padding-bottom: 80px;
+        animation: spaceMove 60s linear infinite; /* Moving stars */
+    }
 
-        /* --- Header --- */
-        header {
-            background: rgba(11, 13, 23, 0.95);
-            padding: 10px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 2px solid var(--secondary);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.8);
-        }
+    @keyframes spaceMove { from { background-position: 0 0, 10px 10px; } to { background-position: 100px 100px, 110px 110px; } }
 
-        h1 { margin: 5px 0; color: var(--primary); text-shadow: 0 0 10px var(--accent); font-size: 1.5rem; }
+    /* --- Header (More Colorful) --- */
+    header {
+        background: rgba(18, 20, 32, 0.95);
+        padding: 15px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        border-bottom: 4px solid var(--secondary);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    }
 
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 10px 0;
-            background: #2d3748;
-            padding: 10px;
-            border-radius: 15px;
-        }
+    h1 { 
+        margin: 5px 0; 
+        color: var(--primary); 
+        text-shadow: 3px 3px 0px #000, 0 0 15px var(--accent); 
+        font-size: 1.8rem; 
+        letter-spacing: 1px;
+    }
 
-        select {
-            font-size: 1rem;
-            padding: 5px;
-            border-radius: 8px;
-            background: white;
-            border: 2px solid var(--secondary);
-        }
+    .controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 10px 0;
+        background: #34495e;
+        padding: 12px;
+        border-radius: 25px; /* Pill shape */
+        border: 2px solid #555;
+    }
 
-        /* --- Navigation --- */
-        .nav-bar {
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
+    select {
+        font-size: 1.1rem;
+        padding: 8px 15px;
+        border-radius: 15px;
+        background: #fff;
+        border: 3px solid var(--primary);
+        font-family: var(--font-cartoon);
+        font-weight: bold;
+        color: #333;
+    }
 
-        .nav-btn {
-            background: var(--secondary);
-            border: none;
-            padding: 8px 12px;
-            border-radius: 20px;
-            color: white;
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+    /* --- Navigation (Candy Buttons) --- */
+    .nav-bar {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        padding-top: 5px;
+    }
 
-        .nav-btn.active {
-            background: var(--accent);
-            border: 2px solid var(--primary);
-            transform: scale(1.05);
-        }
+    .nav-btn {
+        background: var(--secondary);
+        border: none;
+        padding: 10px 15px;
+        border-radius: 20px;
+        color: white;
+        font-family: var(--font-cartoon);
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.1s;
+        box-shadow: 0 4px 0 #0088cc; /* 3D Effect */
+        margin-bottom: 5px;
+    }
 
-        /* --- Main Content --- */
-        main { max-width: 800px; margin: 0 auto; padding: 15px; }
-        
-        .section { display: none; animation: fadeIn 0.4s; }
-        .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .nav-btn:active {
+        transform: translateY(4px);
+        box-shadow: none;
+    }
 
-        /* --- Word Cards --- */
-        .word-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Wider cards */
-            gap: 15px;
-        }
+    .nav-btn.active {
+        background: var(--accent);
+        box-shadow: 0 4px 0 #cc3300;
+        transform: scale(1.05);
+    }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-            border: 2px solid var(--secondary);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            position: relative;
-        }
+    /* --- Main Content --- */
+    main { max-width: 800px; margin: 0 auto; padding: 20px; }
+    
+    .section { display: none; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); } /* Bouncy animation */
+    .section.active { display: block; }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-        .en-text { 
-            font-size: 1.6rem; 
-            color: var(--primary); 
-            font-weight: bold; 
-            margin: 5px 0; 
-            word-wrap: break-word; /* Prevents text cutting off */
-            overflow-wrap: break-word;
-        }
+    /* --- Word Cards (Sticker Look) --- */
+    .word-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+    }
 
-        .cn-text { font-size: 1.2rem; color: #ccc; margin-bottom: 5px; }
-        .mnemonic { color: var(--accent); font-size: 0.9rem; font-style: italic; min-height: 40px; margin-bottom: 5px; }
-        .sentence { color: #888; font-size: 0.85rem; padding-top: 5px; border-top: 1px solid #444; }
+    .card {
+        background: var(--card-bg);
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+        border: 4px solid var(--secondary);
+        box-shadow: 5px 5px 0px rgba(0,0,0,0.3); /* Pop out effect */
+        position: relative;
+        transition: transform 0.2s;
+    }
+    .card:hover { transform: translateY(-5px); }
 
-        .audio-btn {
-            background: #fff; border: 2px solid var(--primary);
-            width: 35px; height: 35px; border-radius: 50%;
-            cursor: pointer; font-size: 1.2rem; margin: 5px;
-            display: inline-flex; justify-content: center; align-items: center;
-        }
+    .en-text { font-size: 1.8rem; color: var(--primary); font-weight: bold; margin: 5px 0; text-shadow: 2px 2px 0 #000; }
+    .cn-text { font-size: 1.3rem; color: #ddd; margin-bottom: 5px; }
+    .mnemonic { color: var(--accent); font-size: 1rem; font-style: normal; font-weight: bold; min-height: 30px; }
+    
+    .audio-btn {
+        background: #fff; border: 3px solid var(--primary);
+        width: 45px; height: 45px; border-radius: 50%;
+        cursor: pointer; font-size: 1.5rem; margin: 5px;
+        display: inline-flex; justify-content: center; align-items: center;
+        box-shadow: 0 3px 0 #ccc;
+        transition: all 0.1s;
+    }
+    .audio-btn:active { transform: translateY(3px); box-shadow: none; }
 
-        /* --- Story & Quiz --- */
-        .story-box {
-            background: #fff; color: #222;
-            padding: 20px; border-radius: 15px;
-            font-size: 1.3rem; line-height: 1.8;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-        }
+    /* --- Story & Quiz --- */
+    .story-box {
+        background: #fff; color: #222;
+        padding: 25px; border-radius: 20px;
+        font-size: 1.4rem; line-height: 1.6;
+        border: 4px solid var(--accent);
+        box-shadow: 8px 8px 0 rgba(0,0,0,0.5);
+    }
+    
+    .quiz-box {
+        background: var(--card-bg); padding: 20px;
+        margin-top: 25px; border-radius: 20px; 
+        border: 3px solid #555;
+    }
 
-        .story-title {
-            color: var(--accent); text-align: center;
-            border-bottom: 2px dashed #ccc; padding-bottom: 10px;
-        }
+    .quiz-opt {
+        display: block; width: 100%; padding: 15px; margin: 10px 0;
+        background: #fff; color: #333; border: 3px solid #ccc; 
+        border-radius: 15px; font-weight: bold;
+        text-align: left; font-size: 1.1rem; cursor: pointer;
+        box-shadow: 0 4px 0 #bbb;
+    }
+    .quiz-opt:active { transform: translateY(4px); box-shadow: none; }
+    .quiz-opt.correct { background: #d4edda; border-color: var(--success); color: #155724; }
+    .quiz-opt.wrong { background: #f8d7da; border-color: var(--error); color: #721c24; }
 
-        .click-word {
-            cursor: pointer; border-bottom: 1px dotted #999;
-            transition: background 0.2s; padding: 0 2px;
-        }
-        .click-word:hover { background: var(--primary); color: #000; border-radius: 4px; }
+    /* --- Game Section --- */
+    .game-area {
+        background: #34495e; padding: 20px; border-radius: 20px;
+        border: 4px dashed #7f8c8d; min-height: 150px;
+        display: flex; flex-wrap: wrap; gap: 12px;
+        justify-content: center; align-items: center; margin-bottom: 20px;
+    }
 
-        .quiz-box {
-            background: var(--card-bg); padding: 15px;
-            margin-top: 20px; border-radius: 10px; border: 1px solid #555;
-        }
+    .puzzle-piece {
+        background: var(--secondary); color: white; padding: 12px 25px;
+        border-radius: 15px; font-size: 1.3rem; cursor: pointer;
+        user-select: none; box-shadow: 0 5px 0 #0077b6; border: 2px solid white;
+        font-weight: bold;
+    }
+    .puzzle-piece:active { transform: translateY(5px); box-shadow: none; }
 
-        .quiz-opt {
-            display: block; width: 100%; padding: 12px; margin: 8px 0;
-            background: #374151; color: white; border: none; border-radius: 8px;
-            text-align: left; font-size: 1rem; cursor: pointer;
-        }
-        .quiz-opt.correct { background: var(--success); font-weight: bold; }
-        .quiz-opt.wrong { background: var(--error); opacity: 0.7; }
+    /* --- Grammar Section (Phone Friendly) --- */
+    .grammar-box { margin-bottom: 25px; }
+    
+    .grammar-rule-box {
+        background: rgba(255,255,255,0.1);
+        border-left: 5px solid var(--primary);
+        padding: 15px; margin-bottom: 15px;
+        border-radius: 0 15px 15px 0;
+    }
+    
+    .g-q-row {
+        margin: 15px 0;
+        font-size: 1.3rem; 
+        line-height: 2; /* More spacing for phone taps */
+        background: #2d3748;
+        padding: 20px;
+        border-radius: 20px;
+        border: 3px solid #4a5568;
+        box-shadow: 5px 5px 0 #1a202c;
+    }
 
-        /* --- Game Section --- */
-        .game-area {
-            background: #2d3748; padding: 20px; border-radius: 15px;
-            border: 2px dashed #666; min-height: 150px;
-            display: flex; flex-wrap: wrap; gap: 10px;
-            justify-content: center; align-items: center; margin-bottom: 20px;
-        }
+    /* Make inputs look like fill-in-the-blanks */
+    .g-input {
+        font-size: 1.3rem;
+        padding: 5px 10px;
+        width: 140px;
+        border: none;
+        border-bottom: 3px dashed var(--accent);
+        background: transparent;
+        color: var(--primary);
+        text-align: center;
+        font-weight: bold;
+        border-radius: 0;
+    }
+    .g-input:focus { outline: none; border-bottom: 3px solid var(--success); background: rgba(255,255,255,0.1); }
 
-        .puzzle-piece {
-            background: var(--secondary); color: white; padding: 10px 20px;
-            border-radius: 10px; font-size: 1.2rem; cursor: pointer;
-            user-select: none; box-shadow: 0 4px 0 #0077b6; transition: transform 0.1s;
-        }
-        .puzzle-piece:active { transform: translateY(4px); box-shadow: none; }
-        .game-feedback { text-align: center; font-size: 1.5rem; font-weight: bold; height: 40px; margin-top: 10px; }
+    .g-cn { color: var(--secondary); font-weight: bold; display: block; margin-top: 5px; font-size: 1.1rem; }
+    .hint-btn {
+        background: #FFD700; border: none; color: #000;
+        font-size: 1rem; border-radius: 20px; padding: 6px 15px;
+        cursor: pointer; margin-top: 8px; font-weight: bold;
+        box-shadow: 0 3px 0 #b39700;
+    }
+    .hint-btn:active { transform: translateY(3px); box-shadow: none; }
 
-        /* --- Dictation --- */
-        .dictation-area {
-            text-align: center; padding: 20px;
-            background: var(--card-bg); border-radius: 15px; border: 2px solid var(--accent);
-        }
-        .input-box {
-            width: 80%; padding: 10px; font-size: 1.5rem;
-            margin: 15px 0; border-radius: 10px; border: none; text-align: center;
-        }
-        .feedback { font-size: 1.2rem; font-weight: bold; min-height: 30px; margin: 10px 0; }
+    /* --- Dictation --- */
+    .dictation-area {
+        text-align: center; padding: 25px;
+        background: var(--card-bg); border-radius: 25px; 
+        border: 4px solid var(--accent);
+        box-shadow: 0 0 25px rgba(255, 69, 0, 0.2);
+    }
+    .input-box {
+        width: 90%; padding: 15px; font-size: 1.8rem;
+        margin: 20px 0; border-radius: 15px; 
+        border: 4px solid var(--secondary); text-align: center;
+        font-family: var(--font-cartoon);
+    }
 
-        /* --- Modal --- */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 1000;
-            justify-content: center; align-items: center;
-        }
-        .modal-content {
-            background: white; color: #333; padding: 25px; border-radius: 20px;
-            width: 90%; max-width: 350px; text-align: center; position: relative;
-        }
-        .close-x { position: absolute; top: 10px; right: 15px; font-size: 2rem; cursor: pointer; }
-
-        /* --- New Result History Styles --- */
-        .history-box {
-            margin-top: 15px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            text-align: left;
-            font-size: 0.9rem;
-            color: #ccc;
-        }
-        .history-row {
-            margin: 5px 0;
-            border-bottom: 1px solid #444;
-            padding-bottom: 5px;
-        }
-        .history-label {
-            color: var(--secondary);
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        /* --- Disabled Button Style --- */
-        .nav-btn:disabled, select:disabled {
-            background-color: #555 !important; /* Gray background */
-            color: #999 !important; /* Dim text */
-            border-color: #444 !important;
-            cursor: not-allowed;
-            transform: none !important;
-            opacity: 0.6;
-        }
-
-        /* --- Status Badge in Nav --- */
-        .status-badge {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: normal;
-            margin-top: 2px;
-        }
-        .status-none { display: none; }
-        .status-progress { color: #FFD700; } /* Yellow */
-        .status-done { color: #48bb78; }    /* Green */
-
-        /* --- Grammar Section --- */
-        .grammar-box {
-            background: var(--card-bg);
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 10px;
-            border: 1px solid #555;
-            text-align: left;
-        }
-        .grammar-group { margin-bottom: 25px; border-bottom: 1px dashed #444; padding-bottom: 15px; }
-        .grammar-rule {
-            background: #2d3748;
-            color: #90cdf4;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 5px 0 15px 0;
-            display: none; /* Hidden by default */
-            font-size: 0.9rem;
-        }
-        .g-input {
-            background: white;
-            border: 1px solid #ccc;
-            padding: 5px;
-            border-radius: 5px;
-            width: 120px;
-            text-align: center;
-            color: #000;
-        }
-        .g-q-row { margin: 10px 0; font-size: 1.1rem; line-height: 1.6; }
-        .g-feedback { margin-left: 10px; font-weight: bold; }
-
-        /* --- Locked Button Style --- */
-        .nav-btn.locked {
-            background-color: #333 !important;
-            color: #777 !important;
-            border-color: #555 !important;
-            cursor: not-allowed;
-            position: relative;
-        }
-        .nav-btn.locked::after {
-            content: "🔒 Locked";
-            display: block;
-            font-size: 0.7rem;
-            color: #e53e3e; /* Red */
-        }
-    </style>
+    /* --- Mobile Tweak --- */
+    @media (max-width: 600px) {
+        h1 { font-size: 1.4rem; }
+        .nav-btn { font-size: 0.85rem; padding: 8px 10px; }
+        .en-text { font-size: 1.4rem; }
+        .g-input { width: 100px; font-size: 1.1rem; }
+        .story-box { padding: 15px; font-size: 1.1rem; }
+    }
+</style>
 </head>
 <body>
 
@@ -303,11 +277,8 @@
         <button class="nav-btn active" onclick="nav('learn')">1. 學習 (Learn)</button>
         <button class="nav-btn" onclick="nav('story')">2. 閱讀 (Read)</button>
         <button class="nav-btn" onclick="nav('game')">3. 遊戲 (Game)</button>
-        <!-- Updated Test Button: ID added, onclick changed to check lock -->
-        <button id="navTestBtn" class="nav-btn locked" onclick="tryEnterTest()">
-            4. 測驗 (Test)
-            <span id="testStatus" class="status-badge status-none"></span>
-        </button>
+        <button class="nav-btn" onclick="nav('grammar')">4. 文法 (Grammar)</button> <!-- NEW BUTTON -->
+        <button class="nav-btn" onclick="nav('dictation')">5. 測驗 (Test)</button>
     </div>
 </header>
 
@@ -343,94 +314,79 @@
         </div>
     </section>
 
+    <!-- SECTION: GRAMMAR -->
+    <section id="grammar" class="section">
+        <h2 style="text-align:center; color:var(--primary)">Grammar Master (文法大師)</h2>
+        <p style="text-align:center; color:#aaa; margin-bottom:20px;">Read the rules and fill in the blanks! (閱讀規則並填充)</p>
+
+        <!-- Part 1: V-ing -->
+        <div class="grammar-box">
+            <div class="grammar-rule-box">
+                <span class="grammar-rule-title">📝 Rule 1: Present Continuous (正在進行式)</span>
+                Action happening <b>NOW</b> (現在). <br>
+                Formula: <b>am / is / are + verb-ing</b><br>
+                <span style="color:#aaa; font-size:0.85rem;">(I am / He,She,It is / You,We,They are)</span><br>
+                <i>Example: I <b>am eating</b> now. / Look! He <b>is running</b>.</i>
+            </div>
+            <div id="quizVing"></div>
+        </div>
+
+        <!-- Part 2: To-Inf -->
+        <div class="grammar-box">
+            <div class="grammar-rule-box">
+                <span class="grammar-rule-title">📝 Rule 2: Infinitive (不定詞)</span>
+                Two verbs together (兩個動詞在一起) or after specific words like <i>want, like, need, hope, try</i>.<br>
+                Formula: <b>to + base verb</b> (Original verb)<br>
+                <i>Example: I want <b>to go</b> home. / She likes <b>to play</b>.</i>
+            </div>
+            <div id="quizInf"></div>
+        </div>
+
+        <!-- Part 3: Past Tense -->
+        <div class="grammar-box">
+            <div class="grammar-rule-box">
+                <span class="grammar-rule-title">📝 Rule 3: Simple Past Tense (過去式)</span>
+                Action finished in the past (yesterday, last week).<br>
+                Formula: Add <b>-ed</b> OR change the word (Irregular).<br>
+                <i>Example: I <b>walked</b> yesterday. / I <b>went</b> (go) to school last week.</i>
+            </div>
+            <div id="quizPast"></div>
+        </div>
+
+        <button class="nav-btn" style="width:100%; background:var(--accent); font-size:1.2rem; padding:15px; margin-bottom:30px;" onclick="checkGrammarAll()">Check Grammar Answers (檢查答案)</button>
+        <div id="grammarFinalMsg" style="text-align:center; font-size:1.5rem; font-weight:bold; height:50px;"></div>
+    </section>
+
     <!-- SECTION 4: DICTATION -->
     <section id="dictation" class="section">
-        <!-- Exit Button -->
-        <div style="text-align:right; margin-bottom:10px;">
-            <button onclick="exitTest()" style="background:#e53e3e; border:none; color:white; padding:5px 10px; border-radius:5px; cursor:pointer;">
-                ❌ 離開並儲存 (Exit & Save)
-            </button>
-        </div>
-
         <h2 style="text-align:center; color:var(--primary)">Review Mission (溫習任務)</h2>
-
-        <!-- Part A: Dictation -->
-        <div id="dictationWrapper">
-            <div class="dictation-area">
-                <p style="color:#aaa;">點擊喇叭 🔊 -> 輸入英文單詞</p>
-                <h1 id="dictCn" style="color:white; font-size:2.5rem;">---</h1>
-                <button class="audio-btn" style="width:60px; height:60px; font-size:2rem;" onclick="playDictSound()">🔊</button>
-                <br>
-                <input type="text" id="dictInput" class="input-box" placeholder="輸入英文..." autocomplete="off">
-                
-                <div style="display:flex; justify-content:space-between; padding:0 10%;">
-                    <button onclick="giveHint()" style="background:none; color:#aaa; border:none; text-decoration:underline;">提示 (Hint)</button>
-                    <span id="dictCount" style="color:var(--primary);">剩餘: 0</span>
-                </div>
-
-                <div id="dictMsg" class="feedback"></div>
-                
-                <!-- History Box -->
-                <div class="history-box">
-                    <div class="history-row">
-                        <span class="history-label">第一次嘗試 (1st Try):</span>
-                        <span id="resFirst" style="color:#fff;">-</span>
-                    </div>
-                    <div class="history-row" style="border:none;">
-                        <span class="history-label">最近嘗試 (Latest):</span>
-                        <span id="resLatest" style="color:#fff;">-</span>
-                    </div>
-                </div>
-
-                <button class="nav-btn" style="width:100%; background:var(--success); font-size:1.2rem; padding:12px; margin-top:10px;" onclick="checkDict()">檢查答案 (Check)</button>
-            </div>
-        </div>
-
-        <!-- Part B: Grammar (Hidden until Dictation is done) -->
-        <div id="grammarLocked" style="text-align:center; margin-top:30px; display:none;">
-            <h3 style="color:#aaa;">🔒 Grammar Quiz Locked</h3>
-            <p>Complete dictation to unlock! (完成聽寫以解鎖)</p>
-        </div>
-
-        <div id="grammarSection" style="display:none;">
-            <hr style="border-color:#444; margin:30px 0;">
-            <h2 style="text-align:center; color:var(--secondary)">Grammar Challenge (文法挑戰)</h2>
+        <div class="dictation-area">
+            <p style="color:#aaa;">點擊喇叭 🔊 -> 輸入英文單詞</p>
+            <h1 id="dictCn" style="color:white; font-size:2.5rem;">---</h1>
+            <button class="audio-btn" style="width:60px; height:60px; font-size:2rem;" onclick="playDictSound()">🔊</button>
+            <br>
+            <input type="text" id="dictInput" class="input-box" placeholder="輸入英文..." autocomplete="off">
             
-            <!-- 1. V-ing -->
-            <div class="grammar-box">
-                <h3 style="color:var(--primary)">Part 1: Present Continuous (V+ing)</h3>
-                <button class="nav-btn" style="font-size:0.8rem; background:#4a5568;" onclick="toggleRule('rule1')">❓ Show Rule (顯示規則)</button>
-                <div id="rule1" class="grammar-rule">
-                    Rule: Use <b>am / is / are + verb-ing</b>.<br>
-                    Example: I <b>am swimming</b>. / She <b>is running</b>.
-                </div>
-                <div id="quizVing"></div>
+            <div style="display:flex; justify-content:space-between; padding:0 10%;">
+                <button onclick="giveHint()" style="background:none; color:#aaa; border:none; text-decoration:underline;">提示 (Hint)</button>
+                <span id="dictCount" style="color:var(--primary);">剩餘: 0</span>
             </div>
 
-            <!-- 2. To-Inf -->
-            <div class="grammar-box">
-                <h3 style="color:var(--primary)">Part 2: Infinitive (to + verb)</h3>
-                <button class="nav-btn" style="font-size:0.8rem; background:#4a5568;" onclick="toggleRule('rule2')">❓ Show Rule (顯示規則)</button>
-                <div id="rule2" class="grammar-rule">
-                    Rule: Use <b>to + base verb</b> (no s, no ing, no ed).<br>
-                    Example: I want <b>to go</b>. / She likes <b>to play</b>.
+            <div id="dictMsg" class="feedback"></div>
+            
+            <!-- NEW HISTORY SECTION -->
+            <div class="history-box">
+                <div class="history-row">
+                    <span class="history-label">第一次嘗試:</span>
+                    <span id="resFirst" style="color:#fff;">-</span>
                 </div>
-                <div id="quizInf"></div>
+                <div class="history-row" style="border:none;">
+                    <span class="history-label">最近嘗試:</span>
+                    <span id="resLatest" style="color:#fff;">-</span>
+                </div>
             </div>
 
-            <!-- 3. Past Tense -->
-            <div class="grammar-box">
-                <h3 style="color:var(--primary)">Part 3: Past Tense (Past Actions)</h3>
-                <button class="nav-btn" style="font-size:0.8rem; background:#4a5568;" onclick="toggleRule('rule3')">❓ Show Rule (顯示規則)</button>
-                <div id="rule3" class="grammar-rule">
-                    Rule: Action finished. Add <b>-ed</b> or change the word.<br>
-                    Example: play -> <b>played</b> / go -> <b>went</b> / see -> <b>saw</b>.
-                </div>
-                <div id="quizPast"></div>
-            </div>
-
-            <button class="nav-btn" style="width:100%; background:var(--accent); font-size:1.2rem; padding:15px;" onclick="checkGrammarAll()">Submit Grammar Quiz (提交文法)</button>
-            <div id="grammarFinalMsg" style="text-align:center; font-size:1.5rem; margin-top:20px;"></div>
+            <button class="nav-btn" style="width:100%; background:var(--success); font-size:1.2rem; padding:12px; margin-top:10px;" onclick="checkDict()">檢查答案 (Check)</button>
         </div>
     </section>
 </main>
@@ -1569,12 +1525,7 @@
         }
     };
 
-    // IF YOU NEED THE FULL STORIES & DICTIONARY AGAIN, LET ME KNOW. 
-    // OTHERWISE, KEEP THE ONES YOU HAVE.
-
-    // ================= 4. APP LOGIC & DATA (THE FIXED PART) =================
-
-    // --- MASSIVE GRAMMAR DATABASE ---
+    // ================= 3. MASSIVE GRAMMAR DATABASE (All Questions) =================
     const grammarPool = {
         ving: [
             {q: "I ___________ (read) a book now.", a: "am reading"}, {q: "She ___________ (sit) on the chair now.", a: "is sitting"},
@@ -1659,30 +1610,18 @@
         ]
     };
 
+    // ================= 4. APPLICATION LOGIC =================
     let currentDay = parseInt(localStorage.getItem('p2_day')) || 1;
+    let dictQueue = JSON.parse(localStorage.getItem('p2_queue')) || [];
     let isGameSolved = false;
     let currentDictTarget = "";
-    
-    // Global State Variables
-    let dictQueue = [];
-    let firstAttemptHistory = {}; // Stores { 'word': 'user_input ✅/❌' }
-    let testStatus = 'not_started'; // not_started, in_progress, done
-    let grammarQuestions = []; // Stores the selected 15 questions
-    let grammarDone = false;
-    let missionProgress = {
-        listened: [],    // Stores words listened to
-        reading: [],     // Stores indices of Reading Questions answered correctly
-        game: false      // Game finished?
-    };
+    let grammarQuestions = {}; // Stores the 15 daily questions
 
     window.onload = function() {
         initDaySelect();
-        // Load Dictionary Queue and History from Save if exists
-        loadTestState();
-        
+        generateGrammarQuestions(); // Randomly select 15 questions for the session
         loadDay(currentDay);
-        updateNavStatus();
-        checkMissionUnlock(); // Ensure lock status is correct on load
+        updateDictUI();
     };
 
     function initDaySelect() {
@@ -1700,87 +1639,30 @@
     function changeDay() {
         currentDay = parseInt(document.getElementById('daySelect').value);
         localStorage.setItem('p2_day', currentDay);
-        
-        // Changing day resets the test for the NEW day
-        resetTestForNewDay();
-        
         isGameSolved = false;
+        generateGrammarQuestions(); // New questions for new day
         loadDay(currentDay);
         nav('learn');
     }
 
-    function resetTestForNewDay() {
-        localStorage.removeItem(`p2_test_state_${currentDay}`);
-        dictQueue = []; 
-        firstAttemptHistory = {};
-        grammarQuestions = [];
-        grammarDone = false;
-        testStatus = 'not_started';
-        missionProgress = { listened: [], reading: [], game: false };
-        updateNavStatus();
-    }
-
-    function loadTestState() {
-        const saved = localStorage.getItem(`p2_test_state_${currentDay}`);
-        if(saved) {
-            const data = JSON.parse(saved);
-            dictQueue = data.queue || [];
-            firstAttemptHistory = data.history || {};
-            testStatus = data.status || 'not_started';
-            grammarQuestions = data.grammarQ || [];
-            grammarDone = data.grammarDone || false;
-            missionProgress = data.mission || { listened: [], reading: [], game: false };
-            isGameSolved = missionProgress.game; 
-        } else {
-            // New load for this day, fill queue
-            const dayWords = dailyWords[currentDay-1] || [];
-            dictQueue = [...dayWords]; // Copy array
-            firstAttemptHistory = {};
-            testStatus = 'not_started';
-            missionProgress = { listened: [], reading: [], game: false };
-            isGameSolved = false;
-            generateGrammarQuestions();
-        }
-        updateDictUI();
-        updateNavStatus();
-    }
-
-    function saveTestState() {
-        missionProgress.game = isGameSolved;
-        const state = {
-            queue: dictQueue,
-            history: firstAttemptHistory,
-            status: testStatus,
-            grammarQ: grammarQuestions,
-            grammarDone: grammarDone,
-            mission: missionProgress
-        };
-        localStorage.setItem(`p2_test_state_${currentDay}`, JSON.stringify(state));
-        updateNavStatus();
-        checkMissionUnlock();
-    }
-
-    function updateNavStatus() {
-        const badge = document.getElementById('testStatus');
-        const totalWords = (dailyWords[currentDay-1] || []).length;
+    // --- Navigation ---
+    function nav(id) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
         
-        if (grammarDone) {
-            badge.className = 'status-badge status-done';
-            badge.innerText = '完成 (Done)';
-        } else if (testStatus === 'in_progress' || dictQueue.length < totalWords) {
-            badge.className = 'status-badge status-progress';
-            if(dictQueue.length === 0) {
-                badge.innerText = '進行中 (In Progress) - 50%';
-            } else {
-                badge.innerText = '進行中 (In Progress)';
-            }
-        } else {
-            badge.className = 'status-badge status-none';
-            badge.innerText = '';
-        }
+        // Map button index: Learn=0, Story=1, Game=2, Grammar=3, Dictation=4
+        const map = {'learn':0, 'story':1, 'game':2, 'grammar':3, 'dictation':4};
+        const btns = document.querySelectorAll('.nav-btn');
+        if(btns[map[id]]) btns[map[id]].classList.add('active');
+        
+        if(id === 'game') initGame();
+        if(id === 'grammar') renderGrammarSection();
     }
 
+    // --- Grammar Logic ---
     function generateGrammarQuestions() {
+        // Randomly pick 5 unique questions from each pool
         const get5 = (arr) => {
             const shuffled = [...arr].sort(() => 0.5 - Math.random());
             return shuffled.slice(0, 5);
@@ -1792,181 +1674,167 @@
         };
     }
 
-    // --- NAVIGATION & LOCKING ---
-    function nav(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        
-        const map = {'learn':0, 'story':1, 'game':2, 'dictation':3};
-        const btns = document.querySelectorAll('.nav-btn');
-        if(btns[map[id]]) btns[map[id]].classList.add('active');
-        
-        // Lockdown Logic
-        if(id === 'dictation') {
-            btns.forEach((btn, index) => { if(index !== 3) btn.disabled = true; });
-            document.getElementById('daySelect').disabled = true;
-            if(testStatus === 'not_started') testStatus = 'in_progress';
-            saveTestState();
-            checkGrammarUnlock();
-        } 
-        if(id === 'game') initGame();
-    }
+    // --- 1. REVISED: Smart Hint Logic (With Vowel Rules) ---
+    function getGrammarHint(type, baseVerb, answer) {
+        if (!baseVerb || !answer) return "";
+        let base = baseVerb.toLowerCase().trim();
+        let ans = answer.toLowerCase().trim();
 
-    function exitTest() {
-        saveTestState();
-        document.querySelectorAll('.nav-btn').forEach(b => b.disabled = false);
-        document.getElementById('daySelect').disabled = false;
-        nav('learn');
-    }
+        // --- Present Continuous (V-ing) ---
+        if (type === 'ving') {
+            let mainVerb = ans.replace(/^(am|is|are)\s+/, '');
 
-    function checkMissionUnlock() {
-        const btn = document.getElementById('navTestBtn');
-        const dayWords = dailyWords[currentDay-1] || [];
-        // Handle undefined articles
-        const art = articles[currentDay];
-        const storyQs = (art && art.q) ? art.q.length : 0;
-
-        const allListened = missionProgress.listened.length >= dayWords.length;
-        const allRead = missionProgress.reading.length >= storyQs;
-        const gameDone = missionProgress.game;
-
-        if (allListened && allRead && gameDone) {
-            btn.classList.remove('locked');
-        } else {
-            btn.classList.add('locked');
-        }
-    }
-
-    function tryEnterTest() {
-        const btn = document.getElementById('navTestBtn');
-        if (btn.classList.contains('locked')) {
-            const dayWords = dailyWords[currentDay-1] || [];
-            const art = articles[currentDay];
-            const storyQs = (art && art.q) ? art.q.length : 0;
-            
-            let msg = "Mission Incomplete (任務未完成)! \n\n";
-            if(missionProgress.listened.length < dayWords.length) msg += "❌ Listen to all 5 words (聽完5個單詞)\n";
-            else msg += "✅ Words Listened\n";
-            
-            if(missionProgress.reading.length < storyQs) msg += "❌ Finish Reading Quiz (完成閱讀測驗)\n";
-            else msg += "✅ Reading Done\n";
-            
-            if(!missionProgress.game) msg += "❌ Finish Game (完成遊戲)\n";
-            else msg += "✅ Game Done\n";
-            
-            alert(msg);
-        } else {
-            nav('dictation');
-        }
-    }
-
-    // --- DICTATION LOGIC ---
-    function updateDictUI() {
-        const count = dictQueue.length;
-        document.getElementById('dictCount').innerText = `剩餘: ${count}`;
-        
-        document.getElementById('dictInput').value = '';
-        document.getElementById('dictMsg').innerText = '';
-        document.getElementById('resLatest').innerText = '-';
-        document.getElementById('resFirst').innerText = '-';
-
-        if(count > 0) {
-            const w = dictQueue[0];
-            currentDictTarget = w;
-            const info = dictionary[w] || {cn:'Translation'};
-            document.getElementById('dictCn').innerText = info.cn;
-            
-            if(firstAttemptHistory[w]) {
-                document.getElementById('resFirst').innerText = firstAttemptHistory[w];
+            // Rule 1: Drop 'e' (make -> making, write -> writing)
+            if (base.endsWith('e') && !base.endsWith('ee') && !mainVerb.includes('eing')) {
+                return `Rule: Remove 'e' + ing (刪去 'e' 加 ing)`;
             }
-            document.getElementById('dictationWrapper').style.display = 'block';
-            document.getElementById('grammarLocked').style.display = 'block';
-            document.getElementById('grammarSection').style.display = 'none';
-        } else {
-            // DICTATION IS DONE
-            document.getElementById('dictCn').innerText = "Dictation Complete! (聽寫完成)";
-            document.getElementById('dictationWrapper').style.display = 'none';
-            currentDictTarget = "";
+
+            // Rule 2: Double Consonant (run -> running, swim -> swimming)
+            // Logic: 1 Syllable + 1 Vowel + 1 Consonant -> Double the last letter
+            // We check this by seeing if the answer added an extra letter before 'ing'
+            if (mainVerb.length > (base.length + 3)) {
+                return `Rule: Short vowel (a,e,i,o,u) + Consonant -> Double letter (短元音+子音 -> 重覆尾音)`;
+            }
+
+            return `Rule: Add 'ing' directly (直接加 ing)`;
+        }
+
+        // --- Past Tense (Past) ---
+        if (type === 'past') {
             
-            // UNLOCK GRAMMAR
-            checkGrammarUnlock();
+            // === SPECIFIC IRREGULAR PATTERNS (Based on your list) ===
+            
+            // Group 1: i -> a (sing -> sang, drink -> drank, swim -> swam)
+            if (['sing', 'drink', 'swim', 'ring', 'begin'].includes(base)) {
+                return `Rule: Change 'i' to 'a' (中間 'i' 變 'a')`;
+            }
+
+            // Group 2: i/o -> e (Magic 'e' pattern: drive -> drove, write -> wrote, ride -> rode)
+            if (['drive', 'write', 'ride'].includes(base)) {
+                return `Rule: Change 'i' to 'o' (中間 'i' 變 'o')`;
+            }
+
+            // Group 3: ow/y -> ew (know -> knew, fly -> flew, grow -> grew)
+            if (['know', 'fly', 'grow', 'blow', 'draw', 'throw'].includes(base)) {
+                return `Rule: Change end to 'ew' (字尾變 'ew')`;
+            }
+
+            // Group 4: -ought / -aught (buy -> bought, teach -> taught)
+            if (['buy', 'bring', 'fight', 'think'].includes(base)) return `Rule: Change to 'ought' (變 'ought')`;
+            if (['teach', 'catch'].includes(base)) return `Rule: Change to 'aught' (變 'aught')`;
+
+            // Group 5: meet -> met, feed -> fed
+            if (['meet', 'feed'].includes(base)) {
+                return `Rule: Remove one 'e' (刪去一個 'e')`;
+            }
+
+            // Group 6: Common "Special" changes (The "Memorize" list)
+            switch (base) {
+                case 'go':    return `Rule: Special! go -> went (不規則: went)`;
+                case 'eat':   return `Rule: Rearrange! eat -> ate (重組字母: ate)`;
+                case 'see':   return `Rule: see -> saw (不規則: saw)`;
+                case 'do':    return `Rule: do -> did (不規則: did)`;
+                case 'have':  return `Rule: have -> had (不規則: had)`;
+                case 'make':  return `Rule: Change 'k' to 'd' (k 變 d -> made)`;
+                case 'come':  return `Rule: Change 'o' to 'a' (o 變 a -> came)`;
+                case 'give':  return `Rule: Change 'i' to 'a' (i 變 a -> gave)`;
+                case 'run':   return `Rule: Change 'u' to 'a' (u 變 a -> ran)`;
+                case 'take':  return `Rule: take -> took (不規則: took)`;
+                case 'wear':  return `Rule: wear -> wore (ear 變 ore)`;
+                case 'find':  return `Rule: find -> found (ind 變 ound)`;
+                case 'win':   return `Rule: win -> won (in 變 on)`;
+                case 'sleep': return `Rule: sleep -> slept (eep 變 ept)`;
+                case 'say':   return `Rule: say -> said (ay 變 aid)`;
+                case 'forget': return `Rule: forget -> forgot (get 變 got)`;
+            }
+
+            // === REGULAR RULES ===
+
+            // Rule: Change y to i + ed (cry -> cried)
+            if (base.endsWith('y') && !['a','e','i','o','u'].includes(base[base.length-2])) {
+                return `Rule: Change 'y' to 'i' + ed (改 'y' 為 'i' 加 ed)`;
+            }
+
+            // Rule: Ends in e -> + d (live -> lived)
+            if (base.endsWith('e')) {
+                return `Rule: Ends in 'e', just add 'd' (字尾是 e，只加 d)`;
+            }
+
+            // Rule: Double Consonant (stop -> stopped)
+            if (ans.length > (base.length + 2)) {
+                 return `Rule: Short vowel + Consonant -> Double letter (重覆尾音字母 + ed)`;
+            }
+
+            // Default
+            return `Rule: Add 'ed' directly (直接加 ed)`;
         }
+
+        // --- Infinitive (To-Inf) ---
+        if (type === 'toInf') {
+            return `Rule: Use 'to' + original verb (用 'to' + 原形動詞)`;
+        }
+
+        return "Hint not available";
     }
 
-    function checkGrammarUnlock() {
-        if(dictQueue.length === 0) {
-            document.getElementById('grammarLocked').style.display = 'none';
-            document.getElementById('grammarSection').style.display = 'block';
-            renderGrammarQuiz();
-        }
-    }
-
-    function playDictSound() { if(currentDictTarget) speak(currentDictTarget); }
-    function giveHint() { if(currentDictTarget) document.getElementById('dictInput').value = currentDictTarget[0] + "..."; }
-
-    function checkDict() {
-        if(!currentDictTarget) return;
-        const inputElem = document.getElementById('dictInput');
-        const val = inputElem.value.trim().toLowerCase();
-        const msg = document.getElementById('dictMsg');
-        
-        const isCorrect = (val === currentDictTarget);
-        const displayResult = `${val} ${isCorrect ? '✅' : '❌'}`;
-
-        if (!firstAttemptHistory[currentDictTarget]) {
-            firstAttemptHistory[currentDictTarget] = displayResult;
-            document.getElementById('resFirst').innerText = displayResult;
-            saveTestState(); 
-        }
-        document.getElementById('resLatest').innerText = displayResult;
-
-        if(isCorrect) {
-            msg.innerText = "答對了! (Correct) 🎉";
-            msg.style.color = "var(--success)";
-            speak("Good Job");
-            setTimeout(() => {
-                dictQueue.shift();
-                saveTestState(); 
-                updateDictUI();
-            }, 1000);
-        } else {
-            msg.innerText = "再試一次! (Try Again)";
-            msg.style.color = "var(--error)";
-            speak("Try again");
-            dictQueue.push(dictQueue.shift());
-            saveTestState();
-            setTimeout(() => {
-                inputElem.value = '';
-                msg.innerText = '';
-            }, 1000);
-        }
-    }
-
-    // --- GRAMMAR LOGIC ---
-    function toggleRule(id) {
-        const el = document.getElementById(id);
-        el.style.display = (el.style.display === 'block') ? 'none' : 'block';
-    }
-
-    function renderGrammarQuiz() {
-        const r = (id, list) => {
+    // --- 2. REVISED: Render Section (Fixes "Missing Text" bug) ---
+    function renderGrammarSection() {
+        const renderList = (id, list, type) => {
             const div = document.getElementById(id);
             if(div.innerHTML !== "") return; 
             
             list.forEach((item, idx) => {
+                // 1. Extract base verb for hint logic
+                const match = item.q.match(/\((.*?)\)/);
+                const baseVerb = match ? match[1] : "";
+                
+                // 2. Generate Hint
+                const specificHint = getGrammarHint(type, baseVerb, item.a);
+
+                // 3. FIX: Split using Regex (/_+/) instead of fixed string
+                // This handles "___" or "___________" equally well so text isn't lost.
+                const parts = item.q.split(/_+/); 
+                
+                // Make words clickable
+                const part1 = parts[0] ? makeClickable(parts[0]) : "";
+                const part2 = parts[1] ? makeClickable(parts[1]) : ""; 
+
+                const hintId = `hint-${type}-${idx}`;
+
                 div.innerHTML += `
                     <div class="g-q-row">
-                        ${idx+1}. ${item.q.replace('___________', `<input type="text" class="g-input" data-ans="${item.a}">`)}
-                        <span class="g-feedback"></span>
+                        <div class="g-q-text">
+                            <!-- Question Part 1 -->
+                            <span style="margin-right:5px;">${idx+1}. ${part1}</span>
+                            
+                            <!-- Input Box -->
+                            <input type="text" class="g-input" data-ans="${item.a}" autocomplete="off">
+                            
+                            <!-- Question Part 2 (The missing part) -->
+                            <span style="margin-left:5px;">${part2}</span>
+                            
+                            <!-- Checkmark/X Feedback -->
+                            <span class="g-feedback"></span>
+                        </div>
+                        
+                        <div style="margin-top:8px;">
+                            <button class="hint-btn" onclick="document.getElementById('${hintId}').style.display='block'">
+                                💡 提示 (Hint)
+                            </button>
+                        </div>
+
+                        <div id="${hintId}" class="g-meta">
+                            <span class="g-cn">${item.cn || "翻譯 (Translation)"}</span>
+                            <span class="g-clue">💡 ${specificHint}</span>
+                        </div>
                     </div>
                 `;
             });
         };
         
-        r('quizVing', grammarQuestions.v);
-        r('quizInf', grammarQuestions.t);
-        r('quizPast', grammarQuestions.p);
+        renderList('quizVing', grammarQuestions.v, 'ving');
+        renderList('quizInf', grammarQuestions.t, 'toInf');
+        renderList('quizPast', grammarQuestions.p, 'past');
     }
 
     function checkGrammarAll() {
@@ -1977,16 +1845,22 @@
         inputs.forEach(input => {
             const userAns = input.value.trim().toLowerCase();
             const correctAns = input.getAttribute('data-ans').toLowerCase();
-            const fb = input.nextElementSibling;
+            
+            // --- THIS IS THE FIX ---
+            // Instead of grabbing the neighbor (which is the text), 
+            // we look for the specific feedback span inside the parent container.
+            const fb = input.parentNode.querySelector('.g-feedback');
             
             if(userAns === correctAns) {
                 input.style.border = "2px solid var(--success)";
                 input.style.background = "#f0fff4";
                 fb.innerHTML = "✅";
+                fb.style.color = "var(--success)";
             } else {
                 input.style.border = "2px solid var(--error)";
                 input.style.background = "#fff5f5";
                 fb.innerHTML = "❌"; 
+                fb.style.color = "var(--error)";
                 allCorrect = false;
             }
             if(userAns !== "") count++;
@@ -1994,37 +1868,91 @@
 
         const msg = document.getElementById('grammarFinalMsg');
         if(allCorrect && count === 15) {
-            msg.innerHTML = "<span style='color:var(--success)'>🎉 Congratulations! All Missions Complete! 🎉<br>任務全部完成！</span>";
-            grammarDone = true;
-            testStatus = 'done';
-            saveTestState();
+            msg.innerHTML = "<span style='color:var(--success)'>🎉 Amazing! You are a Grammar Master! 🎉</span>";
+            speak("Excellent job!");
         } else {
-            msg.innerText = "Keep going! Some answers are missing or wrong. (加油！有些答案不正確)";
-            grammarDone = false;
+            msg.innerHTML = "<span style='color:#e53e3e'>Keep trying! (再試一次)</span>";
+            speak("Try again");
         }
     }
 
-    // --- COMMON UTILS ---
-    function makeClickable(txt) {
-        return txt.split(' ').map(w => {
-            const clean = w.replace(/[^a-zA-Z]/g, ''); 
-            if (!clean) return w;
-            return `<span class="click-word" onclick="wordClick('${clean}'); event.stopPropagation();">${w}</span>`;
-        }).join(' ');
-    }
+        const msg = document.getElementById('grammarFinalMsg');
+        if(allCorrect && count === 15) {
+            msg.innerHTML = "<span style='color:var(--success)'>🎉 Amazing! You are a Grammar Master! 🎉</span>";
+            speak("Excellent job!");
+        } else {
+            msg.innerHTML = "<span style='color:#e53e3e'>Keep trying! (再試一次)</span>";
+            speak("Try again");
+        }
     
+
+    // --- Standard Helper Functions ---
     function speak(txt) {
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(txt);
         u.lang = 'en-US'; u.rate = 0.8;
         window.speechSynthesis.speak(u);
     }
-    
+
+    function makeClickable(txt) {
+        return txt.split(' ').map(w => {
+            const clean = w.replace(/[^a-zA-Z]/g, '');
+            if (!clean) return w;
+            return `<span class="click-word" onclick="wordClick('${clean}'); event.stopPropagation();">${w}</span>`;
+        }).join(' ');
+    }
+
+    function loadDay(d) {
+        // Words
+        const grid = document.getElementById('wordGrid');
+        grid.innerHTML = '';
+        const dayWords = dailyWords[d-1] || [];
+        let addedNew = false;
+        
+        dayWords.forEach(en => {
+            const lowerEn = en.toLowerCase();
+            const info = dictionary[lowerEn] || {cn:'Search', sound:''};
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="en-text">${en}</div>
+                <div class="cn-text">${info.cn}</div>
+                <div class="mnemonic">${info.sound || ""}</div>
+                <button class="audio-btn" onclick="speak('${en}')">🔊</button>
+                <div class="sentence">I like the ${en}.</div>
+            `;
+            grid.appendChild(card);
+            if(!dictQueue.includes(lowerEn)) { dictQueue.push(lowerEn); addedNew = true; }
+        });
+
+        if(addedNew) { localStorage.setItem('p2_queue', JSON.stringify(dictQueue)); updateDictUI(); }
+
+        // Story
+        const art = articles[d] || {t:'No Story', txt:'No text.', q:[]};
+        document.getElementById('storyTitle').innerText = art.t;
+        document.getElementById('storyContent').innerHTML = makeClickable(art.txt);
+
+        // Quiz
+        const qArea = document.getElementById('quizArea');
+        qArea.innerHTML = '';
+        art.q.forEach((item, idx) => {
+            const box = document.createElement('div');
+            box.className = 'quiz-box';
+            let opts = [item.a, ...item.o].sort(() => Math.random() - 0.5);
+            let btnHtml = opts.map(o => `<button class="quiz-opt" onclick="checkQuiz(this, '${o===item.a}')">${makeClickable(o)}</button>`).join('');
+            box.innerHTML = `<p style="font-weight:bold; color:var(--primary)">Q${idx+1}: ${makeClickable(item.q)}</p>${btnHtml}`;
+            qArea.appendChild(box);
+        });
+    }
+
+    // --- Modal/Word Click ---
     function wordClick(w) {
         w = w.toLowerCase().trim();
         let info = dictionary[w];
-        if (!info && w.endsWith('s')) info = dictionary[w.slice(0, -1)];
-
+        if (!info) {
+            // Basic singular check
+            if (w.endsWith('s') && dictionary[w.slice(0, -1)]) { info = dictionary[w.slice(0, -1)]; w = w.slice(0, -1); }
+        }
         document.getElementById('mWord').innerText = w;
         if (info) {
             document.getElementById('mCn').innerText = info.cn;
@@ -2036,39 +1964,38 @@
         document.getElementById('modal').style.display = 'flex';
         speak(w);
     }
-    
+
     function closeModal(e) {
         if(!e || e.target.id === 'modal' || e.target.className === 'close-x') {
             document.getElementById('modal').style.display = 'none';
         }
     }
 
-    // --- GAME ---
+    function checkQuiz(btn, isCorrect) {
+        if(isCorrect === 'true') { btn.classList.add('correct'); speak("Correct"); } 
+        else { btn.classList.add('wrong'); speak("Try again"); }
+    }
+
+    // --- Game ---
     function initGame() {
         const container = document.getElementById('gameZone');
         const hint = document.getElementById('gameHint');
         const msg = document.getElementById('gameMsg');
-        const restartBtn = document.querySelector('#game button.nav-btn');
-
         container.innerHTML = '';
         msg.innerText = '';
 
         if (isGameSolved) {
-            hint.innerText = "Mission Complete! (任務完成)";
-            msg.innerHTML = "<h2 style='color:var(--success)'>🌟 Puzzle Solved! 🌟</h2><p>Great job!</p>";
-            if(restartBtn) restartBtn.style.display = 'none';
+            hint.innerText = "Mission Complete!";
+            msg.innerHTML = "<span style='color:var(--success)'>🌟 You finished today's puzzle! 🌟</span>";
             return;
         }
-
-        if(restartBtn) restartBtn.style.display = 'inline-block';
 
         const dayWordList = dailyWords[currentDay-1];
         const targetWord = dayWordList[Math.floor(Math.random() * dayWordList.length)];
         const sentence = `I can see a ${targetWord}.`;
         const cnWord = dictionary[targetWord] ? dictionary[targetWord].cn : targetWord;
-        const translation = `我可以看到一個${cnWord}。`;
         
-        hint.innerText = translation; 
+        hint.innerText = `我可以看到一個${cnWord}。`; 
         
         let parts = sentence.replace('.','').split(' ');
         parts.push('.'); 
@@ -2096,106 +2023,79 @@
             msg.innerText = "🌟 Perfect Grammar! 🌟";
             msg.style.color = "var(--success)";
             speak(target);
-            
             isGameSolved = true; 
-            saveTestState(); // This calls checkMissionUnlock inside
-
             const pieces = document.querySelectorAll('.puzzle-piece');
             pieces.forEach(p => {
                 p.style.backgroundColor = "var(--success)";
                 p.onclick = null;
                 p.style.cursor = "default";
             });
-            
-            const restartBtn = document.querySelector('#game button.nav-btn');
-            if(restartBtn) restartBtn.style.display = 'none';
         }
     }
 
-    function resetGame() {
-        isGameSolved = false;
-        saveTestState();
-        initGame();
-    }
-    
-    // --- UI LOADERS ---
-    function loadDay(d) {
-        // A. Words
-        const grid = document.getElementById('wordGrid');
-        grid.innerHTML = '';
-        const dayWords = dailyWords[d-1] || [];
-        
-        dayWords.forEach(en => {
-            const lowerEn = en.toLowerCase();
-            const info = dictionary[lowerEn] || {cn:'Search', sound:''};
-            
-            const isListened = missionProgress.listened.includes(en);
-            const borderStyle = isListened ? "border-color:var(--success);" : "";
+    function resetGame() { isGameSolved = false; initGame(); }
 
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div class="en-text">${en}</div>
-                <div class="cn-text">${info.cn}</div>
-                <div class="mnemonic">${info.sound || ""}</div>
-                <button class="audio-btn" style="${borderStyle}" onclick="trackListening('${en}', this)">🔊</button>
-                <div class="sentence">I like the ${en}.</div>
-            `;
-            grid.appendChild(card);
-        });
+    // --- Dictation ---
+    let dictFirstAttempt = null;
 
-        // B. Story
-        const art = articles[d] || {t:'No Story', txt:'No text.', q:[]};
-        document.getElementById('storyTitle').innerText = art.t;
-        document.getElementById('storyContent').innerHTML = makeClickable(art.txt);
+    function updateDictUI() {
+        const count = dictQueue.length;
+        document.getElementById('dictCount').innerText = `剩餘: ${count}`;
+        document.getElementById('dictInput').value = '';
+        document.getElementById('dictMsg').innerText = '';
+        document.getElementById('resFirst').innerText = '-';
+        document.getElementById('resLatest').innerText = '-';
+        dictFirstAttempt = null;
 
-        // C. Quiz
-        const qArea = document.getElementById('quizArea');
-        qArea.innerHTML = '';
-        art.q.forEach((item, idx) => {
-            const box = document.createElement('div');
-            box.className = 'quiz-box';
-            
-            const isSolved = missionProgress.reading.includes(idx);
-            
-            let opts = [item.a, ...item.o].sort(() => Math.random() - 0.5);
-            let btnHtml = opts.map(o => {
-                let extraClass = "";
-                if(isSolved && o === item.a) extraClass = "correct";
-                return `<button class="quiz-opt ${extraClass}" onclick="checkQuiz(this, '${o===item.a}', ${idx})">${makeClickable(o)} ${isSolved && o===item.a ? '✅' : ''}</button>`
-            }).join('');
-
-            box.innerHTML = `<p style="font-weight:bold; color:var(--primary)">Q${idx+1}: ${makeClickable(item.q)}</p>${btnHtml}`;
-            qArea.appendChild(box);
-        });
-    }
-
-    // --- TRACKING HELPERS ---
-    function trackListening(word, btn) {
-        speak(word);
-        if(!missionProgress.listened.includes(word)) {
-            missionProgress.listened.push(word);
-            btn.style.borderColor = "var(--success)"; 
-            saveTestState(); // This calls checkMissionUnlock
-        }
-    }
-
-    function checkQuiz(btn, isCorrect, qIndex) {
-        if(isCorrect === 'true') {
-            btn.classList.add('correct');
-            if(!btn.innerHTML.includes('✅')) btn.innerHTML += " ✅";
-            speak("Correct");
-            
-            if(!missionProgress.reading.includes(qIndex)) {
-                missionProgress.reading.push(qIndex);
-                saveTestState(); // This calls checkMissionUnlock
-            }
+        if(count > 0) {
+            const w = dictQueue[0];
+            currentDictTarget = w;
+            const info = dictionary[w] || {cn:'Translation'};
+            document.getElementById('dictCn').innerText = info.cn;
         } else {
-            btn.classList.add('wrong');
-            speak("Try again");
+            document.getElementById('dictCn').innerText = "完成任務! (Done)";
+            currentDictTarget = "";
         }
     }
 
+    function playDictSound() { if(currentDictTarget) speak(currentDictTarget); }
+    function giveHint() { if(currentDictTarget) document.getElementById('dictInput').value = currentDictTarget[0] + "..."; }
+
+    function checkDict() {
+        if(!currentDictTarget) return;
+        const inputElem = document.getElementById('dictInput');
+        const val = inputElem.value.trim().toLowerCase();
+        const msg = document.getElementById('dictMsg');
+        const isCorrect = (val === currentDictTarget);
+        const displayResult = `${val} ${isCorrect ? '✅' : '❌'}`;
+
+        if (dictFirstAttempt === null) {
+            dictFirstAttempt = displayResult;
+            document.getElementById('resFirst').innerText = dictFirstAttempt;
+        }
+        document.getElementById('resLatest').innerText = displayResult;
+
+        if(isCorrect) {
+            msg.innerText = "答對了! (Correct) 🎉";
+            msg.style.color = "var(--success)";
+            speak("Good Job");
+            setTimeout(() => {
+                dictQueue.shift();
+                localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
+                updateDictUI();
+            }, 1500);
+        } else {
+            msg.innerText = "再試一次! (Try Again)";
+            msg.style.color = "var(--error)";
+            speak("Try again");
+            dictQueue.push(dictQueue.shift());
+            localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
+            setTimeout(() => {
+                inputElem.value = '';
+                msg.innerText = '';
+            }, 1000);
+        }
+    }
 </script>
 </body>
 </html>
