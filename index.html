@@ -1990,6 +1990,51 @@
             nav('learn');
         }
 
+        function checkMissionUnlock() {
+        const btn = document.getElementById('navTestBtn');
+        const dayWords = dailyWords[currentDay-1] || [];
+        const storyQs = (articles[currentDay] && articles[currentDay].q) ? articles[currentDay].q.length : 0;
+
+        // Condition 1: Listened to all 5 words
+        const allListened = missionProgress.listened.length >= dayWords.length;
+        
+        // Condition 2: Reading Quiz Done (All questions correct)
+        const allRead = missionProgress.reading.length >= storyQs;
+        
+        // Condition 3: Game Solved
+        const gameDone = missionProgress.game;
+
+        if (allListened && allRead && gameDone) {
+            btn.classList.remove('locked');
+            // Remove the pseudo-element text via class, or just let CSS handle it
+        } else {
+            btn.classList.add('locked');
+        }
+    }
+
+    function tryEnterTest() {
+        const btn = document.getElementById('navTestBtn');
+        if (btn.classList.contains('locked')) {
+            // Show alert of what is missing
+            const dayWords = dailyWords[currentDay-1] || [];
+            const storyQs = articles[currentDay] ? articles[currentDay].q.length : 0;
+            
+            let msg = "Mission Incomplete (任務未完成)! \n\n";
+            if(missionProgress.listened.length < dayWords.length) msg += "❌ Listen to all 5 words (聽完5個單詞)\n";
+            else msg += "✅ Words Listened\n";
+            
+            if(missionProgress.reading.length < storyQs) msg += "❌ Finish Reading Quiz (完成閱讀測驗)\n";
+            else msg += "✅ Reading Done\n";
+            
+            if(!missionProgress.game) msg += "❌ Finish Game (完成遊戲)\n";
+            else msg += "✅ Game Done\n";
+            
+            alert(msg);
+        } else {
+            nav('dictation');
+        }
+    }
+
         // --- DICTATION LOGIC ---
         function updateDictUI() {
             const count = dictQueue.length;
@@ -2256,41 +2301,72 @@
         }
     }
         
-        function loadDay(d) {
-            const grid = document.getElementById('wordGrid');
-            grid.innerHTML = '';
-            const dayWords = dailyWords[d-1] || [];
-            dayWords.forEach(en => {
-                const lowerEn = en.toLowerCase();
-                const info = dictionary[lowerEn] || {cn:'Search', sound:''};
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <div class="en-text">${en}</div>
-                    <div class="cn-text">${info.cn}</div>
-                    <div class="mnemonic">${info.sound || ""}</div>
-                    <button class="audio-btn" onclick="speak('${en}')">🔊</button>
-                `;
-                grid.appendChild(card);
-            });
+       function loadDay(d) {
+        // A. Words
+        const grid = document.getElementById('wordGrid');
+        grid.innerHTML = '';
+        const dayWords = dailyWords[d-1] || [];
+        
+        dayWords.forEach(en => {
+            const lowerEn = en.toLowerCase();
+            const info = dictionary[lowerEn] || {cn:'Search', sound:''};
+            
+            // Check if already listened for visual cue (optional, using green border)
+            const isListened = missionProgress.listened.includes(en);
+            const borderStyle = isListened ? "border-color:var(--success);" : "";
 
-            const art = articles[d] || {t:'No Story', txt:'No text.', q:[]};
-            document.getElementById('storyTitle').innerText = art.t;
-            document.getElementById('storyContent').innerHTML = makeClickable(art.txt);
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="en-text">${en}</div>
+                <div class="cn-text">${info.cn}</div>
+                <div class="mnemonic">${info.sound || ""}</div>
+                <button class="audio-btn" style="${borderStyle}" onclick="trackListening('${en}', this)">🔊</button>
+                <div class="sentence">I like the ${en}.</div>
+            `;
+            grid.appendChild(card);
+        });
 
-            const qArea = document.getElementById('quizArea');
-            qArea.innerHTML = '';
-            art.q.forEach((item, idx) => {
-                const box = document.createElement('div');
-                box.className = 'quiz-box';
-                let opts = [item.a, ...item.o].sort(() => Math.random() - 0.5);
-                let btnHtml = opts.map(o => 
-                    `<button class="quiz-opt" onclick="checkQuiz(this, '${o===item.a}')">${makeClickable(o)}</button>`
-                ).join('');
-                box.innerHTML = `<p style="font-weight:bold; color:var(--primary)">Q${idx+1}: ${makeClickable(item.q)}</p>${btnHtml}`;
-                qArea.appendChild(box);
-            });
+        // B. Story (Standard load)
+        const art = articles[d] || {t:'No Story', txt:'No text.', q:[]};
+        document.getElementById('storyTitle').innerText = art.t;
+        document.getElementById('storyContent').innerHTML = makeClickable(art.txt);
+
+        // C. Quiz (Updated to track question Index)
+        const qArea = document.getElementById('quizArea');
+        qArea.innerHTML = '';
+        art.q.forEach((item, idx) => {
+            const box = document.createElement('div');
+            box.className = 'quiz-box';
+            
+            // Check if this specific question is already solved
+            const isSolved = missionProgress.reading.includes(idx);
+            
+            let opts = [item.a, ...item.o].sort(() => Math.random() - 0.5);
+            
+            let btnHtml = opts.map(o => {
+                // If solved and this is the correct answer, mark it green
+                let extraClass = "";
+                if(isSolved && o === item.a) extraClass = "correct";
+                
+                // Pass the Question Index (idx) to checkQuiz
+                return `<button class="quiz-opt ${extraClass}" onclick="checkQuiz(this, '${o===item.a}', ${idx})">${makeClickable(o)} ${isSolved && o===item.a ? '✅' : ''}</button>`
+            }).join('');
+
+            box.innerHTML = `<p style="font-weight:bold; color:var(--primary)">Q${idx+1}: ${makeClickable(item.q)}</p>${btnHtml}`;
+            qArea.appendChild(box);
+        });
+    }
+
+    // NEW FUNCTION: Track Listening
+    function trackListening(word, btn) {
+        speak(word);
+        if(!missionProgress.listened.includes(word)) {
+            missionProgress.listened.push(word);
+            btn.style.borderColor = "var(--success)"; // Visual feedback
+            saveTestState();
         }
+    }
 
     // --- SMART CLICK (WITH DICTIONARY FALLBACK) ---
     function wordClick(w) {
@@ -2331,11 +2407,17 @@
         }
     }
 
-    function checkQuiz(btn, isCorrect) {
+    function checkQuiz(btn, isCorrect, qIndex) {
         if(isCorrect === 'true') {
             btn.classList.add('correct');
-            btn.innerHTML += " ✅";
+            if(!btn.innerHTML.includes('✅')) btn.innerHTML += " ✅";
             speak("Correct");
+            
+            // Save Reading Progress
+            if(!missionProgress.reading.includes(qIndex)) {
+                missionProgress.reading.push(qIndex);
+                saveTestState();
+            }
         } else {
             btn.classList.add('wrong');
             speak("Try again");
@@ -2391,13 +2473,20 @@
             msg.innerText = "🌟 Perfect Grammar! 🌟";
             msg.style.color = "var(--success)";
             speak(target);
+            
             isGameSolved = true; 
+            missionProgress.game = true; // Update mission progress
+            saveTestState();             // Save and check unlock
+
             const pieces = document.querySelectorAll('.puzzle-piece');
             pieces.forEach(p => {
                 p.style.backgroundColor = "var(--success)";
                 p.onclick = null;
                 p.style.cursor = "default";
             });
+            
+            const restartBtn = document.querySelector('#game button.nav-btn');
+            if(restartBtn) restartBtn.style.display = 'none';
         }
     }
 
