@@ -202,6 +202,27 @@
             width: 90%; max-width: 350px; text-align: center; position: relative;
         }
         .close-x { position: absolute; top: 10px; right: 15px; font-size: 2rem; cursor: pointer; }
+
+        /* --- New Result History Styles --- */
+        .history-box {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        .history-row {
+            margin: 5px 0;
+            border-bottom: 1px solid #444;
+            padding-bottom: 5px;
+        }
+        .history-label {
+            color: var(--secondary);
+            font-weight: bold;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -209,14 +230,14 @@
 <header>
     <h1>🚀 P2 Space English</h1>
     <div class="controls">
-        <label style="color:white; align-self:center;">Mission Day:</label>
+        <label style="color:white; align-self:center;">任務日 (Day):</label>
         <select id="daySelect" onchange="changeDay()"></select>
     </div>
     <div class="nav-bar">
-        <button class="nav-btn active" onclick="nav('learn')">1. Learn (每日五詞)</button>
-        <button class="nav-btn" onclick="nav('story')">2. Read (閱讀分析)</button>
-        <button class="nav-btn" onclick="nav('game')">3. Game (組句遊戲)</button>
-        <button class="nav-btn" onclick="nav('dictation')">4. Test (聽寫)</button>
+        <button class="nav-btn active" onclick="nav('learn')">1. 學習 (Learn)</button>
+        <button class="nav-btn" onclick="nav('story')">2. 閱讀 (Read)</button>
+        <button class="nav-btn" onclick="nav('game')">3. 遊戲 (Game)</button>
+        <button class="nav-btn" onclick="nav('dictation')">4. 測驗 (Test)</button>
     </div>
 </header>
 
@@ -229,8 +250,8 @@
 
     <!-- SECTION 2: READ -->
     <section id="story" class="section">
-        <h2 style="text-align:center; color:var(--primary)">Reading Time (閱讀)</h2>
-        <p style="text-align:center; font-size:0.9rem; color:#aaa;">Click words to translate & save! (點擊翻譯)</p>
+        <h2 style="text-align:center; color:var(--primary)">Reading Time (閱讀時間)</h2>
+        <p style="text-align:center; font-size:0.9rem; color:#aaa;">點擊單詞可翻譯並收藏！(Click to translate)</p>
         <div class="story-box">
             <h3 id="storyTitle" class="story-title"></h3>
             <div id="storyContent"></div>
@@ -241,32 +262,47 @@
     <!-- SECTION 3: GAME -->
     <section id="game" class="section">
         <h2 style="text-align:center; color:var(--primary)">Sentence Puzzle (組句遊戲)</h2>
-        <p style="text-align:center; color:#ccc;">Click words to build the sentence!</p>
+        <p style="text-align:center; color:#ccc;">點擊單詞組合成正確句子！</p>
         <div style="text-align:center; margin-bottom:15px;">
-            <p style="font-size:1.1rem; color:#aaa;">Target: <span id="gameHint" style="color:white; font-weight:bold;"></span></p>
+            <p style="font-size:1.1rem; color:#aaa;">目標句子: <span id="gameHint" style="color:white; font-weight:bold;"></span></p>
         </div>
         <div id="gameZone" class="game-area"></div>
         <div id="gameMsg" class="game-feedback"></div>
         <div style="text-align:center;">
-            <button class="nav-btn" onclick="resetGame()" style="background:#555;">Restart Puzzle</button>
+            <button class="nav-btn" onclick="resetGame()" style="background:#555;">重新開始 (Restart)</button>
         </div>
     </section>
 
     <!-- SECTION 4: DICTATION -->
     <section id="dictation" class="section">
-        <h2 style="text-align:center; color:var(--primary)">Review Mission (聽寫)</h2>
+        <h2 style="text-align:center; color:var(--primary)">Review Mission (溫習任務)</h2>
         <div class="dictation-area">
-            <p style="color:#aaa;">Tap speaker -> Type word</p>
+            <p style="color:#aaa;">點擊喇叭 🔊 -> 輸入英文單詞</p>
             <h1 id="dictCn" style="color:white; font-size:2.5rem;">---</h1>
             <button class="audio-btn" style="width:60px; height:60px; font-size:2rem;" onclick="playDictSound()">🔊</button>
             <br>
-            <input type="text" id="dictInput" class="input-box" placeholder="English..." autocomplete="off">
+            <input type="text" id="dictInput" class="input-box" placeholder="輸入英文..." autocomplete="off">
+            
             <div style="display:flex; justify-content:space-between; padding:0 10%;">
-                <button onclick="giveHint()" style="background:none; color:#aaa; border:none; text-decoration:underline;">Hint?</button>
-                <span id="dictCount" style="color:var(--primary);">0 Left</span>
+                <button onclick="giveHint()" style="background:none; color:#aaa; border:none; text-decoration:underline;">提示 (Hint)</button>
+                <span id="dictCount" style="color:var(--primary);">剩餘: 0</span>
             </div>
+
             <div id="dictMsg" class="feedback"></div>
-            <button class="nav-btn" style="width:100%; background:var(--success); font-size:1.2rem; padding:12px;" onclick="checkDict()">Check Answer</button>
+            
+            <!-- NEW HISTORY SECTION -->
+            <div class="history-box">
+                <div class="history-row">
+                    <span class="history-label">第一次嘗試:</span>
+                    <span id="resFirst" style="color:#fff;">-</span>
+                </div>
+                <div class="history-row" style="border:none;">
+                    <span class="history-label">最近嘗試:</span>
+                    <span id="resLatest" style="color:#fff;">-</span>
+                </div>
+            </div>
+
+            <button class="nav-btn" style="width:100%; background:var(--success); font-size:1.2rem; padding:12px; margin-top:10px;" onclick="checkDict()">檢查答案 (Check)</button>
         </div>
     </section>
 </main>
@@ -279,7 +315,7 @@
         <h3 id="mCn" style="color:#555;"></h3>
         <p id="mSound" style="background:#f4f4f4; padding:5px; border-radius:5px; font-style:italic;"></p>
         <button class="audio-btn" id="mAudio">🔊</button>
-        <div style="margin-top:10px; color:green; font-weight:bold;">✅ Saved to Review</div>
+        <div style="margin-top:10px; color:green; font-weight:bold;">✅ 已加入溫習列表</div>
     </div>
 </div>
 
@@ -1642,16 +1678,26 @@
     }
 
     // --- DICTATION ---
+    let dictFirstAttempt = null; // Variable to store the first try
+
     function updateDictUI() {
         const count = dictQueue.length;
-        document.getElementById('dictCount').innerText = `${count} words`;
+        document.getElementById('dictCount').innerText = `剩餘: ${count}`; // Traditional Chinese
+        
+        // Reset inputs and history when loading a new word
+        document.getElementById('dictInput').value = '';
+        document.getElementById('dictMsg').innerText = '';
+        document.getElementById('resFirst').innerText = '-';
+        document.getElementById('resLatest').innerText = '-';
+        dictFirstAttempt = null; // Reset first attempt memory
+
         if(count > 0) {
             const w = dictQueue[0];
             currentDictTarget = w;
             const info = dictionary[w] || {cn:'Translation'};
             document.getElementById('dictCn').innerText = info.cn;
         } else {
-            document.getElementById('dictCn').innerText = "All Done!";
+            document.getElementById('dictCn').innerText = "完成任務! (Done)";
             currentDictTarget = "";
         }
     }
@@ -1666,30 +1712,51 @@
 
     function checkDict() {
         if(!currentDictTarget) return;
-        const val = document.getElementById('dictInput').value.trim().toLowerCase();
+        
+        const inputElem = document.getElementById('dictInput');
+        const val = inputElem.value.trim().toLowerCase();
         const msg = document.getElementById('dictMsg');
+        
+        // --- NEW RESULT LOGIC ---
+        const isCorrect = (val === currentDictTarget);
+        const displayResult = `${val} ${isCorrect ? '✅' : '❌'}`;
 
-        if(val === currentDictTarget) {
-            msg.innerText = "Correct! 🎉";
+        // 1. If this is the very first time checking this word, save it.
+        if (dictFirstAttempt === null) {
+            dictFirstAttempt = displayResult;
+            document.getElementById('resFirst').innerText = dictFirstAttempt;
+        }
+
+        // 2. Always update the latest result
+        document.getElementById('resLatest').innerText = displayResult;
+        // ------------------------
+
+        if(isCorrect) {
+            msg.innerText = "答對了! (Correct) 🎉";
             msg.style.color = "var(--success)";
             speak("Good Job");
-            dictQueue.shift();
-            localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
+            
+            // Wait 1.5 seconds before moving to next word so they can see the result
             setTimeout(() => {
-                document.getElementById('dictInput').value = '';
-                msg.innerText = '';
+                dictQueue.shift();
+                localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
                 updateDictUI();
-            }, 1000);
+            }, 1500);
         } else {
-            msg.innerText = "Try Again!";
+            msg.innerText = "再試一次! (Try Again)";
             msg.style.color = "var(--error)";
             speak("Try again");
+            
+            // Move word to back of queue
             dictQueue.push(dictQueue.shift());
             localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
+            
+            // Clear input after 1 second but KEEP history visible
             setTimeout(() => {
-                document.getElementById('dictInput').value = '';
+                inputElem.value = '';
                 msg.innerText = '';
-                updateDictUI();
+                // Note: We do NOT call updateDictUI() here because that clears the history.
+                // We keep the current word active until they get it right.
             }, 1000);
         }
     }
