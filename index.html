@@ -274,6 +274,21 @@
         }
         .g-q-row { margin: 10px 0; font-size: 1.1rem; line-height: 1.6; }
         .g-feedback { margin-left: 10px; font-weight: bold; }
+
+        /* --- Locked Button Style --- */
+        .nav-btn.locked {
+            background-color: #333 !important;
+            color: #777 !important;
+            border-color: #555 !important;
+            cursor: not-allowed;
+            position: relative;
+        }
+        .nav-btn.locked::after {
+            content: "🔒 Locked";
+            display: block;
+            font-size: 0.7rem;
+            color: #e53e3e; /* Red */
+        }
     </style>
 </head>
 <body>
@@ -288,12 +303,12 @@
         <button class="nav-btn active" onclick="nav('learn')">1. 學習 (Learn)</button>
         <button class="nav-btn" onclick="nav('story')">2. 閱讀 (Read)</button>
         <button class="nav-btn" onclick="nav('game')">3. 遊戲 (Game)</button>
-        <button class="nav-btn" onclick="nav('dictation')">4. 測驗 (Test)</button>
+        <!-- Updated Test Button: ID added, onclick changed to check lock -->
+        <button id="navTestBtn" class="nav-btn locked" onclick="tryEnterTest()">
+            4. 測驗 (Test)
+            <span id="testStatus" class="status-badge status-none"></span>
+        </button>
     </div>
-    <button id="navTestBtn" class="nav-btn" onclick="nav('dictation')">
-        4. Test (測驗)
-        <span id="testStatus" class="status-badge status-none"></span>
-    </button>
 </header>
 
 <main>
@@ -1860,43 +1875,59 @@
             updateNavStatus();
         }
 
-        function loadTestState() {
-            const saved = localStorage.getItem(`p2_test_state_${currentDay}`);
-            if(saved) {
-                const data = JSON.parse(saved);
-                dictQueue = data.queue || [];
-                firstAttemptHistory = data.history || {};
-                testStatus = data.status || 'not_started';
-                grammarQuestions = data.grammarQ || [];
-                grammarDone = data.grammarDone || false;
-                // NEW: Load Game State
-                isGameSolved = data.gameSolved || false;
-            } else {
-                // New load for this day
-                const dayWords = dailyWords[currentDay-1] || [];
-                dictQueue = [...dayWords];
-                firstAttemptHistory = {};
-                testStatus = 'not_started';
-                isGameSolved = false; // Reset game
-                generateGrammarQuestions();
-            }
-            updateDictUI();
-            updateNavStatus();
-        }
+        // Global Mission State
+    let missionProgress = {
+        listened: [],    // Stores words listened to, e.g., ['apple', 'banana'...]
+        reading: [],     // Stores indices of Reading Questions answered correctly, e.g., [0, 1, 2, 3, 4]
+        game: false      // Game finished?
+    };
 
-        function saveTestState() {
-            const state = {
-                queue: dictQueue,
-                history: firstAttemptHistory,
-                status: testStatus,
-                grammarQ: grammarQuestions,
-                grammarDone: grammarDone,
-                // NEW: Save Game State
-                gameSolved: isGameSolved
-            };
-            localStorage.setItem(`p2_test_state_${currentDay}`, JSON.stringify(state));
-            updateNavStatus();
+    function loadTestState() {
+        const saved = localStorage.getItem(`p2_test_state_${currentDay}`);
+        if(saved) {
+            const data = JSON.parse(saved);
+            dictQueue = data.queue || [];
+            firstAttemptHistory = data.history || {};
+            testStatus = data.status || 'not_started';
+            grammarQuestions = data.grammarQ || [];
+            grammarDone = data.grammarDone || false;
+            
+            // LOAD MISSION PROGRESS
+            missionProgress = data.mission || { listened: [], reading: [], game: false };
+            isGameSolved = missionProgress.game; // Sync game state
+        } else {
+            // New Day Reset
+            const dayWords = dailyWords[currentDay-1] || [];
+            dictQueue = [...dayWords];
+            firstAttemptHistory = {};
+            testStatus = 'not_started';
+            
+            // RESET MISSION PROGRESS
+            missionProgress = { listened: [], reading: [], game: false };
+            isGameSolved = false;
+            generateGrammarQuestions();
         }
+        updateDictUI();
+        updateNavStatus();
+        checkMissionUnlock(); // Check if buttons should be locked/unlocked
+    }
+
+    function saveTestState() {
+        // Sync game state to mission progress before saving
+        missionProgress.game = isGameSolved; 
+
+        const state = {
+            queue: dictQueue,
+            history: firstAttemptHistory,
+            status: testStatus,
+            grammarQ: grammarQuestions,
+            grammarDone: grammarDone,
+            mission: missionProgress // Save the new mission data
+        };
+        localStorage.setItem(`p2_test_state_${currentDay}`, JSON.stringify(state));
+        updateNavStatus();
+        checkMissionUnlock();
+    }
 
         function updateNavStatus() {
             const badge = document.getElementById('testStatus');
