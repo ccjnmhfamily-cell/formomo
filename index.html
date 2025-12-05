@@ -164,22 +164,72 @@
         .quiz-opt.correct { background: var(--success); font-weight: bold; }
         .quiz-opt.wrong { background: var(--error); opacity: 0.7; }
 
-        /* --- Game Section --- */
-        .game-area {
-            background: #2d3748; padding: 20px; border-radius: 15px;
-            border: 2px dashed #666; min-height: 150px;
-            display: flex; flex-wrap: wrap; gap: 10px;
-            justify-content: center; align-items: center; margin-bottom: 20px;
+        /* --- NEW GAME STYLES (User Friendly) --- */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
         }
 
-        .puzzle-piece {
-            background: var(--secondary); color: white; padding: 10px 20px;
-            border-radius: 10px; font-size: 1.2rem; cursor: pointer;
-            user-select: none; box-shadow: 0 4px 0 #0077b6; transition: transform 0.1s;
+        /* The line where the user builds the sentence */
+        .answer-zone {
+            min-height: 70px;
+            border: 2px solid var(--secondary); /* Sky Blue */
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
         }
-        .puzzle-piece:active { transform: translateY(4px); box-shadow: none; }
-        .game-feedback { text-align: center; font-size: 1.5rem; font-weight: bold; height: 40px; margin-top: 10px; }
 
+        .answer-zone.correct {
+            border-color: var(--success);
+            background: rgba(72, 187, 120, 0.1);
+        }
+
+        /* The area where the jumbled words sit */
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            padding: 15px;
+            background: #374151; /* Lighter dark gray */
+            border-radius: 15px;
+            min-height: 80px;
+            border: 2px dashed #555;
+        }
+
+        /* The Toggle Button for Meaning */
+        .mode-switch {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .mode-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #777;
+            background: #2d3748;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .mode-btn.active {
+            background: var(--primary); /* Gold */
+            color: black;
+            font-weight: bold;
+            border-color: white;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
         /* --- Dictation --- */
         .dictation-area {
             text-align: center; padding: 20px;
@@ -361,6 +411,79 @@
             margin-top: 5px;
         }
         .hint-btn:hover { background: var(--secondary); border-color: var(--secondary); }
+
+        /* --- Grammar Rule Box (Sharp & Cartoon Mode) --- */
+        .grammar-rule-box {
+            /* Make the background pop */
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            
+            /* High Contrast Border - GOLD */
+            border: 4px solid var(--primary); 
+            border-left-width: 12px; /* Extra thick on the left to catch the eye */
+            
+            /* Rounded corners & 3D Shadow */
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); /* Deep shadow */
+            
+            /* Spacing */
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            
+            /* Text settings */
+            color: #ffffff;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            font-family: 'Comic Sans MS', sans-serif;
+            animation: pulseBorder 3s infinite alternate; /* Subtle glow animation */
+        }
+
+        /* Subtle glowing animation for the border */
+        @keyframes pulseBorder {
+            from { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5); }
+            to { box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3); }
+        }
+
+        .grammar-rule-title {
+            display: block;
+            font-size: 1.6rem; 
+            color: var(--primary); /* Gold Color */
+            font-weight: 900; /* Extra Bold */
+            text-shadow: 3px 3px 0 #000; /* Cartoon Outline */
+            
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px dashed rgba(255, 215, 0, 0.5); /* Dashed divider */
+        }
+
+        /* Make important words (<b>) inside the rule box look like highlighted code */
+        .grammar-rule-box b {
+            color: var(--secondary); /* Cyan/Sky Blue */
+            background: rgba(0, 191, 255, 0.15); /* Soft Blue Background */
+            padding: 2px 6px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 191, 255, 0.3);
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        /* Make the Example sentence (<i>) look like a separate dark box */
+        .grammar-rule-box i {
+            display: block;
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.4); /* Darker background */
+            border-radius: 10px;
+            color: #e0e0e0;
+            font-style: normal; /* Remove italic, make it clear */
+            font-weight: bold;
+            border-left: 5px solid var(--accent); /* Orange bar on the left */
+        }
+
+        /* Add a "Lightbulb" icon via CSS to the examples */
+        .grammar-rule-box i::before {
+            content: "💡 Example: ";
+            color: var(--accent);
+        }
     </style>
 </head>
 <body>
@@ -398,17 +521,44 @@
         <div id="quizArea"></div>
     </section>
 
-    <!-- SECTION 3: GAME -->
+    <!-- SECTION 3: GAME (User Friendly Version) -->
     <section id="game" class="section">
         <h2 style="text-align:center; color:var(--primary)">Sentence Puzzle (組句遊戲)</h2>
-        <p style="text-align:center; color:#ccc;">點擊單詞組合成正確句子！</p>
+        <p style="text-align:center; color:#ccc; font-size:0.9rem;">
+            Build the sentence! (組合成正確句子)
+        </p>
+        
         <div style="text-align:center; margin-bottom:15px;">
-            <p style="font-size:1.1rem; color:#aaa;">目標句子: <span id="gameHint" style="color:white; font-weight:bold;"></span></p>
+            <p style="font-size:1.1rem; color:#aaa;">Target: <span id="gameHint" style="color:white; font-weight:bold;"></span></p>
+            <!-- Hint Display -->
+            <p id="gameSentenceHint" style="color:var(--secondary); font-family: monospace; font-size: 1.2rem; min-height: 25px; margin:5px 0;"></p>
+            
+            <button class="nav-btn" onclick="showGameStructureHint()" style="background:#555; font-size:0.8rem; padding:5px 10px;">
+                💡 Show First Letters (顯示首字母)
+            </button>
         </div>
-        <div id="gameZone" class="game-area"></div>
+
+        <!-- NEW: MODE TOGGLE (Move vs Ask) -->
+        <div class="mode-switch">
+            <button id="btnMove" class="mode-btn active" onclick="setGameMode('move')">👆 Move (移動)</button>
+            <button id="btnAsk" class="mode-btn" onclick="setGameMode('ask')">❓ Ask Meaning (問意思)</button>
+        </div>
+
+        <!-- NEW: TWO ZONES (Answer & Bank) -->
+        <div class="game-container">
+            <!-- 1. The Line (Drop Zone) -->
+            <div id="answerZone" class="answer-zone">
+                <span style="color:#666; font-style:italic; font-size:0.8rem;">(Put words here / 放字在這邊)</span>
+            </div>
+
+            <!-- 2. The Bank (Source) -->
+            <div id="wordBank" class="word-bank"></div>
+        </div>
+
         <div id="gameMsg" class="game-feedback"></div>
-        <div style="text-align:center;">
-            <button class="nav-btn" onclick="resetGame()" style="background:#555;">重新開始 (Restart)</button>
+        
+        <div style="text-align:center; margin-top:20px;">
+            <button class="nav-btn" onclick="resetGame()" style="background:#555;">🔄 Restart (重新開始)</button>
         </div>
     </section>
 
@@ -458,7 +608,10 @@
     <!-- SECTION 4: DICTATION -->
     <section id="dictation" class="section">
         <h2 style="text-align:center; color:var(--primary)">Review Mission (溫習任務)</h2>
+        
+        <!-- ... (Keep your existing dictation-area div here) ... -->
         <div class="dictation-area">
+            <!-- ... (Keep the speaker, input, history as they were) ... -->
             <p style="color:#aaa;">點擊喇叭 🔊 -> 輸入英文單詞</p>
             <h1 id="dictCn" style="color:white; font-size:2.5rem;">---</h1>
             <button class="audio-btn" style="width:60px; height:60px; font-size:2rem;" onclick="playDictSound()">🔊</button>
@@ -472,32 +625,57 @@
 
             <div id="dictMsg" class="feedback"></div>
             
-            <!-- NEW HISTORY SECTION -->
             <div class="history-box">
-                <div class="history-row">
-                    <span class="history-label">第一次嘗試:</span>
-                    <span id="resFirst" style="color:#fff;">-</span>
-                </div>
-                <div class="history-row" style="border:none;">
-                    <span class="history-label">最近嘗試:</span>
-                    <span id="resLatest" style="color:#fff;">-</span>
-                </div>
+                <div class="history-row"><span class="history-label">第一次嘗試:</span><span id="resFirst" style="color:#fff;">-</span></div>
+                <div class="history-row" style="border:none;"><span class="history-label">最近嘗試:</span><span id="resLatest" style="color:#fff;">-</span></div>
             </div>
 
             <button class="nav-btn" style="width:100%; background:var(--success); font-size:1.2rem; padding:12px; margin-top:10px;" onclick="checkDict()">檢查答案 (Check)</button>
         </div>
+
+        <!-- NEW: PARENT WORD BANK SECTION -->
+        <div style="margin-top:30px; border-top:2px dashed #555; padding-top:20px;">
+            <h3 style="text-align:center; color:var(--secondary)">🗄️ Word Storage (生字庫)</h3>
+            <p style="text-align:center; font-size:0.85rem; color:#aaa;">Parents can add words here (家長可在此加字)</p>
+            <div style="display:flex; justify-content:center; gap:5px;">
+                <input type="text" id="parentInput" placeholder="Enter word (e.g., apple)" style="padding:10px; border-radius:5px; border:none; width:60%;">
+                <button class="nav-btn" style="background:var(--accent);" onclick="manualAddToBank()">Add</button>
+            </div>
+            <p id="bankMsg" style="text-align:center; color:#48bb78; margin-top:5px;"></p>
+            <p style="text-align:center; color:#888; font-size:0.8rem;">Current stored words: <span id="bankCount">0</span></p>
+        </div>
     </section>
 </main>
 
-<!-- MODAL -->
+<!-- MODAL (Modified with Add to Review Button) -->
 <div id="modal" class="modal" onclick="closeModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
         <span class="close-x" onclick="closeModal(null)">&times;</span>
         <h2 id="mWord" style="color:var(--accent); margin:0;"></h2>
         <h3 id="mCn" style="color:#555;"></h3>
         <p id="mSound" style="background:#f4f4f4; padding:5px; border-radius:5px; font-style:italic;"></p>
-        <button class="audio-btn" id="mAudio">🔊</button>
-        <div style="margin-top:10px; color:green; font-weight:bold;">✅ 已加入溫習列表</div>
+        
+        <div style="display:flex; justify-content:center; gap:10px; margin-top:15px;">
+            <button class="audio-btn" id="mAudio">🔊</button>
+            <button class="nav-btn" style="background:var(--primary); color:black; font-size:0.8rem;" onclick="addToBankFromModal()">
+                + 加入溫習 (Add to Review)
+            </button>
+        </div>
+        <div id="mMsg" style="margin-top:5px; font-size:0.8rem; color:green; height:20px;"></div>
+    </div>
+</div>
+
+<!-- NEW: PROGRESS CHECKLIST MODAL -->
+<div id="progressModal" class="modal" onclick="closeProgressModal()">
+    <div class="modal-content" onclick="event.stopPropagation()" style="background:#2C3E50; border: 4px solid var(--primary); color:white;">
+        <h2 style="color:var(--primary); margin-top:0;">🛑 Mission Locked!</h2>
+        <p style="color:#ccc; font-size:0.9rem;">Complete these tasks to unlock the Test:</p>
+        
+        <div id="taskList" style="text-align:left; margin:20px 0;">
+            <!-- Javascript will fill this -->
+        </div>
+
+        <button class="nav-btn" onclick="closeProgressModal()" style="width:100%; background:#555;">OK, I will do it!</button>
     </div>
 </div>
 
@@ -1034,6 +1212,12 @@
         // --- S ---
         'sad':{cn:'傷心', sound:'杀d'}, 
         'said':{cn:'說(過去式)', sound:'Said'}, 
+        'sail':{cn:'帆', sound:'Sail'}, 
+        'sails':{cn:'帆', sound:'Sails'},
+        'sally':{cn:'Sally (名字)', sound:'Sally'},
+        'salmon':{cn:'鮪魚', sound:'Salmon'},
+        'salt':{cn:'鹽', sound:'Sal'},
+        'salted':{cn:'鹽(過去式)', sound:'Salted'},
         'salad':{cn:'沙律', sound:'Salad'}, 
         'sam':{cn:'Sam (名字)', sound:'Sam'}, 
         'sandcastle':{cn:'沙堡', sound:'Sandcastle'}, 
@@ -1189,13 +1373,21 @@
         'toy':{cn:'玩具', sound:'Toy'}, 
         'toys':{cn:'玩具', sound:'Toys'}, 
         'train':{cn:'火車', sound:'垂 (Chuí) n'}, 
-        'training':{cn:'訓練', sound:'Training'}, 
+        'trained':{cn:'訓練', sound:'Trained'},
+        'training':{cn:'訓練', sound:'Training'},
+        'trains':{cn:'火車', sound:'Trains'},
+        'transport':{cn:'運輸', sound:'Transport'},
+        'trapped':{cn:'困住', sound:'Trapped'}, 
         'trash':{cn:'垃圾', sound:'Trash'}, 
         'tree':{cn:'樹', sound:'吹'}, 
-        'trees':{cn:'樹', sound:'Trees'}, 
+        'trees':{cn:'樹', sound:'Trees'},
+        'trick':{cn:'詭計', sound:'Trick'}, 
         'trip':{cn:'旅程', sound:'Trip'}, 
+        'trips':{cn:'旅程', sound:'Trips'},
         'tripped':{cn:'絆倒', sound:'Tripped'}, 
-        'truck':{cn:'卡車', sound:'出ck'}, 
+        'trouble':{cn:'困擾', sound:'Trouble'},
+        'truck':{cn:'卡車', sound:'出ck'},
+        'trucks':{cn:'卡車', sound:'Trucks'}, 
         'trunk':{cn:'象鼻/樹幹', sound:'Trunk'}, 
         'try':{cn:'嘗試', sound:'Try'}, 
         'tuesday':{cn:'星期二', sound:'Tuesday'}, 
@@ -1276,6 +1468,196 @@
 
         // --- Z ---
         'zoo':{cn:'動物園', sound:'Zoo'}
+    };
+
+    // ================= NEW: SENTENCE DATABASE (User Provided) =================
+    const sentenceDB = {
+        // Day 1
+        "bus": "I take the school bus every morning.",
+        "taxi": "My dad calls a taxi to go to the airport.",
+        "train": "The train moves very fast on the tracks.",
+        "ship": "The big ship sails on the deep blue sea.",
+        "car": "My mom drives a red car.",
+        // Day 2
+        "walk": "I walk to the park with my dog.",
+        "run": "I can run faster than my brother.",
+        "ride": "I like to ride my bicycle on the weekend.",
+        "drive": "I cannot drive, but my father can.",
+        "fly": "Birds use their wings to fly.",
+        // Day 3
+        "plane": "Look at the plane flying in the sky!",
+        "bicycle": "My bicycle has two wheels.",
+        "boat": "We sat in a small boat on the lake.",
+        "truck": "The big truck carries many heavy boxes.",
+        "motorbike": "A motorbike is faster than a bike.",
+        // Day 4
+        "stop": "Please stop running in the classroom.",
+        "go": "We can go to the playground now.",
+        "come": "Please come here and sit down.",
+        "fast": "A cheetah is very fast.",
+        "slow": "A turtle is very slow.",
+        // Day 5
+        "left": "I write with my left hand.",
+        "right": "Look to the right before you cross the street.",
+        "straight": "Draw a straight line on the paper.",
+        "near": "My school is near my house.",
+        "far": "The moon is very far away.",
+        // Day 6
+        "school": "I love to learn new things at school.",
+        "home": "After school, I go home to eat lunch.",
+        "park": "There is a slide and a swing at the park.",
+        "zoo": "We saw a lion at the zoo.",
+        "hospital": "Doctors work at the hospital.",
+        // Day 7
+        "library": "There are many books in the library.",
+        "supermarket": "Mom buys food at the supermarket.",
+        "playground": "I play with my friends at the playground.",
+        "beach": "I like to play in the sand at the beach.",
+        "cinema": "We watched a movie at the cinema.",
+        // Day 8
+        "restaurant": "We ate dinner at a nice restaurant.",
+        "shop": "I bought a toy at the shop.",
+        "market": "We buy fresh fruit at the market.",
+        "bank": "My dad went to the bank to get money.",
+        "hotel": "We slept in a big hotel on our holiday.",
+        // Day 9
+        "classroom": "My desk is in the classroom.",
+        "bedroom": "I sleep in my bedroom every night.",
+        "bathroom": "I brush my teeth in the bathroom.",
+        "kitchen": "Dad cooks dinner in the kitchen.",
+        "garden": "There are pretty flowers in the garden.",
+        // Day 10
+        "door": "Please close the door gently.",
+        "window": "I look out the window to see the rain.",
+        "floor": "I sat on the floor to play a game.",
+        "wall": "I hung a picture on the wall.",
+        "roof": "The cat is sitting on the roof.",
+        // Day 11
+        "apple": "An apple is a red and sweet fruit.",
+        "banana": "A monkey likes to eat a banana.",
+        "orange": "Can I have an orange for a snack?",
+        "grape": "I put a purple grape in my mouth.",
+        "watermelon": "A watermelon is green on the outside and red on the inside.",
+        // Day 12
+        "bread": "Mom makes a sandwich with bread.",
+        "rice": "I eat white rice with a spoon.",
+        "noodles": "I love to eat soup with noodles.",
+        "egg": "I had a fried egg for breakfast.",
+        "meat": "My dog likes to eat meat.",
+        // Day 13
+        "chicken": "We ate fried chicken for dinner.",
+        "fish": "A fish swims in the water.",
+        "vegetable": "Spinach is a healthy vegetable.",
+        "tomato": "A tomato is red and round.",
+        "carrot": "A rabbit loves to eat a carrot.",
+        // Day 14
+        "milk": "I drink a glass of milk every morning.",
+        "water": "Please give me a cup of water.",
+        "juice": "Orange juice is very sweet.",
+        "tea": "My grandma drinks hot tea.",
+        "coffee": "Dad drinks coffee to wake up.",
+        // Day 15
+        "cake": "I had a big birthday cake.",
+        "cookie": "Can I have a chocolate cookie?",
+        "candy": "Do not eat too much candy.",
+        "ice cream": "I like strawberry ice cream.",
+        "chocolate": "Chocolate is my favorite sweet snack.",
+        // Day 16
+        "happy": "I feel happy when I play.",
+        "sad": "I feel sad when I drop my ice cream.",
+        "angry": "He was angry because his toy broke.",
+        "scared": "I am scared of the dark.",
+        "excited": "I am excited for my birthday party.",
+        // Day 17
+        "hungry": "I want lunch because I am hungry.",
+        "thirsty": "I need water because I am thirsty.",
+        "tired": "I am tired after running.",
+        "sleepy": "I feel sleepy at night.",
+        "sick": "I cannot go to school because I am sick.",
+        // Day 18
+        "hot": "The sun is very hot today.",
+        "cold": "Ice is very cold.",
+        "big": "An elephant is a big animal.",
+        "small": "An ant is a small insect.",
+        "tall": "The giraffe is very tall.",
+        // Day 19
+        "head": "I wear a hat on my head.",
+        "eye": "I close one eye to wink.",
+        "ear": "I use my ear to listen to music.",
+        "nose": "I smell flowers with my nose.",
+        "mouth": "I use my mouth to eat and talk.",
+        // Day 20
+        "hand": "I wave my hand to say hello.",
+        "foot": "I put a sock on my foot.",
+        "arm": "I have a strong arm.",
+        "leg": "I hurt my leg when I fell.",
+        "finger": "I wear a ring on my finger.",
+        // Day 21
+        "eat": "I eat breakfast at 7 o'clock.",
+        "drink": "I drink water when I am hot.",
+        "sleep": "I sleep in a soft bed.",
+        "read": "I read a storybook every day.",
+        "write": "I use a pencil to write my name.",
+        // Day 22
+        "play": "I want to play tag with you.",
+        "sing": "We sing a song in music class.",
+        "dance": "I like to dance to the music.",
+        "jump": "Can you jump over the rope?",
+        "swim": "I swim in the pool in summer.",
+        // Day 23
+        "draw": "I draw a picture of my family.",
+        "paint": "I use a brush to paint the sky blue.",
+        "cut": "Be careful when you cut the paper.",
+        "paste": "I use glue to paste the picture.",
+        "color": "Please color the apple red.",
+        // Day 24
+        "book": "I opened the book to read.",
+        "pen": "My teacher uses a red pen.",
+        "pencil": "I write my homework with a pencil.",
+        "ruler": "I use a ruler to measure lines.",
+        "eraser": "I use an eraser to fix my mistake.",
+        // Day 25
+        "bag": "I put my books in my school bag.",
+        "desk": "I sit at my desk in class.",
+        "chair": "I sit on a wooden chair.",
+        "table": "We eat dinner at the table.",
+        "board": "The teacher writes on the white board.",
+        // Day 26
+        "dog": "The dog barked at the mailman.",
+        "cat": "The cat likes to sleep in the sun.",
+        "bird": "The bird sings a sweet song.",
+        "rabbit": "The rabbit has long ears.",
+        "mouse": "The small mouse eats cheese.",
+        // Day 27
+        "lion": "The lion is the king of the jungle.",
+        "tiger": "A tiger has orange and black stripes.",
+        "elephant": "The elephant has a long trunk.",
+        "monkey": "The monkey climbs the tree.",
+        "bear": "The bear sleeps in a cave.",
+        // Day 28
+        "sun": "The sun is yellow and bright.",
+        "moon": "The moon comes out at night.",
+        "star": "I saw a twinkling star in the sky.",
+        "cloud": "The white cloud looks like sheep.",
+        "rain": "I use an umbrella in the rain.",
+        // Day 29
+        "tree": "The bird made a nest in the tree.",
+        "flower": "The flower smells very good.",
+        "grass": "The cows eat the green grass.",
+        "river": "The water flows in the river.",
+        "mountain": "We climbed to the top of the mountain.",
+        // Day 30
+        "red": "An apple is red.",
+        "blue": "The sky is blue.",
+        "green": "The leaves are green.",
+        "yellow": "A lemon is yellow.",
+        "white": "Snow is cold and white.",
+        // Day 31
+        "black": "The night sky is black.",
+        "pink": "A pig is pink.",
+        "purple": "I like the color purple.",
+        "brown": "Chocolate is brown.",
+        "gray": "An elephant is gray."
     };
 
         // ================= 3. STORY DATABASE (COMPLETE 31 DAYS) =================
@@ -1711,13 +2093,23 @@
     // ================= 4. APPLICATION LOGIC =================
     let currentDay = parseInt(localStorage.getItem('p2_day')) || 1;
     let dictQueue = JSON.parse(localStorage.getItem('p2_queue')) || [];
+    
+    // NEW: Word Bank Storage
+    let wordBank = JSON.parse(localStorage.getItem('p2_wordbank')) || [];
+
     let isGameSolved = false;
     let currentDictTarget = "";
-    let grammarQuestions = {}; // Stores the 15 daily questions
+    let grammarQuestions = {}; 
+    let missionStatus = { learn: false, read: false, game: false, grammar: false };
 
     window.onload = function() {
         initDaySelect();
-        generateGrammarQuestions(); // Randomly select 15 questions for the session
+        updateBankUI(); // Update count on load
+        
+        // If queue is empty (new session), generate it
+        if(dictQueue.length === 0) setupDictationQueue();
+        
+        generateGrammarQuestions(); 
         loadDay(currentDay);
         updateDictUI();
     };
@@ -1737,19 +2129,100 @@
     function changeDay() {
         currentDay = parseInt(document.getElementById('daySelect').value);
         localStorage.setItem('p2_day', currentDay);
+        
+        // Reset Mission
+        missionStatus = { learn: false, read: false, game: false, grammar: false };
         isGameSolved = false;
-        generateGrammarQuestions(); // New questions for new day
+        
+        // REFRESH GRAMMAR (This fixes the "Not Changing" issue)
+        generateGrammarQuestions(); 
+        
+        // REFRESH DICTATION QUEUE (Daily 5 + 3 Random Stored)
+        setupDictationQueue();
+
         loadDay(currentDay);
         nav('learn');
     }
 
+    // --- NEW: Dictionary/Storage Logic ---
+    function setupDictationQueue() {
+        // 1. Get today's 5 words
+        let queue = [...(dailyWords[currentDay-1] || [])];
+        
+        // 2. Randomly pick 3 words from Word Bank (Storage)
+        if(wordBank.length > 0) {
+            let shuffledBank = [...wordBank].sort(() => 0.5 - Math.random());
+            let picked = shuffledBank.slice(0, 3);
+            queue = queue.concat(picked);
+        }
+        
+        // 3. Shuffle the final mix
+        queue.sort(() => 0.5 - Math.random());
+        
+        dictQueue = queue;
+        localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
+        updateDictUI();
+    }
+
+    function addToBank(word) {
+        word = word.toLowerCase().trim();
+        if(!word) return "Empty word";
+        if(!dictionary[word] && !confirm("This word is not in the dictionary. Add anyway?")) return "Cancelled";
+        
+        if(!wordBank.includes(word)) {
+            wordBank.push(word);
+            localStorage.setItem('p2_wordbank', JSON.stringify(wordBank));
+            updateBankUI();
+            return "Added successfully!";
+        } else {
+            return "Word already in storage.";
+        }
+    }
+
+    function manualAddToBank() {
+        const inp = document.getElementById('parentInput');
+        const msg = document.getElementById('bankMsg');
+        const res = addToBank(inp.value);
+        msg.innerText = res;
+        if(res.includes("Success")) inp.value = '';
+        setTimeout(() => msg.innerText = '', 2000);
+    }
+
+    function addToBankFromModal() {
+        const w = document.getElementById('mWord').innerText;
+        const msg = document.getElementById('mMsg');
+        const res = addToBank(w);
+        msg.innerText = res;
+    }
+
+    function updateBankUI() {
+        const el = document.getElementById('bankCount');
+        if(el) el.innerText = wordBank.length;
+    }
+
     // --- Navigation ---
+    // --- UPDATED NAVIGATION LOGIC (Pop-up Progress) ---
     function nav(id) {
+        // If the user clicks "Test" (dictation)
+        if (id === 'dictation') {
+            // Check if ANY task is incomplete
+            if (!missionStatus.learn || !missionStatus.read || !missionStatus.game || !missionStatus.grammar) {
+                showProgressModal(); // Show the new Pop-up
+                return; // Stop here
+            }
+            // If all done, update UI and allow entry
+            updateDictUI();
+        }
+
+        // --- MARK TASKS AS DONE ---
+        if (id === 'learn') missionStatus.learn = true;
+        if (id === 'story') missionStatus.read = true;
+
+        // --- STANDARD TAB SWITCHING ---
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         
-        // Map button index: Learn=0, Story=1, Game=2, Grammar=3, Dictation=4
         const map = {'learn':0, 'story':1, 'game':2, 'grammar':3, 'dictation':4};
         const btns = document.querySelectorAll('.nav-btn');
         if(btns[map[id]]) btns[map[id]].classList.add('active');
@@ -1758,169 +2231,201 @@
         if(id === 'grammar') renderGrammarSection();
     }
 
-    // --- Grammar Logic ---
+    // --- NEW: PROGRESS MODAL FUNCTIONS ---
+    function showProgressModal() {
+        const list = document.getElementById('taskList');
+        list.innerHTML = ''; // Clear old list
+
+        const tasks = [
+            { id: 'learn', label: '1. Learn Words (學習)', done: missionStatus.learn },
+            { id: 'story', label: '2. Read Story (閱讀)', done: missionStatus.read },
+            { id: 'game',  label: '3. Play Game (遊戲)',  done: missionStatus.game },
+            { id: 'grammar', label: '4. Grammar (文法)', done: missionStatus.grammar }
+        ];
+
+        let allDone = true;
+
+        tasks.forEach(t => {
+            if (!t.done) {
+                allDone = false;
+                // Only show tasks that are NOT done
+                list.innerHTML += `
+                    <div style="padding:10px; border-bottom:1px solid #444; color:#ff6b6b; font-size:1.1rem;">
+                        ⬜ ${t.label} 
+                    </div>`;
+            } else {
+                // Optional: You can choose to hide completed tasks entirely, 
+                // or show them with a checkmark. 
+                // Currently, I am hiding them so the user focuses on what is LEFT.
+            }
+        });
+
+        document.getElementById('progressModal').style.display = 'flex';
+    }
+
+    function closeProgressModal() {
+        document.getElementById('progressModal').style.display = 'none';
+    }
+
+
+    function checkPuzzle(target) {
+        const container = document.getElementById('gameZone');
+        const currentArr = Array.from(container.children).map(div => div.innerText);
+        const currentStr = currentArr.join(' ');
+        const msg = document.getElementById('gameMsg');
+        
+        if(currentStr === target) {
+            msg.innerText = "🌟 Correct! 🌟";
+            msg.style.color = "var(--success)";
+            speak(target);
+            
+            // Mark Game Mission as Done
+            missionStatus.game = true; 
+            isGameSolved = true;
+
+            const pieces = document.querySelectorAll('.puzzle-piece');
+            pieces.forEach(p => {
+                p.style.backgroundColor = "var(--success)";
+                p.onclick = null;
+                p.style.cursor = "default";
+            });
+        }
+    }
+
+    // ================= UPDATED GRAMMAR LOGIC (Strict Rules) =================
+    
+    // 1. Define Rule Lists for Hints
+    const rules = {
+        dropE: ['write', 'come', 'dance', 'ride', 'make', 'smile', 'chase', 'drive', 'use'],
+        doubleCVC: ['sit', 'run', 'swim', 'cut', 'skip'],
+        // Past Tense Categories
+        totalChange: ['go', 'do'],
+        spellingChange: ['eat'],
+        vowelChange: ['see'],
+        ought: ['buy', 'bring', 'fight', 'think'],
+        aught: ['catch', 'teach'],
+        i_to_a: ['swim', 'drink', 'sing', 'sit', 'give'],
+        ve_to_d: ['have'],
+        i_to_o: ['drive', 'write', 'ride'],
+        y_to_ew: ['fly'],
+        aw_to_ew: ['draw'],
+        ow_to_ew: ['know'],
+        u_to_a: ['run'],
+        eep_to_ept: ['sleep'],
+        k_to_d: ['make'],
+        special_read: ['read'],
+        o_to_a: ['come'],
+        ake_to_ook: ['take'],
+        and_to_ood: ['stand'],
+        ear_to_ore: ['wear'],
+        ind_to_ound: ['find'],
+        ay_to_aid: ['say'],
+        ee_to_e: ['meet'],
+        e_to_o: ['get'],
+        get_to_got: ['forget'],
+        in_to_on: ['win']
+    };
+
+    // 2. The Smart Hint Function
+    function getGrammarHint(type, baseVerb) {
+        if (!baseVerb) return "";
+        let base = baseVerb.toLowerCase().trim();
+
+        // --- Present Continuous (V-ing) ---
+        if (type === 'ving') {
+            if (rules.dropE.includes(base)) return "Rule: Drop 'e' + ing (刪去 'e' 加 ing)";
+            if (rules.doubleCVC.includes(base)) return "Rule: Double letter + ing (重覆尾音 + ing)";
+            return "Rule: Just add 'ing' (直接加 ing)";
+        }
+
+        // --- Past Tense ---
+        if (type === 'past') {
+            // Check specific irregular lists
+            if (rules.totalChange.includes(base)) return "Rule: Total change (完全改變)";
+            if (rules.spellingChange.includes(base)) return "Rule: Spelling change (拼寫改變)";
+            if (rules.vowelChange.includes(base)) return "Rule: Vowel change (元音改變)";
+            if (rules.ought.includes(base)) return "Rule: Change to -ought (變成 -ought)";
+            if (rules.aught.includes(base)) return "Rule: Change to -aught (變成 -aught)";
+            if (rules.i_to_a.includes(base)) return "Rule: Change 'i' to 'a' (i 變 a)";
+            if (rules.ve_to_d.includes(base)) return "Rule: Change 've' to 'd' (ve 變 d)";
+            if (rules.i_to_o.includes(base)) return "Rule: Change 'i' to 'o' (i 變 o)";
+            if (rules.y_to_ew.includes(base)) return "Rule: Change 'y' to 'ew' (y 變 ew)";
+            if (rules.aw_to_ew.includes(base)) return "Rule: Change 'aw' to 'ew' (aw 變 ew)";
+            if (rules.ow_to_ew.includes(base)) return "Rule: Change 'ow' to 'ew' (ow 變 ew)";
+            if (rules.u_to_a.includes(base)) return "Rule: Change 'u' to 'a' (u 變 a)";
+            if (rules.eep_to_ept.includes(base)) return "Rule: Change 'eep' to 'ept' (eep 變 ept)";
+            if (rules.k_to_d.includes(base)) return "Rule: Change 'k' to 'd' (k 變 d)";
+            if (rules.special_read.includes(base)) return "Rule: Same spelling (拼寫不變)";
+            if (rules.o_to_a.includes(base)) return "Rule: Change 'o' to 'a' (o 變 a)";
+            if (rules.ake_to_ook.includes(base)) return "Rule: Change 'ake' to 'ook' (ake 變 ook)";
+            if (rules.and_to_ood.includes(base)) return "Rule: Change 'and' to 'ood' (and 變 ood)";
+            if (rules.ear_to_ore.includes(base)) return "Rule: Change 'ear' to 'ore' (ear 變 ore)";
+            if (rules.ind_to_ound.includes(base)) return "Rule: Change 'ind' to 'ound' (ind 變 ound)";
+            if (rules.ay_to_aid.includes(base)) return "Rule: Change 'ay' to 'aid' (ay 變 aid)";
+            if (rules.ee_to_e.includes(base)) return "Rule: Change 'ee' to 'e' (ee 變 e)";
+            if (rules.e_to_o.includes(base)) return "Rule: Change 'e' to 'o' (e 變 o)";
+            if (rules.get_to_got.includes(base)) return "Rule: Change 'get' to 'got' (get 變 got)";
+            if (rules.in_to_on.includes(base)) return "Rule: Change 'in' to 'on' (in 變 on)";
+
+            // Regular Rules
+            if (base.endsWith('y') && !['a','e','i','o','u'].includes(base[base.length-2])) return "Rule: y → ied";
+            return "Rule: Just add -ed (直接加 -ed)";
+        }
+
+        // --- To-Infinitive ---
+        if (type === 'toInf') {
+            return "Rule: to + Base Form (to + 原形)";
+        }
+
+        return "";
+    }
+
     function generateGrammarQuestions() {
-        // Randomly pick 5 unique questions from each pool
-        const get5 = (arr) => {
-            const shuffled = [...arr].sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, 5);
-        };
+        // Clear previous answers/status to avoid "nothing changes"
+        ['quizVing', 'quizInf', 'quizPast'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.innerHTML = ''; 
+        });
+
+        // Get 5 random from each strict pool
+        const get5 = (arr) => [...arr].sort(() => 0.5 - Math.random()).slice(0, 5);
         grammarQuestions = {
             v: get5(grammarPool.ving),
             t: get5(grammarPool.toInf),
             p: get5(grammarPool.past)
         };
+        
+        document.getElementById('grammarFinalMsg').innerText = '';
     }
 
-    // --- 1. REVISED: Smart Hint Logic (With Vowel Rules) ---
-    function getGrammarHint(type, baseVerb, answer) {
-        if (!baseVerb || !answer) return "";
-        let base = baseVerb.toLowerCase().trim();
-        let ans = answer.toLowerCase().trim();
-
-        // --- Present Continuous (V-ing) ---
-        if (type === 'ving') {
-            let mainVerb = ans.replace(/^(am|is|are)\s+/, '');
-
-            // Rule 1: Drop 'e' (make -> making, write -> writing)
-            if (base.endsWith('e') && !base.endsWith('ee') && !mainVerb.includes('eing')) {
-                return `Rule: Remove 'e' + ing (刪去 'e' 加 ing)`;
-            }
-
-            // Rule 2: Double Consonant (run -> running, swim -> swimming)
-            // Logic: 1 Syllable + 1 Vowel + 1 Consonant -> Double the last letter
-            // We check this by seeing if the answer added an extra letter before 'ing'
-            if (mainVerb.length > (base.length + 3)) {
-                return `Rule: Short vowel (a,e,i,o,u) + Consonant -> Double letter (短元音+子音 -> 重覆尾音)`;
-            }
-
-            return `Rule: Add 'ing' directly (直接加 ing)`;
-        }
-
-        // --- Past Tense (Past) ---
-        if (type === 'past') {
-            
-            // === SPECIFIC IRREGULAR PATTERNS (Based on your list) ===
-            
-            // Group 1: i -> a (sing -> sang, drink -> drank, swim -> swam)
-            if (['sing', 'drink', 'swim', 'ring', 'begin'].includes(base)) {
-                return `Rule: Change 'i' to 'a' (中間 'i' 變 'a')`;
-            }
-
-            // Group 2: i/o -> e (Magic 'e' pattern: drive -> drove, write -> wrote, ride -> rode)
-            if (['drive', 'write', 'ride'].includes(base)) {
-                return `Rule: Change 'i' to 'o' (中間 'i' 變 'o')`;
-            }
-
-            // Group 3: ow/y -> ew (know -> knew, fly -> flew, grow -> grew)
-            if (['know', 'fly', 'grow', 'blow', 'draw', 'throw'].includes(base)) {
-                return `Rule: Change end to 'ew' (字尾變 'ew')`;
-            }
-
-            // Group 4: -ought / -aught (buy -> bought, teach -> taught)
-            if (['buy', 'bring', 'fight', 'think'].includes(base)) return `Rule: Change to 'ought' (變 'ought')`;
-            if (['teach', 'catch'].includes(base)) return `Rule: Change to 'aught' (變 'aught')`;
-
-            // Group 5: meet -> met, feed -> fed
-            if (['meet', 'feed'].includes(base)) {
-                return `Rule: Remove one 'e' (刪去一個 'e')`;
-            }
-
-            // Group 6: Common "Special" changes (The "Memorize" list)
-            switch (base) {
-                case 'go':    return `Rule: Special! go -> went (不規則: went)`;
-                case 'eat':   return `Rule: Rearrange! eat -> ate (重組字母: ate)`;
-                case 'see':   return `Rule: see -> saw (不規則: saw)`;
-                case 'do':    return `Rule: do -> did (不規則: did)`;
-                case 'have':  return `Rule: have -> had (不規則: had)`;
-                case 'make':  return `Rule: Change 'k' to 'd' (k 變 d -> made)`;
-                case 'come':  return `Rule: Change 'o' to 'a' (o 變 a -> came)`;
-                case 'give':  return `Rule: Change 'i' to 'a' (i 變 a -> gave)`;
-                case 'run':   return `Rule: Change 'u' to 'a' (u 變 a -> ran)`;
-                case 'take':  return `Rule: take -> took (不規則: took)`;
-                case 'wear':  return `Rule: wear -> wore (ear 變 ore)`;
-                case 'find':  return `Rule: find -> found (ind 變 ound)`;
-                case 'win':   return `Rule: win -> won (in 變 on)`;
-                case 'sleep': return `Rule: sleep -> slept (eep 變 ept)`;
-                case 'say':   return `Rule: say -> said (ay 變 aid)`;
-                case 'forget': return `Rule: forget -> forgot (get 變 got)`;
-            }
-
-            // === REGULAR RULES ===
-
-            // Rule: Change y to i + ed (cry -> cried)
-            if (base.endsWith('y') && !['a','e','i','o','u'].includes(base[base.length-2])) {
-                return `Rule: Change 'y' to 'i' + ed (改 'y' 為 'i' 加 ed)`;
-            }
-
-            // Rule: Ends in e -> + d (live -> lived)
-            if (base.endsWith('e')) {
-                return `Rule: Ends in 'e', just add 'd' (字尾是 e，只加 d)`;
-            }
-
-            // Rule: Double Consonant (stop -> stopped)
-            if (ans.length > (base.length + 2)) {
-                 return `Rule: Short vowel + Consonant -> Double letter (重覆尾音字母 + ed)`;
-            }
-
-            // Default
-            return `Rule: Add 'ed' directly (直接加 ed)`;
-        }
-
-        // --- Infinitive (To-Inf) ---
-        if (type === 'toInf') {
-            return `Rule: Use 'to' + original verb (用 'to' + 原形動詞)`;
-        }
-
-        return "Hint not available";
-    }
-
-    // --- 2. REVISED: Render Section (Fixes "Missing Text" bug) ---
     function renderGrammarSection() {
         const renderList = (id, list, type) => {
             const div = document.getElementById(id);
             if(div.innerHTML !== "") return; 
-            
+
             list.forEach((item, idx) => {
-                // 1. Extract base verb for hint logic
                 const match = item.q.match(/\((.*?)\)/);
                 const baseVerb = match ? match[1] : "";
+                const specificHint = getGrammarHint(type, baseVerb);
                 
-                // 2. Generate Hint
-                const specificHint = getGrammarHint(type, baseVerb, item.a);
-
-                // 3. FIX: Split using Regex (/_+/) instead of fixed string
-                // This handles "___" or "___________" equally well so text isn't lost.
+                // Split logic: Handles "____" or "___________"
                 const parts = item.q.split(/_+/); 
-                
-                // Make words clickable
-                const part1 = parts[0] ? makeClickable(parts[0]) : "";
-                const part2 = parts[1] ? makeClickable(parts[1]) : ""; 
+                const part1 = parts[0] || "";
+                const part2 = parts[1] || ""; 
 
                 const hintId = `hint-${type}-${idx}`;
 
                 div.innerHTML += `
                     <div class="g-q-row">
                         <div class="g-q-text">
-                            <!-- Question Part 1 -->
                             <span style="margin-right:5px;">${idx+1}. ${part1}</span>
-                            
-                            <!-- Input Box -->
-                            <input type="text" class="g-input" data-ans="${item.a}" autocomplete="off">
-                            
-                            <!-- Question Part 2 (The missing part) -->
+                            <input type="text" class="g-input" data-ans="${item.a}" placeholder="Answer" autocomplete="off">
                             <span style="margin-left:5px;">${part2}</span>
-                            
-                            <!-- Checkmark/X Feedback -->
                             <span class="g-feedback"></span>
                         </div>
-                        
                         <div style="margin-top:8px;">
-                            <button class="hint-btn" onclick="document.getElementById('${hintId}').style.display='block'">
-                                💡 提示 (Hint)
-                            </button>
+                            <button class="hint-btn" onclick="document.getElementById('${hintId}').style.display='block'">💡 提示 (Hint)</button>
                         </div>
-
                         <div id="${hintId}" class="g-meta">
                             <span class="g-clue">💡 ${specificHint}</span>
                         </div>
@@ -1938,16 +2443,12 @@
         const inputs = document.querySelectorAll('.g-input');
         let allCorrect = true;
         let count = 0;
-
+        
         inputs.forEach(input => {
-            const userAns = input.value.trim().toLowerCase();
+            const userAns = input.value.trim().toLowerCase(); // Remove extra spaces
             const correctAns = input.getAttribute('data-ans').toLowerCase();
-            
-            // --- THIS IS THE FIX ---
-            // Instead of grabbing the neighbor (which is the text), 
-            // we look for the specific feedback span inside the parent container.
             const fb = input.parentNode.querySelector('.g-feedback');
-            
+
             if(userAns === correctAns) {
                 input.style.border = "2px solid var(--success)";
                 input.style.background = "#f0fff4";
@@ -1956,7 +2457,7 @@
             } else {
                 input.style.border = "2px solid var(--error)";
                 input.style.background = "#fff5f5";
-                fb.innerHTML = "❌"; 
+                fb.innerHTML = `❌ <span style="font-size:0.8rem; color:#aaa;">(Ans: ${correctAns})</span>`; 
                 fb.style.color = "var(--error)";
                 allCorrect = false;
             }
@@ -1965,23 +2466,14 @@
 
         const msg = document.getElementById('grammarFinalMsg');
         if(allCorrect && count === 15) {
-            msg.innerHTML = "<span style='color:var(--success)'>🎉 Amazing! You are a Grammar Master! 🎉</span>";
+            msg.innerHTML = "<span style='color:var(--success)'>🎉 Amazing! Grammar Master! 🎉</span>";
             speak("Excellent job!");
+            missionStatus.grammar = true; 
         } else {
-            msg.innerHTML = "<span style='color:#e53e3e'>Keep trying! (再試一次)</span>";
+            msg.innerHTML = "<span style='color:#e53e3e'>Check the answers in brackets! (看括號內的正確答案)</span>";
             speak("Try again");
         }
     }
-
-        const msg = document.getElementById('grammarFinalMsg');
-        if(allCorrect && count === 15) {
-            msg.innerHTML = "<span style='color:var(--success)'>🎉 Amazing! You are a Grammar Master! 🎉</span>";
-            speak("Excellent job!");
-        } else {
-            msg.innerHTML = "<span style='color:#e53e3e'>Keep trying! (再試一次)</span>";
-            speak("Try again");
-        }
-    
 
     // --- Standard Helper Functions ---
     function speak(txt) {
@@ -2000,11 +2492,9 @@
     }
 
     function loadDay(d) {
-        // Words
         const grid = document.getElementById('wordGrid');
         grid.innerHTML = '';
         const dayWords = dailyWords[d-1] || [];
-        let addedNew = false;
         
         dayWords.forEach(en => {
             const lowerEn = en.toLowerCase();
@@ -2019,17 +2509,12 @@
                 <div class="sentence">I like the ${en}.</div>
             `;
             grid.appendChild(card);
-            if(!dictQueue.includes(lowerEn)) { dictQueue.push(lowerEn); addedNew = true; }
         });
 
-        if(addedNew) { localStorage.setItem('p2_queue', JSON.stringify(dictQueue)); updateDictUI(); }
-
-        // Story
         const art = articles[d] || {t:'No Story', txt:'No text.', q:[]};
         document.getElementById('storyTitle').innerText = art.t;
         document.getElementById('storyContent').innerHTML = makeClickable(art.txt);
 
-        // Quiz
         const qArea = document.getElementById('quizArea');
         qArea.innerHTML = '';
         art.q.forEach((item, idx) => {
@@ -2042,20 +2527,20 @@
         });
     }
 
-    // --- Modal/Word Click ---
     function wordClick(w) {
         w = w.toLowerCase().trim();
         let info = dictionary[w];
-        if (!info) {
-            // Basic singular check
-            if (w.endsWith('s') && dictionary[w.slice(0, -1)]) { info = dictionary[w.slice(0, -1)]; w = w.slice(0, -1); }
-        }
+        if (!info && w.endsWith('s')) { info = dictionary[w.slice(0, -1)]; w = w.slice(0, -1); }
+        
         document.getElementById('mWord').innerText = w;
+        document.getElementById('mMsg').innerText = ""; // Clear msg
+        
         if (info) {
             document.getElementById('mCn').innerText = info.cn;
             document.getElementById('mSound').innerText = info.sound || "";
         } else {
             document.getElementById('mCn').innerText = "Translation not found";
+            document.getElementById('mSound').innerText = "";
         }
         document.getElementById('mAudio').onclick = () => speak(w);
         document.getElementById('modal').style.display = 'flex';
@@ -2073,66 +2558,136 @@
         else { btn.classList.add('wrong'); speak("Try again"); }
     }
 
-    // --- Game ---
+    // ================= REVISED GAME LOGIC (User Friendly + Meaning) =================
+    
+    let currentGameTarget = ""; 
+    let gameMode = 'move'; // 'move' or 'ask'
+
+    function setGameMode(mode) {
+        gameMode = mode;
+        // Update Buttons UI
+        document.getElementById('btnMove').className = mode === 'move' ? 'mode-btn active' : 'mode-btn';
+        document.getElementById('btnAsk').className = mode === 'ask' ? 'mode-btn active' : 'mode-btn';
+    }
+
     function initGame() {
-        const container = document.getElementById('gameZone');
+        const answerZone = document.getElementById('answerZone');
+        const wordBank = document.getElementById('wordBank');
         const hint = document.getElementById('gameHint');
         const msg = document.getElementById('gameMsg');
-        container.innerHTML = '';
+        const hintDisplay = document.getElementById('gameSentenceHint');
+        
+        // Reset UI
+        answerZone.innerHTML = '<span id="placeholder" style="color:#666; font-style:italic; font-size:0.8rem;">(Put words here)</span>';
+        answerZone.classList.remove('correct');
+        wordBank.innerHTML = '';
         msg.innerText = '';
+        hintDisplay.innerText = ''; 
+        setGameMode('move'); // Default to move mode
 
-        if (isGameSolved) {
-            hint.innerText = "Mission Complete!";
-            msg.innerHTML = "<span style='color:var(--success)'>🌟 You finished today's puzzle! 🌟</span>";
-            return;
+        // Check Mission Status
+        if (missionStatus.game) {
+             msg.innerHTML = "<span style='color:var(--success)'>✅ Mission Complete! (You can play again)</span>";
         }
 
         const dayWordList = dailyWords[currentDay-1];
         const targetWord = dayWordList[Math.floor(Math.random() * dayWordList.length)];
-        const sentence = `I can see a ${targetWord}.`;
+        
+        // Get Sentence from DB
+        const sentence = sentenceDB[targetWord] || `I can see a ${targetWord}.`;
         const cnWord = dictionary[targetWord] ? dictionary[targetWord].cn : targetWord;
         
-        hint.innerText = `我可以看到一個${cnWord}。`; 
+        hint.innerHTML = `Word: <span style="color:var(--primary)">${targetWord}</span> (${cnWord})`; 
         
-        let parts = sentence.replace('.','').split(' ');
-        parts.push('.'); 
+        // Clean sentence for logic
+        let cleanSentence = sentence.replace(/[.,!?;]/g, ''); 
+        currentGameTarget = cleanSentence; 
+
+        // Split and Shuffle
+        let parts = cleanSentence.split(' ');
         parts.sort(() => Math.random() - 0.5); 
         
         parts.forEach(word => {
             const piece = document.createElement('div');
             piece.className = 'puzzle-piece';
             piece.innerText = word;
+            
+            // CLICK HANDLER
             piece.onclick = function() {
-                container.appendChild(this);
-                checkPuzzle(sentence);
+                if (gameMode === 'ask') {
+                    // ASK MEANING MODE: Open Modal
+                    // Clean punctuation for dictionary lookup (e.g., "morning." -> "morning")
+                    const cleanWord = word.replace(/[^a-zA-Z]/g, ''); 
+                    wordClick(cleanWord);
+                } else {
+                    // MOVE MODE: Move between zones
+                    movePiece(this, cleanSentence);
+                }
             };
-            container.appendChild(piece);
+            
+            wordBank.appendChild(piece);
         });
     }
 
+    function movePiece(piece, targetSentence) {
+        const answerZone = document.getElementById('answerZone');
+        const wordBank = document.getElementById('wordBank');
+        const placeholder = document.getElementById('placeholder');
+
+        // Logic: If parent is bank -> move to answer. If parent is answer -> move to bank.
+        if (piece.parentNode === wordBank) {
+            if(placeholder) placeholder.style.display = 'none'; // Hide text
+            answerZone.appendChild(piece);
+        } else {
+            wordBank.appendChild(piece);
+            if(answerZone.children.length === 1 && placeholder) placeholder.style.display = 'block'; // Show text if empty
+        }
+
+        // Check Answer automatically
+        checkPuzzle(targetSentence);
+    }
+
+    function showGameStructureHint() {
+        if (!currentGameTarget) return;
+        const words = currentGameTarget.split(' ');
+        const hintStr = words.map(w => w.charAt(0) + "_".repeat(w.length - 1)).join('  ');
+        document.getElementById('gameSentenceHint').innerText = hintStr;
+    }
+
     function checkPuzzle(target) {
-        const container = document.getElementById('gameZone');
-        const currentArr = Array.from(container.children).map(div => div.innerText);
-        let currentStr = currentArr.join(' ').replace(' .', '.');
+        const answerZone = document.getElementById('answerZone');
+        // Only get text from Puzzle Pieces (ignore the placeholder span)
+        const pieces = answerZone.querySelectorAll('.puzzle-piece');
+        const currentArr = Array.from(pieces).map(div => div.innerText);
+        const currentStr = currentArr.join(' ');
         const msg = document.getElementById('gameMsg');
         
         if(currentStr === target) {
-            msg.innerText = "🌟 Perfect Grammar! 🌟";
+            msg.innerText = "🌟 Correct! 🌟";
             msg.style.color = "var(--success)";
             speak(target);
-            isGameSolved = true; 
-            const pieces = document.querySelectorAll('.puzzle-piece');
+            
+            missionStatus.game = true; 
+            isGameSolved = true;
+            answerZone.classList.add('correct');
+
+            // Freeze pieces
             pieces.forEach(p => {
                 p.style.backgroundColor = "var(--success)";
-                p.onclick = null;
                 p.style.cursor = "default";
+                p.onclick = null; // Disable clicking
             });
+        } else {
+            // Not correct yet
+            answerZone.classList.remove('correct');
         }
     }
 
-    function resetGame() { isGameSolved = false; initGame(); }
-
-    // --- Dictation ---
+    function resetGame() { 
+        isGameSolved = false; 
+        initGame(); 
+    }
+    // --- Dictation Logic ---
     let dictFirstAttempt = null;
 
     function updateDictUI() {
@@ -2185,6 +2740,10 @@
             msg.innerText = "再試一次! (Try Again)";
             msg.style.color = "var(--error)";
             speak("Try again");
+            
+            // Auto add wrong words to bank? (Optional - you can enable this line if desired)
+            // addToBank(currentDictTarget);
+
             dictQueue.push(dictQueue.shift());
             localStorage.setItem('p2_queue', JSON.stringify(dictQueue));
             setTimeout(() => {
